@@ -1,0 +1,22 @@
+<resources>
+
+    <!-- 获取token -->
+    <string name="sharewifi_getToken">/wifi_api/auth</string>
+    <!-- 获取短信验证码 -->
+    <string name="sharewifi_user_sms">/wifi_api/user/sms</string>
+    <!-- 用户登录 -->
+    <string name="sharewifi_user_login">/wifi_api/user/login</string>
+    <!-- 用户签到 -->
+    <string name="sharewifi_user_sign">/wifi_api/user/sign</string>
+    <!-- 用户积分历史 -->
+    <string name="sharewifi_user_history">/wifi_api/user/user_history</string>
+    <!-- 用户分享wifi -->
+    <string name="sharewifi_user_share">/wifi_api/user/share</string>
+    <!-- 用户获取分享wifi列表 -->
+    <string name="sharewifi_user_share_list">/wifi_api/user/share_list</string>
+    <!-- 用户加入wifi消费接口 -->
+    <string name="sharewifi_user_user_expense">/wifi_api/user/user_expense</string>
+    <!-- app升级获取当前最新版本 -->
+    <string name="sharewifi_user_app_version">/wifi_api/user/app_version</string>
+
+</resources>

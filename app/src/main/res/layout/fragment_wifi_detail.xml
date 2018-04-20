@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/color_login_bg" />
+
+    <RelativeLayout
+        android:id="@+id/layout_wifi_detail_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/color_login_bg">
+
+        <ImageView
+            android:id="@+id/wifi_detail_iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@drawable/back_bg" />
+
+        <TextView
+            android:id="@+id/wifi_detail_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/network_detail"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_signal_strength"
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/signal_intensity"
+            android:textColor="@color/black_80"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_network_signal_strength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:drawablePadding="12dp"
+            android:drawableRight="@drawable/ic_list_next"
+            android:text="@string/strong"
+            android:textColor="@color/black_60"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <View style="@style/MainLineStyle" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/ip_address"
+            android:textColor="@color/black_80"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_network_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/default_address"
+            android:textColor="@color/black_60"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <View style="@style/MainLineStyle" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/gateway"
+            android:textColor="@color/black_80"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_network_gateway"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/default_address"
+            android:textColor="@color/black_60"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <View style="@style/MainLineStyle" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="34dp"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:id="@+id/tv_network_disconnect"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/login_selector_bg"
+            android:gravity="center"
+            android:text="@string/disconnect"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_network_speed"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/login_selector_bg"
+            android:gravity="center"
+            android:text="@string/network_speed_measurement"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</LinearLayout>

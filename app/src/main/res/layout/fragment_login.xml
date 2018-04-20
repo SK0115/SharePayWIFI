@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="42dp" />
+
+    <TextView
+        android:id="@+id/text_mobile_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="106dp"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:text="@string/mobile_login"
+        android:textColor="@color/color_mobile_login"
+        android:textSize="24sp" />
+
+    <RelativeLayout
+        android:id="@+id/layout_mobile_num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_mobile_login"
+        android:layout_marginTop="41dp">
+
+        <EditText
+            android:id="@+id/edittext_mobile_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28dp"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:cursorVisible="false"
+            android:ellipsize="end"
+            android:focusable="true"
+            android:gravity="left|bottom"
+            android:hint="@string/mobile_num"
+            android:includeFontPadding="false"
+            android:maxLength="11"
+            android:paddingBottom="0dp"
+            android:phoneNumber="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black_40"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/image_mobile_num_split_normal"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/edittext_mobile_num"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="11dp"
+            android:src="@color/black_40" />
+
+        <ImageView
+            android:id="@+id/image_mobile_num_split_focus"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/edittext_mobile_num"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="11dp"
+            android:src="@color/color_login_bg"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_verifi_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_mobile_num"
+        android:layout_marginTop="41dp">
+
+        <EditText
+            android:id="@+id/edittext_mobile_verifcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28dp"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:cursorVisible="false"
+            android:ellipsize="end"
+            android:focusable="true"
+            android:gravity="left|bottom"
+            android:hint="@string/verification_code"
+            android:includeFontPadding="false"
+            android:maxLength="11"
+            android:paddingBottom="0dp"
+            android:phoneNumber="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black_40"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/image_verification_code_split_normal"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/edittext_mobile_verifcode"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="137dp"
+            android:layout_marginTop="11dp"
+            android:src="@color/black_40" />
+
+        <ImageView
+            android:id="@+id/image_verification_code_split_focus"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/edittext_mobile_verifcode"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="137dp"
+            android:layout_marginTop="11dp"
+            android:src="@color/color_login_bg"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/text_getverifi_code"
+        android:layout_width="107dp"
+        android:layout_height="38dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/layout_mobile_num"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/get_verificode_selector_bg"
+        android:clickable="true"
+        android:ellipsize="end"
+        android:focusable="true"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/get_verification_code"
+        android:textColor="@color/color_mobile_login"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/text_verificode_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_verifi_code"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="7.5dp"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:text="@string/error_verificode_retry"
+        android:textColor="@color/color_verificode_error"
+        android:textSize="12sp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/text_login_view"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/text_verificode_error"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="22dp"
+        android:background="@drawable/login_selector_bg"
+        android:clickable="true"
+        android:ellipsize="end"
+        android:focusable="true"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/login"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/text_jumplogin_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_login_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp"
+        android:clickable="true"
+        android:ellipsize="end"
+        android:focusable="true"
+        android:includeFontPadding="false"
+        android:text="@string/jump_login"
+        android:textColor="@drawable/jump_login_selector_bg"
+        android:textSize="12sp" />
+
+    <RelativeLayout
+        android:id="@+id/layout_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_30"
+        android:visibility="invisible">
+
+        <com.sharepay.wifi.view.ProgressView
+            android:id="@+id/pb_loading"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent">#00ffffff</color>
+    <color name="white">#ffffff</color>
+    <color name="white_8">#14ffffff</color>
+    <color name="white_10">#19ffffff</color>
+    <color name="white_15">#26ffffff</color>
+    <color name="white_20">#33ffffff</color>
+    <color name="white_30">#4cffffff</color>
+    <color name="white_40">#66ffffff</color>
+    <color name="white_50">#80ffffff</color>
+    <color name="white_60">#99ffffff</color>
+    <color name="white_70">#B2ffffff</color>
+    <color name="white_75">#BFffffff</color>
+    <color name="white_80">#CCffffff</color>
+    <color name="white_90">#E6ffffff</color>
+    <color name="black">#000000</color>
+    <color name="black_10">#19000000</color>
+    <color name="black_20">#33000000</color>
+    <color name="black_30">#4c000000</color>
+    <color name="black_35">#A5000000</color>
+    <color name="black_40">#66000000</color>
+    <color name="black_50">#80000000</color>
+    <color name="black_60">#99000000</color>
+    <color name="black_70">#B2000000</color>
+    <color name="black_75">#BF000000</color>
+    <color name="black_80">#CC000000</color>
+    <color name="black_90">#E6000000</color>
+    <color name="pink">#ffffcbd7</color>
+    <color name="green">#ffbae4b6</color>
+    <color name="color_mobile_login">#12B064</color>
+    <color name="color_login_bg">#12B063</color>
+    <color name="color_verificode_error">#EE263A</color>
+    <color name="color_line_bg">#ebebeb</color>
+    <color name="color_login_out_bg">#f57142</color>
+    <color name="color_account_point">#00c2ad</color>
+    <color name="color_cost_intergration">#32C79E</color>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="color_333333">#333333</color>
+    <color name="color_666666">#666666</color>
+    <color name="color_999999">#999999</color>
+</resources>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:id="@+id/tv_personal_center_mall_building"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="7.5dp"
+            android:text="@string/intergration_mail_building"
+            android:textColor="@color/black_40"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_personal_center_exit_login"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/tv_personal_center_mall_building"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/login_out_selector_bg"
+            android:gravity="center"
+            android:text="@string/exit_login"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+</RelativeLayout>

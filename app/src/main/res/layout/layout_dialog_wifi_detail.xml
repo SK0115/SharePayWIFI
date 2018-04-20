@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/dialog_main_bg"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/layout_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="32dp"
+                android:orientation="horizontal"
+                android:visibility="invisible">
+
+                <TextView
+                    android:id="@+id/tv_speed_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:text="3.28"
+                    android:textColor="@color/color_login_bg"
+                    android:textSize="30dp" />
+
+                <TextView
+                    android:id="@+id/tv_spped_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginLeft="7dp"
+                    android:text="Mb/s"
+                    android:textColor="@color/black_80"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/avi_speed_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="42dp"
+                app:indicatorColor="@color/black_40"
+                app:indicatorName="BallClipRotate" />
+
+            <ImageView
+                android:id="@+id/iv_colse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="15dp"
+                android:src="@drawable/icon_dialog_colse" />
+
+            <TextView
+                android:id="@+id/tv_speed_dec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layout_speed"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="22dp"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_40"
+                android:textSize="15dp" />
+        </RelativeLayout>
+
+        <View
+            style="@style/MainLineStyle"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="33dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <ImageView
+                android:id="@+id/iv_speed_num_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/wifi_speed_bg" />
+
+            <ImageView
+                android:id="@+id/iv_speed_num_point"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/wifi_speed_bg_tip" />
+
+            <TextView
+                android:id="@+id/tv_speed_num_unit_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/iv_speed_num_down"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="7dp"
+                android:text="Mb/s"
+                android:textColor="@color/black_80"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/tv_speed_num_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/tv_speed_num_unit_down"
+                android:layout_centerHorizontal="true"
+                android:includeFontPadding="false"
+                android:text="3.28"
+                android:textColor="@color/black_80"
+                android:textSize="30dp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

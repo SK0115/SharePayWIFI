@@ -1,0 +1,29 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.jakewharton:butterknife-gradle-plugin:8.8.1'
+        classpath "io.realm:realm-gradle-plugin:5.0.0"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+ext {
+    compileSdkVersion = 26
+    buildToolsVersion = "26.0.2"
+    minSdkVersion = 19
+    targetSdkVersion = 26
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

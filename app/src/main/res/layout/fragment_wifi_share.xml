@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/color_login_bg" />
+
+    <RelativeLayout
+        android:id="@+id/layout_wifi_share_main_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/color_login_bg">
+
+        <ImageView
+            android:id="@+id/iv_wifi_share_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@drawable/back_bg" />
+
+        <TextView
+            android:id="@+id/tv_wifi_share_main_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="61dp"
+        android:background="@null"
+        android:hint="@string/wifi_password"
+        android:textColor="@color/black_40"
+        android:textColorHint="@color/black_40"
+        android:textSize="17sp" />
+
+    <View
+        style="@style/MainLineStyle"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="11dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="7.5dp"
+        android:text="@string/please_input_password"
+        android:textColor="@color/color_login_bg"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="41dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/share_income"
+            android:textColor="@color/black_40"
+            android:textSize="17sp" />
+
+        <ImageView
+            android:id="@+id/iv_wifi_share_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/icon_left" />
+
+        <TextView
+            android:id="@+id/tv_wifi_share_income"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:text="@string/one_intergration_hour"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
+
+        <ImageView
+            android:id="@+id/iv_wifi_share_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/icon_right" />
+    </LinearLayout>
+
+    <View
+        style="@style/MainLineStyle"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="11dp" />
+
+    <TextView
+        android:id="@+id/tv_wifi_share_share"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/dialog_btn_bg"
+        android:gravity="center"
+        android:text="@string/share"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+</LinearLayout>

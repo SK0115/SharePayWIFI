@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_main_bg"
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/tv_dialog_title"
+            style="@style/DialogTitleTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="19dp" />
+
+        <TextView
+            android:id="@+id/tv_dialog_describe"
+            style="@style/DialogTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="28dp">
+
+            <TextView
+                android:id="@+id/tv_dialog_cancel"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:background="@drawable/dialog_btn_bg"
+                android:gravity="center"
+                android:text="取消"
+                android:layout_marginRight="8dp"
+                android:textColor="@android:color/white"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/tv_dialog_sure"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:background="@drawable/dialog_btn_bg"
+                android:gravity="center"
+                android:text="确定"
+                android:textColor="@android:color/white"
+                android:textSize="15dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

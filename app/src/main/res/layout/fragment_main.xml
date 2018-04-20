@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/color_login_bg" />
+
+    <RelativeLayout
+        android:id="@+id/layout_main_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/color_login_bg">
+
+        <ImageView
+            android:id="@+id/iv_main_personal_enter"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@drawable/main_account_bg" />
+
+        <TextView
+            android:id="@+id/tv_main_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/iv_main_share"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@drawable/share_bg" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/layout_tips"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/color_line_bg"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <TextView
+                android:id="@+id/tv_sign_in_dec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:singleLine="true"
+                android:text="@string/sign_veryday_intergration"
+                android:textColor="@color/black_80"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_sign_in"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_sign_in"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="@string/sign"
+                android:textColor="@color/color_login_bg"
+                android:textSize="17sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_main_connect_wifi"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:background="@color/white_90"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <ImageView
+                android:id="@+id/iv_has_connect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="14dp"
+                android:layout_toRightOf="@+id/iv_has_connect"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_has_connect_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:includeFontPadding="false"
+                    android:singleLine="true"
+                    android:textColor="@color/black_60"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_has_connect_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="4dp"
+                    android:includeFontPadding="false"
+                    android:singleLine="true"
+                    android:text="已连接2分钟"
+                    android:textColor="@color/black_40"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_list_next" />
+
+        </RelativeLayout>
+
+        <View style="@style/MainLineStyle" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white_90"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp"
+            android:paddingTop="33dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:paddingLeft="15dp"
+                android:paddingRight="10dp"
+                android:text="@string/select_network"
+                android:textColor="@color/black_90"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.sharepay.wifi.view.ProgressView
+                android:id="@+id/pb_scan_loading"
+                android:layout_width="18dp"
+                android:layout_height="18dp" />
+
+        </LinearLayout>
+
+        <View style="@style/MainLineStyle" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white_90"
+            android:overScrollMode="never" />
+    </LinearLayout>
+</LinearLayout>
