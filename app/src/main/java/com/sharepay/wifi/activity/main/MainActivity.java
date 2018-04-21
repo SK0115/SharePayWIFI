@@ -10,6 +10,8 @@ import android.support.v4.content.ContextCompat;
 
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.base.BaseActivity;
+import com.sharepay.wifi.module.main.MainFragment;
+import com.sharepay.wifi.module.main.MainPresenter;
 import com.sharepay.wifi.util.CommonUtil;
 
 import java.util.ArrayList;

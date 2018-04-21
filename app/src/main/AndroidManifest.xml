@@ -52,16 +52,16 @@
             android:name="com.sharepay.wifi.activity.login.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.sharepay.wifi.activity.wifidetail.WifiDetailActivity"
+            android:name="com.sharepay.wifi.activity.wifiDetail.WifiDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.sharepay.wifi.activity.personal.PersonalCenterActivity"
+            android:name="com.sharepay.wifi.activity.personalCenter.PersonalCenterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.sharepay.wifi.activity.wifishare.WifiShareActivity"
+            android:name="com.sharepay.wifi.activity.wifiShare.WifiShareActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.sharepay.wifi.activity.cost.CostHistoryActivity"
+            android:name="com.sharepay.wifi.activity.costHistory.CostHistoryActivity"
             android:screenOrientation="portrait" />
 
         <meta-data

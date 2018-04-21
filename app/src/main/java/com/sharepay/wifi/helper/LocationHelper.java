@@ -10,7 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
-import com.sharepay.wifi.activity.wifishare.WifiShareFragment;
+import com.sharepay.wifi.module.wifiShare.WifiShareFragment;
 
 public class LocationHelper {
 

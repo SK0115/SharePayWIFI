@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.base.BaseActivity;
+import com.sharepay.wifi.module.login.LoginFragment;
+import com.sharepay.wifi.module.login.LoginPresenter;
 import com.sharepay.wifi.util.CommonUtil;
 
 public class LoginActivity extends BaseActivity {

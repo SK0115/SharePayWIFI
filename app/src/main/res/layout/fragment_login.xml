@@ -194,7 +194,7 @@
         android:background="@color/black_30"
         android:visibility="invisible">
 
-        <com.sharepay.wifi.view.ProgressView
+        <com.sharepay.wifi.baseCtrl.ProgressView
             android:id="@+id/pb_loading"
             android:layout_width="50dp"
             android:layout_height="50dp"

@@ -6,10 +6,10 @@ import android.view.ViewGroup;
 import com.sharepay.wifi.base.BaseAdapter;
 import com.sharepay.wifi.base.BaseHolder;
 import com.sharepay.wifi.model.PersonalCenterData;
-import com.sharepay.wifi.view.PersonalCenterAccountItemView;
-import com.sharepay.wifi.view.PersonalCenterExitItemView;
-import com.sharepay.wifi.view.PersonalCenterImgItemView;
-import com.sharepay.wifi.view.PersonalCenterTextItemView;
+import com.sharepay.wifi.viewModule.personalCenter.PersonalCenterAccountItemView;
+import com.sharepay.wifi.viewModule.personalCenter.PersonalCenterExitItemView;
+import com.sharepay.wifi.viewModule.personalCenter.PersonalCenterImgItemView;
+import com.sharepay.wifi.viewModule.personalCenter.PersonalCenterTextItemView;
 
 import java.util.ArrayList;
 import java.util.List;
