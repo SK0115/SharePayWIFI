@@ -3,7 +3,7 @@ package com.sharepay.wifi.module.login;
 import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.http.LoginRequestService;
-import com.sharepay.wifi.http.NetManager;
+import com.sharepay.wifi.http.HttpRequestHelper;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.http.LoginAccountHttpData;
@@ -19,12 +19,12 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     private final String TAG = "LoginPresenter ";
     private LoginContract.View mView;
-    private LoginRequestService loginRequestService;
+    private LoginRequestService mLoginRequestService;
 
     public LoginPresenter(LoginContract.View view) {
         mView = view;
         mView.setPresenter(this);
-        loginRequestService = NetManager.getInstance().create(LoginRequestService.class);
+        mLoginRequestService = HttpRequestHelper.getInstance().create(LoginRequestService.class);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             // token未过期
             return;
         }
-        loginRequestService.getTokenResult(CommonUtil.getDeivceID(), WIFIDefine.APPID, WIFIDefine.APPSECRET).subscribeOn(Schedulers.io()) // 在IO线程进行网络请求
+        mLoginRequestService.getTokenResult(CommonUtil.getDeivceID(), WIFIDefine.APPID, WIFIDefine.APPSECRET).subscribeOn(Schedulers.io()) // 在IO线程进行网络请求
                 .observeOn(AndroidSchedulers.mainThread()) // 回到主线程去处理请求结果
                 .subscribe(new Observer<BaseHttpResult<TokenHttpData>>() {
                     @Override
@@ -75,7 +75,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void getVerificationCode(String mobile) {
-        loginRequestService.getVerificationCode(CommonUtil.getDeivceID(), mobile, CommonUtil.getToken()).subscribeOn(Schedulers.io()) // 在IO线程进行网络请求
+        mLoginRequestService.getVerificationCode(CommonUtil.getDeivceID(), mobile, CommonUtil.getToken()).subscribeOn(Schedulers.io()) // 在IO线程进行网络请求
                 .observeOn(AndroidSchedulers.mainThread()) // 回到主线程去处理请求结果
                 .subscribe(new Observer<BaseHttpResult<BaseHttpData>>() {
                     @Override
@@ -104,7 +104,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void login(String mobile, String code) {
-        loginRequestService.login(mobile, CommonUtil.getToken(), CommonUtil.getDeivceID(), code).subscribeOn(Schedulers.io()) // 在IO线程进行网络请求
+        mLoginRequestService.login(mobile, CommonUtil.getToken(), CommonUtil.getDeivceID(), code).subscribeOn(Schedulers.io()) // 在IO线程进行网络请求
                 .observeOn(AndroidSchedulers.mainThread()) // 回到主线程去处理请求结果
                 .subscribe(new Observer<BaseHttpResult<LoginAccountHttpData>>() {
                     @Override

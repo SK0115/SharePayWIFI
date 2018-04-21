@@ -11,7 +11,6 @@ public class PersonalCenterPresenter implements PersonalCenterContract.Presenter
 
     @Override
     public void start() {
-
     }
 
     @Override

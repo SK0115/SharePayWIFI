@@ -2,7 +2,7 @@ package com.sharepay.wifi.module.costHistory;
 
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.http.CostHistoryRequestService;
-import com.sharepay.wifi.http.NetManager;
+import com.sharepay.wifi.http.HttpRequestHelper;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.util.CommonUtil;
@@ -21,7 +21,7 @@ public class CostHistoryPresenter implements CostHistoryContract.Presenter {
     public CostHistoryPresenter(CostHistoryContract.View view) {
         mView = view;
         mView.setPresenter(this);
-        mCostHistoryRequestService = NetManager.getInstance().create(CostHistoryRequestService.class);
+        mCostHistoryRequestService = HttpRequestHelper.getInstance().create(CostHistoryRequestService.class);
     }
 
     @Override

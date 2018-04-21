@@ -15,20 +15,20 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class NetManager {
+public class HttpRequestHelper {
 
-    private static final String TAG = "NetManager ";
-    private static final int DEFAULT_TIMEOUT = 120;
-    private static NetManager mNetManager;
+    private static final String TAG = "HttpRequestHelper ";
+    private static final int HTTP_REQUEST_DEFAULT_TIMEOUT = 120;
+    private static HttpRequestHelper mHttpRequestHelper;
 
-    private NetManager() {
+    private HttpRequestHelper() {
     }
 
-    public static NetManager getInstance() {
-        if (CommonUtil.checkIsNull(mNetManager)) {
-            mNetManager = new NetManager();
+    public static HttpRequestHelper getInstance() {
+        if (CommonUtil.checkIsNull(mHttpRequestHelper)) {
+            mHttpRequestHelper = new HttpRequestHelper();
         }
-        return mNetManager;
+        return mHttpRequestHelper;
     }
 
     public <T> T create(Class<T> service) {
@@ -48,8 +48,8 @@ public class NetManager {
     }
 
     public OkHttpClient getOkHttpClient() {
-        final OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS).readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+        final OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(HTTP_REQUEST_DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(HTTP_REQUEST_DEFAULT_TIMEOUT, TimeUnit.SECONDS).readTimeout(HTTP_REQUEST_DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         // if (BuildConfig.DEBUG) {
         // HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         // interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

@@ -6,7 +6,7 @@ import android.widget.Toast;
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.http.MainRequestService;
-import com.sharepay.wifi.http.NetManager;
+import com.sharepay.wifi.http.HttpRequestHelper;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.util.CommonUtil;
@@ -21,13 +21,13 @@ public class MainPresenter implements MainContract.Presenter {
     private final String TAG = "MainPresenter ";
     private Context mContext;
     private MainContract.View mView;
-    private MainRequestService mRequestService;
+    private MainRequestService mMainRequestService;
 
     public MainPresenter(Context context, MainContract.View view) {
         mContext = context;
         mView = view;
         mView.setPresenter(this);
-        mRequestService = NetManager.getInstance().create(MainRequestService.class);
+        mMainRequestService = HttpRequestHelper.getInstance().create(MainRequestService.class);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void userSign(String mobile) {
-        mRequestService.sign(mobile, CommonUtil.getToken(), CommonUtil.getDeivceID()).subscribeOn(Schedulers.io()) // 在IO线程进行网络请求
+        mMainRequestService.sign(mobile, CommonUtil.getToken(), CommonUtil.getDeivceID()).subscribeOn(Schedulers.io()) // 在IO线程进行网络请求
                 .observeOn(AndroidSchedulers.mainThread()) // 回到主线程去处理请求结果
                 .subscribe(new Observer<BaseHttpResult<BaseHttpData>>() {
                     @Override
