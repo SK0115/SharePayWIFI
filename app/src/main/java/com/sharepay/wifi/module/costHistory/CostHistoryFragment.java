@@ -2,6 +2,7 @@ package com.sharepay.wifi.module.costHistory;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.sharepay.wifi.R;
@@ -9,7 +10,11 @@ import com.sharepay.wifi.activity.costHistory.CostHistoryActivity;
 import com.sharepay.wifi.adapter.CostHistoryListAdapter;
 import com.sharepay.wifi.base.BaseFragment;
 import com.sharepay.wifi.baseCtrl.FullyLinearLayoutManager;
+import com.sharepay.wifi.define.WIFIDefine;
+import com.sharepay.wifi.helper.AccountHelper;
+import com.sharepay.wifi.model.http.UserIntegralHistoryHttpData;
 import com.sharepay.wifi.model.info.CostHistoryInfo;
+import com.sharepay.wifi.model.realm.AccountInfoRealm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +24,7 @@ import butterknife.OnClick;
 
 public class CostHistoryFragment extends BaseFragment implements CostHistoryContract.View {
 
+    private CostHistoryContract.Presenter mPresenter;
     private CostHistoryActivity mActivity;
     private CostHistoryListAdapter mAdapter;
 
@@ -50,7 +56,10 @@ public class CostHistoryFragment extends BaseFragment implements CostHistoryCont
 
     @Override
     protected void initView() {
-        initCostHistory();
+        AccountInfoRealm accountInfoRealm = AccountHelper.getInstance().getAccountInfo();
+        if (null != accountInfoRealm && !TextUtils.isEmpty(accountInfoRealm.getMobile()) && !TextUtils.isEmpty(accountInfoRealm.getId())) {
+            mPresenter.requestUserIntegralHistory(accountInfoRealm.getMobile(), 1);
+        }
     }
 
     @Override
@@ -60,29 +69,38 @@ public class CostHistoryFragment extends BaseFragment implements CostHistoryCont
 
     @Override
     public void setPresenter(CostHistoryContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 
-    private void initCostHistory() {
-        List<CostHistoryInfo> datas = new ArrayList<>();
-        datas.add(new CostHistoryInfo("共享WIFI[123]", "2017-12-03 12:02:48", "+ 2"));
-        datas.add(new CostHistoryInfo("共享WIFI[456]", "2017-12-03 12:02:48", "+ 2"));
-        datas.add(new CostHistoryInfo("共享WIFI[789]", "2017-12-03 12:02:48", "+ 2"));
-        datas.add(new CostHistoryInfo("余额兑换网络时长 2小时", "2017-12-03 12:02:48", "- 2"));
-        datas.add(new CostHistoryInfo("新用户分享红包", "2017-12-03 12:02:48", "+ 5"));
-        datas.add(new CostHistoryInfo("每日签到", "2017-12-03 12:02:48", "+ 2"));
-        datas.add(new CostHistoryInfo("每日签到", "2017-12-03 12:02:48", "+ 2"));
-        datas.add(new CostHistoryInfo("每日签到", "2017-12-03 12:02:48", "+ 2"));
-        datas.add(new CostHistoryInfo("每日签到", "2017-12-03 12:02:48", "+ 2"));
-        datas.add(new CostHistoryInfo("每日签到", "2017-12-03 12:02:48", "+ 2"));
-        datas.add(new CostHistoryInfo("每日签到", "2017-12-03 12:02:48", "+ 2"));
-        datas.add(new CostHistoryInfo("每日签到", "2017-12-03 12:02:48", "+ 2"));
-        datas.add(new CostHistoryInfo("每日签到", "2017-12-03 12:02:48", "+ 2"));
-        datas.add(new CostHistoryInfo("每日签到", "2017-12-03 12:02:48", "+ 2"));
-        datas.add(new CostHistoryInfo("每日签到", "2017-12-03 12:02:48", "+ 2"));
-        mAdapter = new CostHistoryListAdapter(mActivity, datas, false);
-        recyclerviewCostHistory.setNestedScrollingEnabled(false);
-        // 设置布局管理器
-        recyclerviewCostHistory.setLayoutManager(new FullyLinearLayoutManager(mActivity));
-        recyclerviewCostHistory.setAdapter(mAdapter);
+    @Override
+    public void setUserIntegralHistoryHttpResult(List<UserIntegralHistoryHttpData> userIntegralHistoryHttpDataList, int pageNo) {
+        if (null != userIntegralHistoryHttpDataList && userIntegralHistoryHttpDataList.size() > 0) {
+            List<CostHistoryInfo> datas = new ArrayList<>();
+            for (int i = 0; i < userIntegralHistoryHttpDataList.size(); i++) {
+                UserIntegralHistoryHttpData data = userIntegralHistoryHttpDataList.get(i);
+                CostHistoryInfo info = new CostHistoryInfo();
+                String content = WIFIDefine.USER_INTEGRAL_HISTORY_TYPE.TYPE_SIGN_TEXT;
+                String integration = "";
+                if (WIFIDefine.USER_INTEGRAL_HISTORY_TYPE.TYPE_SIGN.equals(data.getType())) {
+                    content = WIFIDefine.USER_INTEGRAL_HISTORY_TYPE.TYPE_SIGN_TEXT;
+                    integration = "+ " + data.getIntegral();
+                } else if (WIFIDefine.USER_INTEGRAL_HISTORY_TYPE.TYPE_SHARE.equals(data.getType())) {
+                    content = WIFIDefine.USER_INTEGRAL_HISTORY_TYPE.TYPE_SHARE_TEXT;
+                    integration = "+ " + data.getIntegral();
+                } else if (WIFIDefine.USER_INTEGRAL_HISTORY_TYPE.TYPE_SPENDING.equals(data.getType())) {
+                    content = WIFIDefine.USER_INTEGRAL_HISTORY_TYPE.TYPE_SPENDING_TEXT;
+                    integration = "- " + data.getIntegral();
+                }
+                info.setContent(content);
+                info.setTime(data.getAddTime());
+                info.setIntegration(integration);
+                datas.add(info);
+            }
+            mAdapter = new CostHistoryListAdapter(mActivity, datas, false);
+            recyclerviewCostHistory.setNestedScrollingEnabled(false);
+            // 设置布局管理器
+            recyclerviewCostHistory.setLayoutManager(new FullyLinearLayoutManager(mActivity));
+            recyclerviewCostHistory.setAdapter(mAdapter);
+        }
     }
 }

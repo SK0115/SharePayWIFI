@@ -12,10 +12,7 @@ public class CostHistoryInfo implements Parcelable {
     private String time; // 消费时间
     private String integration; // 消费积分
 
-    public CostHistoryInfo(String content, String time, String integration) {
-        setContent(content);
-        setTime(time);
-        setIntegration(integration);
+    public CostHistoryInfo() {
     }
 
     public String getContent() {

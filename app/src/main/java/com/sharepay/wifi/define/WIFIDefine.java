@@ -32,6 +32,15 @@ public class WIFIDefine {
         int JUMP_PAGE_REQUESTCODE = 110;
     }
 
+    public interface USER_INTEGRAL_HISTORY_TYPE {
+        String TYPE_SIGN = "1";
+        String TYPE_SHARE = "2";
+        String TYPE_SPENDING = "3";
+        String TYPE_SIGN_TEXT = "签到";
+        String TYPE_SHARE_TEXT = "分享";
+        String TYPE_SPENDING_TEXT = "消费";
+    }
+
     public interface HttpRequestCallBack {
         /**
          * 请求结果

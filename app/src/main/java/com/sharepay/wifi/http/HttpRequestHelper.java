@@ -9,10 +9,12 @@ import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.http.LoginAccountHttpData;
 import com.sharepay.wifi.model.http.NetSpeedTestHttpData;
 import com.sharepay.wifi.model.http.TokenHttpData;
+import com.sharepay.wifi.model.http.UserIntegralHistoryHttpData;
 import com.sharepay.wifi.util.CommonUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -145,6 +147,22 @@ public class HttpRequestHelper {
     public void requestUserSign(Observer<BaseHttpResult<BaseHttpData>> observer, MainRequestService mainRequestService, String mobile) {
         if (null != observer && null != mainRequestService) {
             Observable observable = mainRequestService.requestUserSign(mobile, CommonUtil.getToken(), CommonUtil.getDeivceID());
+            toObservable(observable, observer);
+        }
+    }
+
+    /**
+     * 请求用户积分历史信息
+     * 
+     * @param observer
+     * @param costHistoryRequestService
+     * @param mobile
+     * @param pageNo
+     */
+    public void requestUserIntegralHistory(Observer<BaseHttpResult<List<UserIntegralHistoryHttpData>>> observer,
+            CostHistoryRequestService costHistoryRequestService, String mobile, int pageNo) {
+        if (null != observer && null != costHistoryRequestService) {
+            Observable observable = costHistoryRequestService.requestUserIntegralHistory(CommonUtil.getToken(), mobile, CommonUtil.getDeivceID(), pageNo);
             toObservable(observable, observer);
         }
     }
