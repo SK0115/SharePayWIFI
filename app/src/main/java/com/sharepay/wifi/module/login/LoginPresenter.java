@@ -8,12 +8,6 @@ import com.sharepay.wifi.http.HttpRequestHelper;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.http.LoginAccountHttpData;
-import com.sharepay.wifi.util.CommonUtil;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class LoginPresenter implements LoginContract.Presenter {
 
@@ -54,31 +48,19 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void login(String mobile, String code) {
-        mLoginRequestService.login(mobile, CommonUtil.getToken(), CommonUtil.getDeivceID(), code).subscribeOn(Schedulers.io()) // 在IO线程进行网络请求
-                .observeOn(AndroidSchedulers.mainThread()) // 回到主线程去处理请求结果
-                .subscribe(new Observer<BaseHttpResult<LoginAccountHttpData>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        LogHelper.releaseLog(TAG + "login onSubscribe! Disposable:" + d.isDisposed());
-                    }
+        HttpRequestHelper.getInstance().login(new BaseHttpObserver<BaseHttpResult<LoginAccountHttpData>>(new HttpRequestCallBack() {
+            @Override
+            public void onNext(Object loginAccountHttpData) {
+                if (null != mView && loginAccountHttpData instanceof BaseHttpResult) {
+                    LogHelper.releaseLog(TAG + "login onNext! loginAccountHttpData:" + loginAccountHttpData.toString());
+                    mView.setLoginAccountHttpResult((BaseHttpResult<LoginAccountHttpData>) loginAccountHttpData);
+                }
+            }
 
-                    @Override
-                    public void onNext(BaseHttpResult<LoginAccountHttpData> loginAccountHttpData) {
-                        if (null != mView && null != loginAccountHttpData) {
-                            LogHelper.releaseLog(TAG + "login onNext! loginAccountHttpData:" + loginAccountHttpData.toString());
-                            mView.setLoginAccountHttpResult(loginAccountHttpData);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        LogHelper.errorLog(TAG + "login onError! msg:" + e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        LogHelper.releaseLog(TAG + "login onComplete!");
-                    }
-                });
+            @Override
+            public void onError(Throwable e) {
+                LogHelper.errorLog(TAG + "login onError! msg:" + e.getMessage());
+            }
+        }), mLoginRequestService, mobile, code);
     }
 }

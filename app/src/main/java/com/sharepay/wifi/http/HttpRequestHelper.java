@@ -6,6 +6,7 @@ import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
+import com.sharepay.wifi.model.http.LoginAccountHttpData;
 import com.sharepay.wifi.model.http.NetSpeedTestHttpData;
 import com.sharepay.wifi.model.http.TokenHttpData;
 import com.sharepay.wifi.util.CommonUtil;
@@ -115,6 +116,21 @@ public class HttpRequestHelper {
     public void requestVerificationCode(Observer<BaseHttpResult<BaseHttpData>> observer, LoginRequestService loginRequestService, String mobile) {
         if (null != observer && null != loginRequestService) {
             Observable observable = loginRequestService.requestVerificationCode(CommonUtil.getDeivceID(), mobile, CommonUtil.getToken());
+            toObservable(observable, observer);
+        }
+    }
+
+    /**
+     * 登陆
+     * 
+     * @param observer
+     * @param loginRequestService
+     * @param mobile
+     * @param code
+     */
+    public void login(Observer<BaseHttpResult<LoginAccountHttpData>> observer, LoginRequestService loginRequestService, String mobile, String code) {
+        if (null != observer && null != loginRequestService) {
+            Observable observable = loginRequestService.login(mobile, CommonUtil.getToken(), CommonUtil.getDeivceID(), code);
             toObservable(observable, observer);
         }
     }
