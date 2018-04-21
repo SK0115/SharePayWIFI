@@ -34,6 +34,6 @@ public interface LoginContract {
          * @param code
          *            验证码
          */
-        void login(String mobile, String code);
+        void requestUserlogin(String mobile, String code);
     }
 }

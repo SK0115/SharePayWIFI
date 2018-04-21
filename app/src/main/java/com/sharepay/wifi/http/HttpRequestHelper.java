@@ -128,9 +128,9 @@ public class HttpRequestHelper {
      * @param mobile
      * @param code
      */
-    public void login(Observer<BaseHttpResult<LoginAccountHttpData>> observer, LoginRequestService loginRequestService, String mobile, String code) {
+    public void requestUserlogin(Observer<BaseHttpResult<LoginAccountHttpData>> observer, LoginRequestService loginRequestService, String mobile, String code) {
         if (null != observer && null != loginRequestService) {
-            Observable observable = loginRequestService.login(mobile, CommonUtil.getToken(), CommonUtil.getDeivceID(), code);
+            Observable observable = loginRequestService.requestUserlogin(mobile, CommonUtil.getToken(), CommonUtil.getDeivceID(), code);
             toObservable(observable, observer);
         }
     }

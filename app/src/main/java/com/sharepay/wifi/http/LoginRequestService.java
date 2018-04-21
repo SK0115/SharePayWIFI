@@ -21,6 +21,6 @@ public interface LoginRequestService {
             @Query("token") String token);
 
     @GET("/wifi_api/user/login")
-    Observable<BaseHttpResult<LoginAccountHttpData>> login(@Query("mobile") String mobile, @Query("token") String token, @Query("userid") String userid,
-            @Query("code") String code);
+    Observable<BaseHttpResult<LoginAccountHttpData>> requestUserlogin(@Query("mobile") String mobile, @Query("token") String token,
+            @Query("userid") String userid, @Query("code") String code);
 }

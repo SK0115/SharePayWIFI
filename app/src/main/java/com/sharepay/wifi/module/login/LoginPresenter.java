@@ -47,8 +47,8 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
-    public void login(String mobile, String code) {
-        HttpRequestHelper.getInstance().login(new BaseHttpObserver<BaseHttpResult<LoginAccountHttpData>>(new HttpRequestCallBack() {
+    public void requestUserlogin(String mobile, String code) {
+        HttpRequestHelper.getInstance().requestUserlogin(new BaseHttpObserver<BaseHttpResult<LoginAccountHttpData>>(new HttpRequestCallBack() {
             @Override
             public void onNext(Object loginAccountHttpData) {
                 if (null != mView && loginAccountHttpData instanceof BaseHttpResult) {

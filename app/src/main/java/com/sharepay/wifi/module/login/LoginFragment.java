@@ -124,7 +124,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
             mLoadingLayout.setVisibility(View.VISIBLE);
             mLoadingProgressBar.setImageResource(R.drawable.ic_list_loading);
             mLoadingProgressBar.startRotateAnimation();
-            mPresenter.login(mobileNum, code);
+            mPresenter.requestUserlogin(mobileNum, code);
             break;
         case R.id.text_jumplogin_view:
             if (WIFIDefine.JUMP_ACTIVITY.PERSONAL_CENTER.equals(mActivityFormText)) {
