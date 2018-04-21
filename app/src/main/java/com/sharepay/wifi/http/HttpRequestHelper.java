@@ -2,8 +2,11 @@ package com.sharepay.wifi.http;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.sharepay.wifi.base.BaseHttpResultFunction;
+import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.LogHelper;
+import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.http.NetSpeedTestHttpData;
+import com.sharepay.wifi.model.http.TokenHttpData;
 import com.sharepay.wifi.util.CommonUtil;
 
 import java.io.IOException;
@@ -82,6 +85,19 @@ public class HttpRequestHelper {
     private <T> void toObservable(Observable<T> observable, Observer<T> observer) {
         observable.map(new BaseHttpResultFunction<T>()).subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
+    }
+
+    /**
+     * 请求token信息
+     * 
+     * @param observer
+     * @param loginRequestService
+     */
+    public void requestToken(Observer<BaseHttpResult<TokenHttpData>> observer, LoginRequestService loginRequestService) {
+        if (null != observer && null != loginRequestService) {
+            Observable observable = loginRequestService.requestToken(CommonUtil.getDeivceID(), WIFIDefine.APPID, WIFIDefine.APPSECRET);
+            toObservable(observable, observer);
+        }
     }
 
     /**

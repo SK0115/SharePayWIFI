@@ -18,7 +18,7 @@ public interface LoginRequestService {
     String DOMAIN_URL = DomainDefine.DOMAIN_URL;
 
     @GET("/wifi_api/auth")
-    Observable<BaseHttpResult<TokenHttpData>> getTokenResult(@Query("userid") String userid, @Query("appid") String appid, @Query("secret") String secret);
+    Observable<BaseHttpResult<TokenHttpData>> requestToken(@Query("userid") String userid, @Query("appid") String appid, @Query("secret") String secret);
 
     @GET("/wifi_api/user/sms")
     Observable<BaseHttpResult<BaseHttpData>> getVerificationCode(@Query("userid") String userid, @Query("mobile") String mobile, @Query("token") String token);

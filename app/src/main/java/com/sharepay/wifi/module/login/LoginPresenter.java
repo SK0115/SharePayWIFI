@@ -1,6 +1,7 @@
 package com.sharepay.wifi.module.login;
 
-import com.sharepay.wifi.define.WIFIDefine;
+import com.sharepay.wifi.base.BaseHttpObserver;
+import com.sharepay.wifi.define.WIFIDefine.HttpRequestCallBack;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.http.LoginRequestService;
 import com.sharepay.wifi.http.HttpRequestHelper;
@@ -37,40 +38,28 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
-    public void getTokenResult() {
+    public void requestToken() {
         if (!CommonUtil.tokenIsExpired()) {
             // token未过期
             return;
         }
-        mLoginRequestService.getTokenResult(CommonUtil.getDeivceID(), WIFIDefine.APPID, WIFIDefine.APPSECRET).subscribeOn(Schedulers.io()) // 在IO线程进行网络请求
-                .observeOn(AndroidSchedulers.mainThread()) // 回到主线程去处理请求结果
-                .subscribe(new Observer<BaseHttpResult<TokenHttpData>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        LogHelper.releaseLog(TAG + "getTokenResult onSubscribe! Disposable:" + d.isDisposed());
+        HttpRequestHelper.getInstance().requestToken(new BaseHttpObserver<BaseHttpResult<TokenHttpData>>(new HttpRequestCallBack() {
+            @Override
+            public void onNext(Object tokenHttpData) {
+                if (null != mView && tokenHttpData instanceof BaseHttpResult) {
+                    LogHelper.releaseLog(TAG + "requestToken onNext! tokenData:" + tokenHttpData.toString());
+                    TokenHttpData tokenData = ((BaseHttpResult<TokenHttpData>) tokenHttpData).getHttpData();
+                    if (null != tokenData) {
+                        CommonUtil.saveToken(tokenData);
                     }
+                }
+            }
 
-                    @Override
-                    public void onNext(BaseHttpResult<TokenHttpData> tokenHttpData) {
-                        if (null != mView && null != tokenHttpData) {
-                            LogHelper.releaseLog(TAG + "getTokenResult onNext! tokenData:" + tokenHttpData.toString());
-                            TokenHttpData tokenData = tokenHttpData.getHttpData();
-                            if (null != tokenData) {
-                                CommonUtil.saveToken(tokenData);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        LogHelper.errorLog(TAG + "getTokenResult onError! msg:" + e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        LogHelper.releaseLog(TAG + "getTokenResult onComplete!");
-                    }
-                });
+            @Override
+            public void onError(Throwable e) {
+                LogHelper.errorLog(TAG + "requestToken onError! msg:" + e.getMessage());
+            }
+        }), mLoginRequestService);
     }
 
     @Override

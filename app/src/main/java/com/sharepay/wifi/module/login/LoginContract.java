@@ -21,7 +21,7 @@ public interface LoginContract {
         /**
          * 获取token信息
          */
-        void getTokenResult();
+        void requestToken();
 
         /**
          * 获取手机验证码
