@@ -158,7 +158,6 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
     protected void initView() {
         Intent intent = mActivity.getIntent();
         mActivityFormText = intent.getStringExtra(WIFIDefine.ACTIVITY_JUMP_FROM);
-        mPresenter.requestToken();
         setHintTextSize(mNumEditText, getResources().getString(R.string.mobile_num), 17);
         setHintTextSize(mVerifCodeEditText, getResources().getString(R.string.verification_code), 17);
     }

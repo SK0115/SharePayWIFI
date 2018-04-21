@@ -19,11 +19,6 @@ public interface LoginContract {
     interface Presenter extends BasePresenter {
 
         /**
-         * 获取token信息
-         */
-        void requestToken();
-
-        /**
          * 获取手机验证码
          * 
          * @param mobile

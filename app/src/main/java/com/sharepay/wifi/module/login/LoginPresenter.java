@@ -1,14 +1,11 @@
 package com.sharepay.wifi.module.login;
 
-import com.sharepay.wifi.base.BaseHttpObserver;
-import com.sharepay.wifi.define.WIFIDefine.HttpRequestCallBack;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.http.LoginRequestService;
 import com.sharepay.wifi.http.HttpRequestHelper;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.http.LoginAccountHttpData;
-import com.sharepay.wifi.model.http.TokenHttpData;
 import com.sharepay.wifi.util.CommonUtil;
 
 import io.reactivex.Observer;
@@ -30,36 +27,10 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void start() {
-
     }
 
     @Override
     public void onDetach() {
-    }
-
-    @Override
-    public void requestToken() {
-        if (!CommonUtil.tokenIsExpired()) {
-            // token未过期
-            return;
-        }
-        HttpRequestHelper.getInstance().requestToken(new BaseHttpObserver<BaseHttpResult<TokenHttpData>>(new HttpRequestCallBack() {
-            @Override
-            public void onNext(Object tokenHttpData) {
-                if (null != mView && tokenHttpData instanceof BaseHttpResult) {
-                    LogHelper.releaseLog(TAG + "requestToken onNext! tokenData:" + tokenHttpData.toString());
-                    TokenHttpData tokenData = ((BaseHttpResult<TokenHttpData>) tokenHttpData).getHttpData();
-                    if (null != tokenData) {
-                        CommonUtil.saveToken(tokenData);
-                    }
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                LogHelper.errorLog(TAG + "requestToken onError! msg:" + e.getMessage());
-            }
-        }), mLoginRequestService);
     }
 
     @Override

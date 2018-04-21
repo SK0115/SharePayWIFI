@@ -91,11 +91,15 @@ public class HttpRequestHelper {
      * 请求token信息
      * 
      * @param observer
-     * @param loginRequestService
+     * @param startRequestService
      */
-    public void requestToken(Observer<BaseHttpResult<TokenHttpData>> observer, LoginRequestService loginRequestService) {
-        if (null != observer && null != loginRequestService) {
-            Observable observable = loginRequestService.requestToken(CommonUtil.getDeivceID(), WIFIDefine.APPID, WIFIDefine.APPSECRET);
+    public void requestToken(Observer<BaseHttpResult<TokenHttpData>> observer, StartRequestService startRequestService) {
+        if (!CommonUtil.tokenIsExpired()) {
+            // token未过期
+            return;
+        }
+        if (null != observer && null != startRequestService) {
+            Observable observable = startRequestService.requestToken(CommonUtil.getDeivceID(), WIFIDefine.APPID, WIFIDefine.APPSECRET);
             toObservable(observable, observer);
         }
     }
