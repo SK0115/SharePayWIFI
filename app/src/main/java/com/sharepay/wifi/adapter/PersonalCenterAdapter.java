@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 import com.sharepay.wifi.base.BaseAdapter;
 import com.sharepay.wifi.base.BaseHolder;
-import com.sharepay.wifi.model.PersonalCenterData;
+import com.sharepay.wifi.model.info.PersonalCenterInfo;
 import com.sharepay.wifi.viewModule.personalCenter.PersonalCenterAccountItemView;
 import com.sharepay.wifi.viewModule.personalCenter.PersonalCenterExitItemView;
 import com.sharepay.wifi.viewModule.personalCenter.PersonalCenterImgItemView;
@@ -14,18 +14,18 @@ import com.sharepay.wifi.viewModule.personalCenter.PersonalCenterTextItemView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersonalCenterAdapter extends BaseAdapter<PersonalCenterData> {
+public class PersonalCenterAdapter extends BaseAdapter<PersonalCenterInfo> {
 
     private int mPosition = 0;
 
     private PersonalCenterItemClickListener mClickListener;
 
-    public PersonalCenterAdapter(Context context, List<PersonalCenterData> datas, boolean isOpenLoadMore) {
+    public PersonalCenterAdapter(Context context, List<PersonalCenterInfo> datas, boolean isOpenLoadMore) {
         super(context, datas, isOpenLoadMore);
     }
 
-    public void setDatas(List<PersonalCenterData> datas) {
-        mDatas = datas == null ? new ArrayList<PersonalCenterData>() : datas;
+    public void setDatas(List<PersonalCenterInfo> datas) {
+        mDatas = datas == null ? new ArrayList<PersonalCenterInfo>() : datas;
     }
 
     public void setClickListener(PersonalCenterItemClickListener clickListener) {
@@ -42,14 +42,14 @@ public class PersonalCenterAdapter extends BaseAdapter<PersonalCenterData> {
         BaseHolder baseHolder = null;
         switch (viewType) {
         case TYPE_COMMON_VIEW:
-            PersonalCenterData data = mDatas.get(mPosition);
-            if (PersonalCenterData.PERSONAL_CENTER_TEXT.equals(data.getType())) {
+            PersonalCenterInfo data = mDatas.get(mPosition);
+            if (PersonalCenterInfo.PERSONAL_CENTER_TEXT.equals(data.getType())) {
                 baseHolder = BaseHolder.create(new PersonalCenterTextItemView(mContext));
-            } else if (PersonalCenterData.PERSONAL_CENTER_IMG.equals(data.getType())) {
+            } else if (PersonalCenterInfo.PERSONAL_CENTER_IMG.equals(data.getType())) {
                 baseHolder = BaseHolder.create(new PersonalCenterImgItemView(mContext));
-            } else if (PersonalCenterData.PERSONAL_CENTER_ACCOUNT.equals(data.getType())) {
+            } else if (PersonalCenterInfo.PERSONAL_CENTER_ACCOUNT.equals(data.getType())) {
                 baseHolder = BaseHolder.create(new PersonalCenterAccountItemView(mContext));
-            } else if (PersonalCenterData.PERSONAL_CENTER_EXIT.equals(data.getType())) {
+            } else if (PersonalCenterInfo.PERSONAL_CENTER_EXIT.equals(data.getType())) {
                 baseHolder = BaseHolder.create(new PersonalCenterExitItemView(mContext));
             }
             break;
@@ -64,15 +64,15 @@ public class PersonalCenterAdapter extends BaseAdapter<PersonalCenterData> {
     }
 
     @Override
-    protected void convert(BaseHolder holder, PersonalCenterData data) {
-        if (PersonalCenterData.PERSONAL_CENTER_TEXT.equals(data.getType())) {
+    protected void convert(BaseHolder holder, PersonalCenterInfo data) {
+        if (PersonalCenterInfo.PERSONAL_CENTER_TEXT.equals(data.getType())) {
             ((PersonalCenterTextItemView) holder.getConvertView()).setData(data);
-        } else if (PersonalCenterData.PERSONAL_CENTER_IMG.equals(data.getType())) {
+        } else if (PersonalCenterInfo.PERSONAL_CENTER_IMG.equals(data.getType())) {
             ((PersonalCenterImgItemView) holder.getConvertView()).setData(data);
-        } else if (PersonalCenterData.PERSONAL_CENTER_ACCOUNT.equals(data.getType())) {
+        } else if (PersonalCenterInfo.PERSONAL_CENTER_ACCOUNT.equals(data.getType())) {
             ((PersonalCenterAccountItemView) holder.getConvertView()).setClickListener(mClickListener);
             ((PersonalCenterAccountItemView) holder.getConvertView()).setData(data);
-        } else if (PersonalCenterData.PERSONAL_CENTER_EXIT.equals(data.getType())) {
+        } else if (PersonalCenterInfo.PERSONAL_CENTER_EXIT.equals(data.getType())) {
             ((PersonalCenterExitItemView) holder.getConvertView()).setClickListener(mClickListener);
             ((PersonalCenterExitItemView) holder.getConvertView()).setData(data);
         }

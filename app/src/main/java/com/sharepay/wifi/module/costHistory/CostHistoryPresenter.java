@@ -3,8 +3,8 @@ package com.sharepay.wifi.module.costHistory;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.http.CostHistoryRequestService;
 import com.sharepay.wifi.http.NetManager;
-import com.sharepay.wifi.model.BaseHttpData;
-import com.sharepay.wifi.model.BaseHttpResult;
+import com.sharepay.wifi.model.http.BaseHttpData;
+import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.util.CommonUtil;
 
 import io.reactivex.Observer;
@@ -39,7 +39,7 @@ public class CostHistoryPresenter implements CostHistoryContract.Presenter {
                 .subscribe(new Observer<BaseHttpResult<BaseHttpData>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        LogHelper.releaseLog(TAG + "getUsrIntegralHistory onSubscribe!");
+                        LogHelper.releaseLog(TAG + "getUsrIntegralHistory onSubscribe! Disposable:" + d.isDisposed());
                     }
 
                     @Override
@@ -51,7 +51,7 @@ public class CostHistoryPresenter implements CostHistoryContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        LogHelper.errorLog(TAG + "getUsrIntegralHistory onError! error:" + e.getMessage());
+                        LogHelper.errorLog(TAG + "getUsrIntegralHistory onError! msg:" + e.getMessage());
                     }
 
                     @Override

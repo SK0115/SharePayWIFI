@@ -9,7 +9,7 @@ import com.sharepay.wifi.activity.costHistory.CostHistoryActivity;
 import com.sharepay.wifi.adapter.CostHistoryListAdapter;
 import com.sharepay.wifi.base.BaseFragment;
 import com.sharepay.wifi.baseCtrl.FullyLinearLayoutManager;
-import com.sharepay.wifi.model.CostHistoryInfo;
+import com.sharepay.wifi.model.info.CostHistoryInfo;
 
 import java.util.ArrayList;
 import java.util.List;

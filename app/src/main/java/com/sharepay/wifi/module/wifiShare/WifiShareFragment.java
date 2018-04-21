@@ -14,7 +14,7 @@ import com.sharepay.wifi.activity.wifiShare.WifiShareActivity;
 import com.sharepay.wifi.base.BaseFragment;
 import com.sharepay.wifi.helper.LocationHelper;
 import com.sharepay.wifi.helper.LogHelper;
-import com.sharepay.wifi.model.IncomeInfo;
+import com.sharepay.wifi.model.info.IncomeInfo;
 import com.sharepay.wifi.util.ToastUtils;
 
 import java.util.ArrayList;

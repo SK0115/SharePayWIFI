@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.adapter.PersonalCenterAdapter.PersonalCenterItemClickListener;
-import com.sharepay.wifi.model.PersonalCenterData;
+import com.sharepay.wifi.model.info.PersonalCenterInfo;
 
 public class PersonalCenterAccountItemView extends RelativeLayout {
 
@@ -45,7 +45,7 @@ public class PersonalCenterAccountItemView extends RelativeLayout {
             @Override
             public void onClick(View view) {
                 if (null != mClickListener) {
-                    mClickListener.click(PersonalCenterData.PERSONAL_CENTER_ACCOUNT);
+                    mClickListener.click(PersonalCenterInfo.PERSONAL_CENTER_ACCOUNT);
                 }
             }
         });
@@ -55,7 +55,7 @@ public class PersonalCenterAccountItemView extends RelativeLayout {
         mClickListener = clickListener;
     }
 
-    public void setData(PersonalCenterData data) {
+    public void setData(PersonalCenterInfo data) {
         if (null != data) {
             mPhotoView.setBackgroundResource(data.getImg());
             mNumView.setText(data.getTitle());

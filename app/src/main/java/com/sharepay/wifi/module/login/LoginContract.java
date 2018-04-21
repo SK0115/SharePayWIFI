@@ -2,8 +2,8 @@ package com.sharepay.wifi.module.login;
 
 import com.sharepay.wifi.base.BasePresenter;
 import com.sharepay.wifi.base.BaseView;
-import com.sharepay.wifi.model.LoginAccountHttpData;
-import com.sharepay.wifi.model.BaseHttpResult;
+import com.sharepay.wifi.model.http.BaseHttpResult;
+import com.sharepay.wifi.model.http.LoginAccountHttpData;
 
 public interface LoginContract {
 

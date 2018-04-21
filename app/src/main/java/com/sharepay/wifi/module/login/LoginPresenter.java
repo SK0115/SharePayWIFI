@@ -4,10 +4,10 @@ import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.http.LoginRequestService;
 import com.sharepay.wifi.http.NetManager;
-import com.sharepay.wifi.model.BaseHttpData;
-import com.sharepay.wifi.model.LoginAccountHttpData;
-import com.sharepay.wifi.model.BaseHttpResult;
-import com.sharepay.wifi.model.TokenHttpData;
+import com.sharepay.wifi.model.http.BaseHttpData;
+import com.sharepay.wifi.model.http.BaseHttpResult;
+import com.sharepay.wifi.model.http.LoginAccountHttpData;
+import com.sharepay.wifi.model.http.TokenHttpData;
 import com.sharepay.wifi.util.CommonUtil;
 
 import io.reactivex.Observer;
@@ -47,7 +47,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                 .subscribe(new Observer<BaseHttpResult<TokenHttpData>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        LogHelper.releaseLog(TAG + "getTokenResult onSubscribe!");
+                        LogHelper.releaseLog(TAG + "getTokenResult onSubscribe! Disposable:" + d.isDisposed());
                     }
 
                     @Override
@@ -63,7 +63,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        LogHelper.errorLog(TAG + "getTokenResult onError! error:" + e.getMessage());
+                        LogHelper.errorLog(TAG + "getTokenResult onError! msg:" + e.getMessage());
                     }
 
                     @Override
@@ -80,7 +80,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                 .subscribe(new Observer<BaseHttpResult<BaseHttpData>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        LogHelper.releaseLog(TAG + "getVerificationCode onSubscribe!");
+                        LogHelper.releaseLog(TAG + "getVerificationCode onSubscribe! Disposable:" + d.isDisposed());
                     }
 
                     @Override
@@ -92,7 +92,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        LogHelper.errorLog(TAG + "getVerificationCode onError! error:" + e.getMessage());
+                        LogHelper.errorLog(TAG + "getVerificationCode onError! msg:" + e.getMessage());
                     }
 
                     @Override
@@ -109,7 +109,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                 .subscribe(new Observer<BaseHttpResult<LoginAccountHttpData>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        LogHelper.releaseLog(TAG + "login onSubscribe!");
+                        LogHelper.releaseLog(TAG + "login onSubscribe! Disposable:" + d.isDisposed());
                     }
 
                     @Override
@@ -122,7 +122,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        LogHelper.errorLog(TAG + "login onError! error:" + e.getMessage());
+                        LogHelper.errorLog(TAG + "login onError! msg:" + e.getMessage());
                     }
 
                     @Override

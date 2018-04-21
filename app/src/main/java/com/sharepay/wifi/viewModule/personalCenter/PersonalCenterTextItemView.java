@@ -8,7 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sharepay.wifi.R;
-import com.sharepay.wifi.model.PersonalCenterData;
+import com.sharepay.wifi.model.info.PersonalCenterInfo;
 
 public class PersonalCenterTextItemView extends RelativeLayout {
 
@@ -36,7 +36,7 @@ public class PersonalCenterTextItemView extends RelativeLayout {
         mContentView = view.findViewById(R.id.tv_personal_textitem_content);
     }
 
-    public void setData(PersonalCenterData data) {
+    public void setData(PersonalCenterInfo data) {
         if (null != data) {
             mTitleView.setText(data.getTitle());
             mContentView.setText(data.getMessage());

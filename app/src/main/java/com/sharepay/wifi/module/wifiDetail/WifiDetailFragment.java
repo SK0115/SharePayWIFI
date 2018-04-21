@@ -112,7 +112,7 @@ public class WifiDetailFragment extends BaseFragment implements WifiDetailContra
     }
 
     @Override
-    public void setNetSpeedUrl(String speedUrl) {
+    public void setNetSpeedTestUrl(String speedUrl) {
         LogHelper.releaseLog(TAG + "setNetSpeedUrl speedUrl:" + speedUrl);
         if (!TextUtils.isEmpty(speedUrl)) {
             PreferenceUtil.getInstance().saveStringValue(WIFIDefine.KEY_PREFERENCE_SPEEDDETECTIONURL, speedUrl);
@@ -164,7 +164,7 @@ public class WifiDetailFragment extends BaseFragment implements WifiDetailContra
         String downUrl = PreferenceUtil.getInstance().getStringValue(WIFIDefine.KEY_PREFERENCE_SPEEDDETECTIONURL, "");
         LogHelper.releaseLog(TAG + "downUrl = " + downUrl);
         if (TextUtils.isEmpty(downUrl)) {
-            mPresenter.getNetResult();
+            mPresenter.getNetSpeedTestResult();
         } else {
             download.startSpeed(downUrl);
         }

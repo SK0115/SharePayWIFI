@@ -1,4 +1,4 @@
-package com.sharepay.wifi.model;
+package com.sharepay.wifi.model.http;
 
 import android.os.Parcel;
 import android.os.Parcelable;

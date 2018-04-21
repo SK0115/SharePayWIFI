@@ -5,10 +5,10 @@ import com.sharepay.wifi.base.BaseView;
 
 public interface WifiDetailContract {
     interface View extends BaseView<Presenter> {
-        void setNetSpeedUrl(String speedUrl);
+        void setNetSpeedTestUrl(String speedUrl);
     }
 
     interface Presenter extends BasePresenter {
-        void getNetResult();
+        void getNetSpeedTestResult();
     }
 }

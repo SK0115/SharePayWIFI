@@ -2,10 +2,10 @@ package com.sharepay.wifi.helper;
 
 import android.text.TextUtils;
 
-import com.sharepay.wifi.model.AccountInfoRealm;
-import com.sharepay.wifi.model.BaseHttpResult;
-import com.sharepay.wifi.model.LoginAccountHttpData;
-import com.sharepay.wifi.model.SignInfoRealm;
+import com.sharepay.wifi.model.http.BaseHttpResult;
+import com.sharepay.wifi.model.http.LoginAccountHttpData;
+import com.sharepay.wifi.model.realm.AccountInfoRealm;
+import com.sharepay.wifi.model.realm.SignInfoRealm;
 import com.sharepay.wifi.util.CommonUtil;
 
 import io.realm.RealmObject;

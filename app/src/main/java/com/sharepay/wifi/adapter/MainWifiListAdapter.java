@@ -9,7 +9,7 @@ import com.sharepay.wifi.R;
 import com.sharepay.wifi.base.BaseAdapter;
 import com.sharepay.wifi.base.BaseHolder;
 import com.sharepay.wifi.helper.WIFIHelper;
-import com.sharepay.wifi.model.WIFIInfo;
+import com.sharepay.wifi.model.info.WIFIInfo;
 
 import java.util.ArrayList;
 import java.util.List;

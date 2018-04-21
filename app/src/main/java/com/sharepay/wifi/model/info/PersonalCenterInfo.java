@@ -1,4 +1,4 @@
-package com.sharepay.wifi.model;
+package com.sharepay.wifi.model.info;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * 个人中心数据
  */
-public class PersonalCenterData implements Parcelable {
+public class PersonalCenterInfo implements Parcelable {
 
     public static final String PERSONAL_CENTER_TEXT = "personalCenterText";
     public static final String PERSONAL_CENTER_IMG = "personalCenterImg";
@@ -19,7 +19,7 @@ public class PersonalCenterData implements Parcelable {
     private String type;
     private boolean isLogin;
 
-    public PersonalCenterData() {
+    public PersonalCenterInfo() {
     }
 
     public String getTitle() {
@@ -64,11 +64,11 @@ public class PersonalCenterData implements Parcelable {
 
     @Override
     public String toString() {
-        return "PersonalCenterData={" + "title='" + getTitle() + '\'' + ", img='" + getImg() + '\'' + ", message='" + getMessage() + '\'' + ", type='"
+        return "PersonalCenterInfo={" + "title='" + getTitle() + '\'' + ", img='" + getImg() + '\'' + ", message='" + getMessage() + '\'' + ", type='"
                 + getType() + '\'' + ", isLogin='" + isLogin() + '\'' + '}';
     }
 
-    private PersonalCenterData(Parcel in) {
+    private PersonalCenterInfo(Parcel in) {
         title = in.readString();
         img = in.readInt();
         message = in.readString();
@@ -90,15 +90,15 @@ public class PersonalCenterData implements Parcelable {
         return 0;
     }
 
-    public static final Creator<PersonalCenterData> CREATOR = new Creator<PersonalCenterData>() {
+    public static final Creator<PersonalCenterInfo> CREATOR = new Creator<PersonalCenterInfo>() {
         @Override
-        public PersonalCenterData createFromParcel(Parcel in) {
-            return new PersonalCenterData(in);
+        public PersonalCenterInfo createFromParcel(Parcel in) {
+            return new PersonalCenterInfo(in);
         }
 
         @Override
-        public PersonalCenterData[] newArray(int size) {
-            return new PersonalCenterData[size];
+        public PersonalCenterInfo[] newArray(int size) {
+            return new PersonalCenterInfo[size];
         }
     };
 }

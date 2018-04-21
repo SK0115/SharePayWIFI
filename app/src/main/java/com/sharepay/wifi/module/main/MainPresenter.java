@@ -7,8 +7,8 @@ import com.sharepay.wifi.R;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.http.MainRequestService;
 import com.sharepay.wifi.http.NetManager;
-import com.sharepay.wifi.model.BaseHttpData;
-import com.sharepay.wifi.model.BaseHttpResult;
+import com.sharepay.wifi.model.http.BaseHttpData;
+import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.util.CommonUtil;
 
 import io.reactivex.Observer;
@@ -45,7 +45,7 @@ public class MainPresenter implements MainContract.Presenter {
                 .subscribe(new Observer<BaseHttpResult<BaseHttpData>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        LogHelper.releaseLog(TAG + "userSign onSubscribe!");
+                        LogHelper.releaseLog(TAG + "userSign onSubscribe! Disposable:" + d.isDisposed());
                     }
 
                     @Override
@@ -58,7 +58,7 @@ public class MainPresenter implements MainContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        LogHelper.errorLog(TAG + "userSign onError! error:" + e.getMessage());
+                        LogHelper.errorLog(TAG + "userSign onError! msg:" + e.getMessage());
                         Toast.makeText(mContext, mContext.getString(R.string.sign_fail), Toast.LENGTH_SHORT).show();
                     }
 

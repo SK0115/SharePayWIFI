@@ -1,4 +1,4 @@
-package com.sharepay.wifi.model;
+package com.sharepay.wifi.model.http;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * 测速请求数据
  */
-public class SpeedDownloadInfo implements Parcelable {
+public class NetSpeedTestHttpData implements Parcelable {
 
     private String speedTestUrl;
 
@@ -23,10 +23,10 @@ public class SpeedDownloadInfo implements Parcelable {
 
     @Override
     public String toString() {
-        return "SpeedDownloadInfo={" + "speedTestUrl='" + getSpeedTestUrl() + '\'' + '}';
+        return "NetSpeedTestHttpData={" + "speedTestUrl='" + getSpeedTestUrl() + '\'' + '}';
     }
 
-    private SpeedDownloadInfo(Parcel in) {
+    private NetSpeedTestHttpData(Parcel in) {
         speedTestUrl = in.readString();
     }
 
@@ -40,15 +40,15 @@ public class SpeedDownloadInfo implements Parcelable {
         return 0;
     }
 
-    public static final Creator<SpeedDownloadInfo> CREATOR = new Creator<SpeedDownloadInfo>() {
+    public static final Creator<NetSpeedTestHttpData> CREATOR = new Creator<NetSpeedTestHttpData>() {
         @Override
-        public SpeedDownloadInfo createFromParcel(Parcel in) {
-            return new SpeedDownloadInfo(in);
+        public NetSpeedTestHttpData createFromParcel(Parcel in) {
+            return new NetSpeedTestHttpData(in);
         }
 
         @Override
-        public SpeedDownloadInfo[] newArray(int size) {
-            return new SpeedDownloadInfo[size];
+        public NetSpeedTestHttpData[] newArray(int size) {
+            return new NetSpeedTestHttpData[size];
         }
     };
 }

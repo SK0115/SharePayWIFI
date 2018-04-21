@@ -23,8 +23,8 @@ import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.AccountHelper;
 import com.sharepay.wifi.helper.BaseTimer;
 import com.sharepay.wifi.helper.LogHelper;
-import com.sharepay.wifi.model.LoginAccountHttpData;
-import com.sharepay.wifi.model.BaseHttpResult;
+import com.sharepay.wifi.model.http.BaseHttpResult;
+import com.sharepay.wifi.model.http.LoginAccountHttpData;
 
 import butterknife.BindView;
 import butterknife.OnClick;

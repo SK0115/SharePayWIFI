@@ -6,7 +6,7 @@ import android.widget.TextView;
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.base.BaseAdapter;
 import com.sharepay.wifi.base.BaseHolder;
-import com.sharepay.wifi.model.CostHistoryInfo;
+import com.sharepay.wifi.model.info.CostHistoryInfo;
 
 import java.util.List;
 

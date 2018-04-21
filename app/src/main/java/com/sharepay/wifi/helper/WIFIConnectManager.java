@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
-import com.sharepay.wifi.model.WIFIInfo;
+import com.sharepay.wifi.model.info.WIFIInfo;
 
 import java.util.List;
 

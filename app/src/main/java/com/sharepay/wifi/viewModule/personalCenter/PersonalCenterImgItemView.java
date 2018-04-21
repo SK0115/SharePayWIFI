@@ -9,7 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sharepay.wifi.R;
-import com.sharepay.wifi.model.PersonalCenterData;
+import com.sharepay.wifi.model.info.PersonalCenterInfo;
 
 public class PersonalCenterImgItemView extends RelativeLayout {
 
@@ -37,7 +37,7 @@ public class PersonalCenterImgItemView extends RelativeLayout {
         mImgView = view.findViewById(R.id.iv_personal_item_img);
     }
 
-    public void setData(PersonalCenterData data) {
+    public void setData(PersonalCenterInfo data) {
         if (null != data) {
             mTitleView.setText(data.getTitle());
             mImgView.setBackgroundResource(data.getImg());

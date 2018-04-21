@@ -18,8 +18,8 @@ import com.sharepay.wifi.base.OnBaseItemClickListener;
 import com.sharepay.wifi.baseCtrl.FullyLinearLayoutManager;
 import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.AccountHelper;
-import com.sharepay.wifi.model.AccountInfoRealm;
-import com.sharepay.wifi.model.PersonalCenterData;
+import com.sharepay.wifi.model.info.PersonalCenterInfo;
+import com.sharepay.wifi.model.realm.AccountInfoRealm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
 
     private PersonalCenterContract.Presenter mPresenter;
     private PersonalCenterAdapter mAdapter;
-    private List<PersonalCenterData> mPersonalCenterDataList;
+    private List<PersonalCenterInfo> mPersonalCenterDataList;
     private boolean mIsLogin = false;
 
     @OnClick({ R.id.iv_personal_center_back })
@@ -99,9 +99,9 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
         if (null == mAdapter) {
             mAdapter = new PersonalCenterAdapter(mActivity, mPersonalCenterDataList, false);
             mAdapter.setClickListener(mClickListener);
-            mAdapter.setOnItemClickListener(new OnBaseItemClickListener<PersonalCenterData>() {
+            mAdapter.setOnItemClickListener(new OnBaseItemClickListener<PersonalCenterInfo>() {
                 @Override
-                public void onItemClick(BaseHolder viewHolder, PersonalCenterData data, int position) {
+                public void onItemClick(BaseHolder viewHolder, PersonalCenterInfo data, int position) {
                     if (getString(R.string.cost_history).equals(data.getTitle())) {
                         if (mIsLogin) {
                             startActivity(new Intent(mActivity, CostHistoryActivity.class));
@@ -123,7 +123,7 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
     private PersonalCenterAdapter.PersonalCenterItemClickListener mClickListener = new PersonalCenterAdapter.PersonalCenterItemClickListener() {
         @Override
         public void click(String type) {
-            if (PersonalCenterData.PERSONAL_CENTER_ACCOUNT.equals(type)) {
+            if (PersonalCenterInfo.PERSONAL_CENTER_ACCOUNT.equals(type)) {
                 if (!mIsLogin) {
                     Intent intent = new Intent(mActivity, LoginActivity.class);
                     Bundle bundle = new Bundle();
@@ -131,7 +131,7 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
                     intent.putExtras(bundle);
                     startActivityForResult(intent, WIFIDefine.JUMP_PAGE_REQUESTCODE.JUMP_PAGE_REQUESTCODE);
                 }
-            } else if (PersonalCenterData.PERSONAL_CENTER_EXIT.equals(type)) {
+            } else if (PersonalCenterInfo.PERSONAL_CENTER_EXIT.equals(type)) {
                 mIsLogin = false;
                 AccountHelper.getInstance().logout();
                 doLoginResult();
@@ -141,50 +141,50 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
 
     private void resetPersonalCenterDataList(AccountInfoRealm accountInfoRealm) {
         if (null == mPersonalCenterDataList) {
-            mPersonalCenterDataList = new ArrayList<PersonalCenterData>();
+            mPersonalCenterDataList = new ArrayList<PersonalCenterInfo>();
         }
         mPersonalCenterDataList.clear();
-        PersonalCenterData personalCenterData = new PersonalCenterData();
+        PersonalCenterInfo personalCenterData = new PersonalCenterInfo();
         if (mIsLogin && null != accountInfoRealm) {
             personalCenterData.setTitle(accountInfoRealm.getMobile());
             personalCenterData.setMessage(accountInfoRealm.getIntegral() + "");
-            personalCenterData.setType(PersonalCenterData.PERSONAL_CENTER_ACCOUNT);
+            personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_ACCOUNT);
             mPersonalCenterDataList.add(personalCenterData);
         } else {
             personalCenterData.setImg(R.drawable.ic_account_img);
             personalCenterData.setMessage("0");
             personalCenterData.setTitle(getString(R.string.please_login));
-            personalCenterData.setType(PersonalCenterData.PERSONAL_CENTER_ACCOUNT);
+            personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_ACCOUNT);
             mPersonalCenterDataList.add(personalCenterData);
         }
 
-        personalCenterData = new PersonalCenterData();
+        personalCenterData = new PersonalCenterInfo();
         personalCenterData.setTitle(getString(R.string.cost_history));
         personalCenterData.setImg(R.drawable.ic_list_next);
-        personalCenterData.setType(PersonalCenterData.PERSONAL_CENTER_IMG);
+        personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_IMG);
         mPersonalCenterDataList.add(personalCenterData);
 
-        personalCenterData = new PersonalCenterData();
+        personalCenterData = new PersonalCenterInfo();
         personalCenterData.setTitle(getString(R.string.contact_us));
         personalCenterData.setImg(R.drawable.ic_list_next);
-        personalCenterData.setType(PersonalCenterData.PERSONAL_CENTER_IMG);
+        personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_IMG);
         mPersonalCenterDataList.add(personalCenterData);
 
-        personalCenterData = new PersonalCenterData();
+        personalCenterData = new PersonalCenterInfo();
         personalCenterData.setTitle(getString(R.string.user_agreement));
         personalCenterData.setImg(R.drawable.ic_list_next);
-        personalCenterData.setType(PersonalCenterData.PERSONAL_CENTER_IMG);
+        personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_IMG);
         mPersonalCenterDataList.add(personalCenterData);
 
-        personalCenterData = new PersonalCenterData();
+        personalCenterData = new PersonalCenterInfo();
         personalCenterData.setTitle(getString(R.string.version_info));
         personalCenterData.setImg(0);
         personalCenterData.setMessage(getString(R.string.click_update));
-        personalCenterData.setType(PersonalCenterData.PERSONAL_CENTER_TEXT);
+        personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_TEXT);
         mPersonalCenterDataList.add(personalCenterData);
 
-        personalCenterData = new PersonalCenterData();
-        personalCenterData.setType(PersonalCenterData.PERSONAL_CENTER_EXIT);
+        personalCenterData = new PersonalCenterInfo();
+        personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_EXIT);
         personalCenterData.setIsLogin(mIsLogin);
         mPersonalCenterDataList.add(personalCenterData);
     }

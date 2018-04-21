@@ -2,8 +2,8 @@ package com.sharepay.wifi.module.main;
 
 import com.sharepay.wifi.base.BasePresenter;
 import com.sharepay.wifi.base.BaseView;
-import com.sharepay.wifi.model.BaseHttpData;
-import com.sharepay.wifi.model.BaseHttpResult;
+import com.sharepay.wifi.model.http.BaseHttpData;
+import com.sharepay.wifi.model.http.BaseHttpResult;
 
 public interface MainContract {
     interface View extends BaseView<Presenter> {

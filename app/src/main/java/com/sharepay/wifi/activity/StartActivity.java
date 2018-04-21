@@ -12,7 +12,7 @@ import com.sharepay.wifi.activity.main.MainActivity;
 import com.sharepay.wifi.base.BaseActivity;
 import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.RealmHelper;
-import com.sharepay.wifi.model.AccountInfoRealm;
+import com.sharepay.wifi.model.realm.AccountInfoRealm;
 import com.sharepay.wifi.util.CommonUtil;
 import com.sharepay.wifi.util.PreferenceUtil;
 

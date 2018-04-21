@@ -12,10 +12,10 @@ import com.sharepay.wifi.SPApplication;
 import com.sharepay.wifi.helper.AccountHelper;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.helper.RealmHelper;
-import com.sharepay.wifi.model.DeviceInfoRealm;
-import com.sharepay.wifi.model.SignInfoRealm;
-import com.sharepay.wifi.model.TokenHttpData;
-import com.sharepay.wifi.model.TokenInfoRealm;
+import com.sharepay.wifi.model.http.TokenHttpData;
+import com.sharepay.wifi.model.realm.DeviceInfoRealm;
+import com.sharepay.wifi.model.realm.SignInfoRealm;
+import com.sharepay.wifi.model.realm.TokenInfoRealm;
 
 import java.security.MessageDigest;
 import java.text.DecimalFormat;

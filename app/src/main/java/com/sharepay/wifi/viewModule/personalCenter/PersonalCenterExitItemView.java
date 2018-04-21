@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.adapter.PersonalCenterAdapter.PersonalCenterItemClickListener;
-import com.sharepay.wifi.model.PersonalCenterData;
+import com.sharepay.wifi.model.info.PersonalCenterInfo;
 
 public class PersonalCenterExitItemView extends RelativeLayout {
 
@@ -38,7 +38,7 @@ public class PersonalCenterExitItemView extends RelativeLayout {
             @Override
             public void onClick(View view) {
                 if (null != mClickListener) {
-                    mClickListener.click(PersonalCenterData.PERSONAL_CENTER_EXIT);
+                    mClickListener.click(PersonalCenterInfo.PERSONAL_CENTER_EXIT);
                 }
             }
         });
@@ -48,7 +48,7 @@ public class PersonalCenterExitItemView extends RelativeLayout {
         mClickListener = clickListener;
     }
 
-    public void setData(PersonalCenterData data) {
+    public void setData(PersonalCenterInfo data) {
         if (null != data) {
             if (data.isLogin()) {
                 mExitView.setVisibility(View.VISIBLE);

@@ -20,7 +20,7 @@ import com.sharepay.wifi.activity.login.LoginActivity;
 import com.sharepay.wifi.activity.main.MainActivity;
 import com.sharepay.wifi.base.BaseFragment;
 import com.sharepay.wifi.helper.RealmHelper;
-import com.sharepay.wifi.model.AccountInfoRealm;
+import com.sharepay.wifi.model.realm.AccountInfoRealm;
 
 import java.util.ArrayList;
 import java.util.List;
