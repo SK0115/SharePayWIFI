@@ -1,13 +1,19 @@
 package com.sharepay.wifi.http;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import com.sharepay.wifi.base.BaseHttpResultFunction;
 import com.sharepay.wifi.helper.LogHelper;
+import com.sharepay.wifi.model.http.NetSpeedTestHttpData;
 import com.sharepay.wifi.util.CommonUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -47,7 +53,7 @@ public class HttpRequestHelper {
         return requestUrl;
     }
 
-    public OkHttpClient getOkHttpClient() {
+    private OkHttpClient getOkHttpClient() {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(HTTP_REQUEST_DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(HTTP_REQUEST_DEFAULT_TIMEOUT, TimeUnit.SECONDS).readTimeout(HTTP_REQUEST_DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         // 配置request header 添加的token拦截器
@@ -64,5 +70,30 @@ public class HttpRequestHelper {
             }
         });
         return builder.build();
+    }
+
+    /**
+     * 生成Observable
+     * 
+     * @param observable
+     * @param observer
+     * @param <T>
+     */
+    private <T> void toObservable(Observable<T> observable, Observer<T> observer) {
+        observable.map(new BaseHttpResultFunction<T>()).subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    /**
+     * 网络测速地址请求
+     * 
+     * @param observer
+     * @param netSpeedTestService
+     */
+    public void requestNetSpeedTestUrl(Observer<NetSpeedTestHttpData> observer, NetSpeedTestService netSpeedTestService) {
+        if (null != observer && null != netSpeedTestService) {
+            Observable observable = netSpeedTestService.requestNetSpeedTestUrl();
+            toObservable(observable, observer);
+        }
     }
 }

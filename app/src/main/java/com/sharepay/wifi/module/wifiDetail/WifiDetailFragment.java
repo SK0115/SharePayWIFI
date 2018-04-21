@@ -164,7 +164,7 @@ public class WifiDetailFragment extends BaseFragment implements WifiDetailContra
         String downUrl = PreferenceUtil.getInstance().getStringValue(WIFIDefine.KEY_PREFERENCE_SPEEDDETECTIONURL, "");
         LogHelper.releaseLog(TAG + "downUrl = " + downUrl);
         if (TextUtils.isEmpty(downUrl)) {
-            mPresenter.getNetSpeedTestResult();
+            mPresenter.requestNetSpeedTestUrl();
         } else {
             download.startSpeed(downUrl);
         }

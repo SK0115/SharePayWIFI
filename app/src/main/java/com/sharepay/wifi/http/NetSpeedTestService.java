@@ -11,5 +11,5 @@ public interface NetSpeedTestService {
     String DOMAIN_URL = DomainDefine.NET_SPEED_URL;
 
     @GET("/upgrade/Service/optimizationTools.jsp")
-    Observable<NetSpeedTestHttpData> getNetSpeedTestResult();
+    Observable<NetSpeedTestHttpData> requestNetSpeedTestUrl();
 }

@@ -31,4 +31,20 @@ public class WIFIDefine {
     public interface JUMP_PAGE_REQUESTCODE {
         int JUMP_PAGE_REQUESTCODE = 110;
     }
+
+    public interface HttpRequestCallBack {
+        /**
+         * 请求结果
+         * 
+         * @param obj
+         */
+        void onNext(Object obj);
+
+        /**
+         * 错误信息
+         * 
+         * @param e
+         */
+        void onError(Throwable e);
+    }
 }

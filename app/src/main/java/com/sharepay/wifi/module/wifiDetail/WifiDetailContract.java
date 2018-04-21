@@ -9,6 +9,6 @@ public interface WifiDetailContract {
     }
 
     interface Presenter extends BasePresenter {
-        void getNetSpeedTestResult();
+        void requestNetSpeedTestUrl();
     }
 }

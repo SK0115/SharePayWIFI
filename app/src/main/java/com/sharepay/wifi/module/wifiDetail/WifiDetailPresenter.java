@@ -1,14 +1,11 @@
 package com.sharepay.wifi.module.wifiDetail;
 
+import com.sharepay.wifi.base.BaseHttpObserver;
+import com.sharepay.wifi.define.WIFIDefine.HttpRequestCallBack;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.http.HttpRequestHelper;
 import com.sharepay.wifi.http.NetSpeedTestService;
 import com.sharepay.wifi.model.http.NetSpeedTestHttpData;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class WifiDetailPresenter implements WifiDetailContract.Presenter {
     private static final String TAG = "WifiDetailPresenter ";
@@ -30,31 +27,20 @@ public class WifiDetailPresenter implements WifiDetailContract.Presenter {
     }
 
     @Override
-    public void getNetSpeedTestResult() {
-        mNetSpeedTestService.getNetSpeedTestResult().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<NetSpeedTestHttpData>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        LogHelper.releaseLog(TAG + "getNetSpeedTestResult onSubscribe! Disposable:" + d.isDisposed());
-                    }
+    public void requestNetSpeedTestUrl() {
+        HttpRequestHelper.getInstance().requestNetSpeedTestUrl(new BaseHttpObserver<NetSpeedTestHttpData>(new HttpRequestCallBack() {
+            @Override
+            public void onNext(Object netSpeedTestHttpData) {
+                LogHelper.releaseLog(TAG + "requestNetSpeedTestUrl onNext! NetSpeedTestHttpData:" + netSpeedTestHttpData.toString());
+                if (null != mView && netSpeedTestHttpData instanceof NetSpeedTestHttpData) {
+                    mView.setNetSpeedTestUrl(((NetSpeedTestHttpData) netSpeedTestHttpData).getSpeedTestUrl());
+                }
+            }
 
-                    @Override
-                    public void onNext(NetSpeedTestHttpData netSpeedTestHttpData) {
-                        LogHelper.releaseLog(TAG + "getNetSpeedTestResult onNext! NetSpeedTestHttpData speedTestUrl:" + netSpeedTestHttpData.getSpeedTestUrl());
-                        if (null != mView) {
-                            mView.setNetSpeedTestUrl(netSpeedTestHttpData.getSpeedTestUrl());
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        LogHelper.errorLog(TAG + "getNetSpeedTestResult onError! msg:" + e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        LogHelper.releaseLog(TAG + "getNetSpeedTestResult onComplete!");
-                    }
-                });
+            @Override
+            public void onError(Throwable e) {
+                LogHelper.errorLog(TAG + "requestNetSpeedTestUrl onError! msg:" + e.getMessage());
+            }
+        }), mNetSpeedTestService);
     }
 }
