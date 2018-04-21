@@ -50,22 +50,19 @@ public class HttpRequestHelper {
     public OkHttpClient getOkHttpClient() {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(HTTP_REQUEST_DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(HTTP_REQUEST_DEFAULT_TIMEOUT, TimeUnit.SECONDS).readTimeout(HTTP_REQUEST_DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        // if (BuildConfig.DEBUG) {
-        // HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        // interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        // builder.addInterceptor(interceptor);
-        // }
         // 配置request header 添加的token拦截器
         builder.addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request.Builder newBuilder = chain.request().newBuilder();
-                // newBuilder.addHeader("APPVERSION", appVersion + "@" + Api.DEVICE_TYPE);
-                LogHelper.releaseLog(TAG + "getOkHttpClient newBuilder:" + newBuilder.build().url().toString());
+                Response response = chain.proceed(newBuilder.build());
+                if (null != response) {
+                    LogHelper.releaseLog(TAG + "getOkHttpClient response:" + response.toString());
+                    LogHelper.releaseLog(TAG + "getOkHttpClient responseBody:" + response.body().string().toString());
+                }
                 return chain.proceed(newBuilder.build());
             }
         });
-        LogHelper.releaseLog(TAG + "getOkHttpClient builder:" + builder.build().toString());
         return builder.build();
     }
 }
