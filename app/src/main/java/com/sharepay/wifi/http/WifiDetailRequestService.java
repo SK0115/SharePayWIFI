@@ -6,7 +6,7 @@ import com.sharepay.wifi.model.http.NetSpeedTestHttpData;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 
-public interface NetSpeedTestService {
+public interface WifiDetailRequestService {
 
     String DOMAIN_URL = DomainDefine.NET_SPEED_URL;
 

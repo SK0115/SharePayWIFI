@@ -104,11 +104,11 @@ public class HttpRequestHelper {
      * 网络测速地址请求
      * 
      * @param observer
-     * @param netSpeedTestService
+     * @param wifiDetailRequestService
      */
-    public void requestNetSpeedTestUrl(Observer<NetSpeedTestHttpData> observer, NetSpeedTestService netSpeedTestService) {
-        if (null != observer && null != netSpeedTestService) {
-            Observable observable = netSpeedTestService.requestNetSpeedTestUrl();
+    public void requestNetSpeedTestUrl(Observer<NetSpeedTestHttpData> observer, WifiDetailRequestService wifiDetailRequestService) {
+        if (null != observer && null != wifiDetailRequestService) {
+            Observable observable = wifiDetailRequestService.requestNetSpeedTestUrl();
             toObservable(observable, observer);
         }
     }

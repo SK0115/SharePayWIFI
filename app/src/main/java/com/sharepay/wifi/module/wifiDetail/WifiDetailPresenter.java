@@ -4,18 +4,18 @@ import com.sharepay.wifi.base.BaseHttpObserver;
 import com.sharepay.wifi.define.WIFIDefine.HttpRequestCallBack;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.http.HttpRequestHelper;
-import com.sharepay.wifi.http.NetSpeedTestService;
+import com.sharepay.wifi.http.WifiDetailRequestService;
 import com.sharepay.wifi.model.http.NetSpeedTestHttpData;
 
 public class WifiDetailPresenter implements WifiDetailContract.Presenter {
     private static final String TAG = "WifiDetailPresenter ";
     private WifiDetailContract.View mView;
-    private NetSpeedTestService mNetSpeedTestService;
+    private WifiDetailRequestService mWifiDetailRequestService;
 
     public WifiDetailPresenter(WifiDetailContract.View view) {
         mView = view;
         mView.setPresenter(this);
-        mNetSpeedTestService = HttpRequestHelper.getInstance().create(NetSpeedTestService.class);
+        mWifiDetailRequestService = HttpRequestHelper.getInstance().create(WifiDetailRequestService.class);
     }
 
     @Override
@@ -41,6 +41,6 @@ public class WifiDetailPresenter implements WifiDetailContract.Presenter {
             public void onError(Throwable e) {
                 LogHelper.errorLog(TAG + "requestNetSpeedTestUrl onError! msg:" + e.getMessage());
             }
-        }), mNetSpeedTestService);
+        }), mWifiDetailRequestService);
     }
 }
