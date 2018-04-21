@@ -16,5 +16,5 @@ public interface MainRequestService {
     String DOMAIN_URL = DomainDefine.DOMAIN_URL;
 
     @GET("/wifi_api/user/sign")
-    Observable<BaseHttpResult<BaseHttpData>> sign(@Query("mobile") String mobile, @Query("token") String token, @Query("userid") String userid);
+    Observable<BaseHttpResult<BaseHttpData>> requestUserSign(@Query("mobile") String mobile, @Query("token") String token, @Query("userid") String userid);
 }

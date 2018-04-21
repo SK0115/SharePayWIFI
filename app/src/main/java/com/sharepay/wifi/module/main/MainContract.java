@@ -22,6 +22,6 @@ public interface MainContract {
          * 
          * @param mobile
          */
-        void userSign(String mobile);
+        void requestUserSign(String mobile);
     }
 }

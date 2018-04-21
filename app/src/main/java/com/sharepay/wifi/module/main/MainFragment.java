@@ -104,7 +104,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                 return;
             }
             if (!mIsSign && null != mPresenter) {
-                mPresenter.userSign(accountInfoRealm.getMobile());
+                mPresenter.requestUserSign(accountInfoRealm.getMobile());
             }
             break;
         case R.id.layout_main_connect_wifi:

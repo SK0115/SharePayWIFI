@@ -52,14 +52,14 @@ public class LoginPresenter implements LoginContract.Presenter {
             @Override
             public void onNext(Object loginAccountHttpData) {
                 if (null != mView && loginAccountHttpData instanceof BaseHttpResult) {
-                    LogHelper.releaseLog(TAG + "login onNext! loginAccountHttpData:" + loginAccountHttpData.toString());
+                    LogHelper.releaseLog(TAG + "requestUserlogin onNext! loginAccountHttpData:" + loginAccountHttpData.toString());
                     mView.setLoginAccountHttpResult((BaseHttpResult<LoginAccountHttpData>) loginAccountHttpData);
                 }
             }
 
             @Override
             public void onError(Throwable e) {
-                LogHelper.errorLog(TAG + "login onError! msg:" + e.getMessage());
+                LogHelper.errorLog(TAG + "requestUserlogin onError! msg:" + e.getMessage());
             }
         }), mLoginRequestService, mobile, code);
     }

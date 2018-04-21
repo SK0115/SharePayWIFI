@@ -136,6 +136,20 @@ public class HttpRequestHelper {
     }
 
     /**
+     * 用户签到
+     * 
+     * @param observer
+     * @param mainRequestService
+     * @param mobile
+     */
+    public void requestUserSign(Observer<BaseHttpResult<BaseHttpData>> observer, MainRequestService mainRequestService, String mobile) {
+        if (null != observer && null != mainRequestService) {
+            Observable observable = mainRequestService.requestUserSign(mobile, CommonUtil.getToken(), CommonUtil.getDeivceID());
+            toObservable(observable, observer);
+        }
+    }
+
+    /**
      * 网络测速地址请求
      * 
      * @param observer

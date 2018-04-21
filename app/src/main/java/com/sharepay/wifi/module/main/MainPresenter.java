@@ -4,17 +4,13 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.sharepay.wifi.R;
+import com.sharepay.wifi.base.BaseHttpObserver;
+import com.sharepay.wifi.define.WIFIDefine.HttpRequestCallBack;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.http.MainRequestService;
 import com.sharepay.wifi.http.HttpRequestHelper;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
-import com.sharepay.wifi.util.CommonUtil;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainPresenter implements MainContract.Presenter {
 
@@ -39,33 +35,21 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void userSign(String mobile) {
-        mMainRequestService.sign(mobile, CommonUtil.getToken(), CommonUtil.getDeivceID()).subscribeOn(Schedulers.io()) // 在IO线程进行网络请求
-                .observeOn(AndroidSchedulers.mainThread()) // 回到主线程去处理请求结果
-                .subscribe(new Observer<BaseHttpResult<BaseHttpData>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        LogHelper.releaseLog(TAG + "userSign onSubscribe! Disposable:" + d.isDisposed());
-                    }
+    public void requestUserSign(String mobile) {
+        HttpRequestHelper.getInstance().requestUserSign(new BaseHttpObserver<BaseHttpResult<BaseHttpData>>(new HttpRequestCallBack() {
+            @Override
+            public void onNext(Object signHttpData) {
+                if (null != mView && signHttpData instanceof BaseHttpResult) {
+                    LogHelper.releaseLog(TAG + "requestUserSign onNext! signHttpData:" + signHttpData.toString());
+                    mView.setSignHttpResult((BaseHttpResult<BaseHttpData>) signHttpData);
+                }
+            }
 
-                    @Override
-                    public void onNext(BaseHttpResult<BaseHttpData> signHttpData) {
-                        if (null != mView && null != signHttpData) {
-                            LogHelper.releaseLog(TAG + "userSign onNext! signHttpData:" + signHttpData.toString());
-                            mView.setSignHttpResult(signHttpData);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        LogHelper.errorLog(TAG + "userSign onError! msg:" + e.getMessage());
-                        Toast.makeText(mContext, mContext.getString(R.string.sign_fail), Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        LogHelper.releaseLog(TAG + "userSign onComplete!");
-                    }
-                });
+            @Override
+            public void onError(Throwable e) {
+                LogHelper.errorLog(TAG + "requestUserSign onError! msg:" + e.getMessage());
+                Toast.makeText(mContext, mContext.getString(R.string.sign_fail), Toast.LENGTH_SHORT).show();
+            }
+        }), mMainRequestService, mobile);
     }
 }
