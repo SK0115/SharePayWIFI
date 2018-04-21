@@ -24,7 +24,7 @@ public interface LoginContract {
          * @param mobile
          *            手机号
          */
-        void getVerificationCode(String mobile);
+        void requestVerificationCode(String mobile);
 
         /**
          * 登陆

@@ -93,7 +93,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
             } else if (mobile.length() > 11) {
                 Toast.makeText(mActivity, getString(R.string.phonenum_more_eleven), Toast.LENGTH_SHORT).show();
             } else {
-                mPresenter.getVerificationCode(mobile);
+                mPresenter.requestVerificationCode(mobile);
                 startCountdown();
             }
             break;

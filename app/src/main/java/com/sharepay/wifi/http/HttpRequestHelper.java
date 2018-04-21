@@ -4,6 +4,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.sharepay.wifi.base.BaseHttpResultFunction;
 import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.LogHelper;
+import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.http.NetSpeedTestHttpData;
 import com.sharepay.wifi.model.http.TokenHttpData;
@@ -100,6 +101,20 @@ public class HttpRequestHelper {
         }
         if (null != observer && null != startRequestService) {
             Observable observable = startRequestService.requestToken(CommonUtil.getDeivceID(), WIFIDefine.APPID, WIFIDefine.APPSECRET);
+            toObservable(observable, observer);
+        }
+    }
+
+    /**
+     * 请求手机验证码
+     * 
+     * @param observer
+     * @param loginRequestService
+     * @param mobile
+     */
+    public void requestVerificationCode(Observer<BaseHttpResult<BaseHttpData>> observer, LoginRequestService loginRequestService, String mobile) {
+        if (null != observer && null != loginRequestService) {
+            Observable observable = loginRequestService.requestVerificationCode(CommonUtil.getDeivceID(), mobile, CommonUtil.getToken());
             toObservable(observable, observer);
         }
     }

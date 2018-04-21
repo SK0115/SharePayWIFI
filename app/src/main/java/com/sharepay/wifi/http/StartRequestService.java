@@ -14,5 +14,4 @@ public interface StartRequestService {
 
     @GET("/wifi_api/auth")
     Observable<BaseHttpResult<TokenHttpData>> requestToken(@Query("userid") String userid, @Query("appid") String appid, @Query("secret") String secret);
-
 }

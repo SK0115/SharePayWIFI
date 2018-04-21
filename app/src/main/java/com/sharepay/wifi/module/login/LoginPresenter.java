@@ -1,5 +1,7 @@
 package com.sharepay.wifi.module.login;
 
+import com.sharepay.wifi.base.BaseHttpObserver;
+import com.sharepay.wifi.define.WIFIDefine.HttpRequestCallBack;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.http.LoginRequestService;
 import com.sharepay.wifi.http.HttpRequestHelper;
@@ -34,32 +36,20 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
-    public void getVerificationCode(String mobile) {
-        mLoginRequestService.getVerificationCode(CommonUtil.getDeivceID(), mobile, CommonUtil.getToken()).subscribeOn(Schedulers.io()) // 在IO线程进行网络请求
-                .observeOn(AndroidSchedulers.mainThread()) // 回到主线程去处理请求结果
-                .subscribe(new Observer<BaseHttpResult<BaseHttpData>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        LogHelper.releaseLog(TAG + "getVerificationCode onSubscribe! Disposable:" + d.isDisposed());
-                    }
+    public void requestVerificationCode(String mobile) {
+        HttpRequestHelper.getInstance().requestVerificationCode(new BaseHttpObserver<BaseHttpResult<BaseHttpData>>(new HttpRequestCallBack() {
+            @Override
+            public void onNext(Object smsHttpData) {
+                if (smsHttpData instanceof BaseHttpResult) {
+                    LogHelper.releaseLog(TAG + "requestVerificationCode onNext! smsHttpData:" + smsHttpData.toString());
+                }
+            }
 
-                    @Override
-                    public void onNext(BaseHttpResult<BaseHttpData> smsHttpData) {
-                        if (null != smsHttpData) {
-                            LogHelper.releaseLog(TAG + "getVerificationCode onNext! smsData:" + smsHttpData.toString());
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        LogHelper.errorLog(TAG + "getVerificationCode onError! msg:" + e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        LogHelper.releaseLog(TAG + "getVerificationCode onComplete!");
-                    }
-                });
+            @Override
+            public void onError(Throwable e) {
+                LogHelper.errorLog(TAG + "requestVerificationCode onError! msg:" + e.getMessage());
+            }
+        }), mLoginRequestService, mobile);
     }
 
     @Override
