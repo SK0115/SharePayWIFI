@@ -50,21 +50,21 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseHolder> {
     public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         BaseHolder baseHolder = null;
         switch (viewType) {
-            case TYPE_COMMON_VIEW:
-                baseHolder = BaseHolder.create(mContext, getItemLayoutId(), parent);
-                break;
-            case TYPE_FOOTER_VIEW:
-                if (mFooterLayout == null) {
-                    mFooterLayout = new RelativeLayout(mContext);
-                }
-                baseHolder = BaseHolder.create(mFooterLayout);
-                break;
-            case TYPE_EMPTY_VIEW:
-                baseHolder = BaseHolder.create(mEmptyView);
-                break;
-            case TYPE_DEFAULT_VIEW:
-                baseHolder = BaseHolder.create(new View(mContext));
-                break;
+        case TYPE_COMMON_VIEW:
+            baseHolder = BaseHolder.create(mContext, getItemLayoutId(), parent);
+            break;
+        case TYPE_FOOTER_VIEW:
+            if (mFooterLayout == null) {
+                mFooterLayout = new RelativeLayout(mContext);
+            }
+            baseHolder = BaseHolder.create(mFooterLayout);
+            break;
+        case TYPE_EMPTY_VIEW:
+            baseHolder = BaseHolder.create(mEmptyView);
+            break;
+        case TYPE_DEFAULT_VIEW:
+            baseHolder = BaseHolder.create(new View(mContext));
+            break;
         }
         return baseHolder;
     }
@@ -72,9 +72,9 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseHolder> {
     @Override
     public void onBindViewHolder(BaseHolder holder, int position) {
         switch (holder.getItemViewType()) {
-            case TYPE_COMMON_VIEW:
-                bindCommonItem(holder, position);
-                break;
+        case TYPE_COMMON_VIEW:
+            bindCommonItem(holder, position);
+            break;
         }
     }
 
@@ -84,7 +84,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseHolder> {
         viewHolder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mItemClickListener != null){
+                if (mItemClickListener != null) {
                     mItemClickListener.onItemClick(viewHolder, mDatas.get(position), position);
                 }
             }
@@ -166,7 +166,6 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseHolder> {
         startLoadMore(recyclerView, layoutManager);
     }
 
-
     /**
      * 判断列表是否滑动到底部
      *
@@ -182,7 +181,6 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseHolder> {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-//                Logger.d("onScrollStateChanged isAutoLoadMore= "+isAutoLoadMore+"-------"+findLastVisibleItemPosition(layoutManager));
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     if (!isAutoLoadMore && findLastVisibleItemPosition(layoutManager) + 1 == getItemCount()) {
                         scrollLoadMore();
@@ -193,13 +191,12 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseHolder> {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-//                Logger.d("onScrolled isAutoLoadMore= "+isAutoLoadMore+"-------"+findLastVisibleItemPosition(layoutManager));
                 if (isAutoLoadMore && findLastVisibleItemPosition(layoutManager) + 1 == getItemCount()) {
                     scrollLoadMore();
                 }
-//                else if (getItemCount()==1){
-////                    scrollLoadMore();
-//                }
+                // else if (getItemCount()==1){
+                //// scrollLoadMore();
+                // }
                 else if (isAutoLoadMore) {
                     isAutoLoadMore = false;
                 }
@@ -249,8 +246,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseHolder> {
             mFooterLayout = new RelativeLayout(mContext);
         }
         removeFooterView();
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mFooterLayout.addView(footerView, params);
     }
 
@@ -291,6 +287,17 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseHolder> {
 
     public void setLoadingView(int loadingId) {
         setLoadingView(inflate(loadingId));
+    }
+
+    /**
+     * 设置加载中view的显示或隐藏
+     * 
+     * @param isShow
+     */
+    public void setLoadingViewVisibility(boolean isShow) {
+        if (null != mLoadingView) {
+            mLoadingView.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        }
     }
 
     /**
@@ -338,7 +345,6 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseHolder> {
     public int getFooterViewCount() {
         return mOpenLoadMore ? 1 : 0;
     }
-
 
     public void setOnLoadMoreListener(OnLoadMoreListener loadMoreListener) {
         mLoadMoreListener = loadMoreListener;

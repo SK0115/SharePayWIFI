@@ -1,5 +1,6 @@
 package com.sharepay.wifi.module.costHistory;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -9,12 +10,12 @@ import com.sharepay.wifi.R;
 import com.sharepay.wifi.activity.costHistory.CostHistoryActivity;
 import com.sharepay.wifi.adapter.CostHistoryListAdapter;
 import com.sharepay.wifi.base.BaseFragment;
+import com.sharepay.wifi.base.OnLoadMoreListener;
 import com.sharepay.wifi.baseCtrl.FullyLinearLayoutManager;
 import com.sharepay.wifi.define.WIFIDefine;
-import com.sharepay.wifi.helper.AccountHelper;
+import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.model.http.UserIntegralHistoryHttpData;
 import com.sharepay.wifi.model.info.CostHistoryInfo;
-import com.sharepay.wifi.model.realm.AccountInfoRealm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +25,13 @@ import butterknife.OnClick;
 
 public class CostHistoryFragment extends BaseFragment implements CostHistoryContract.View {
 
+    private final String TAG = "CostHistoryFragment ";
     private CostHistoryContract.Presenter mPresenter;
     private CostHistoryActivity mActivity;
     private CostHistoryListAdapter mAdapter;
+    private String mPhoneNum;
+    private int mRequestPageNo = 0;
+    private boolean mIsLoadFinish = false; // 是否加载结束
 
     @BindView(R.id.recyclerview_costhistory)
     RecyclerView recyclerviewCostHistory;
@@ -56,9 +61,11 @@ public class CostHistoryFragment extends BaseFragment implements CostHistoryCont
 
     @Override
     protected void initView() {
-        AccountInfoRealm accountInfoRealm = AccountHelper.getInstance().getAccountInfo();
-        if (null != accountInfoRealm && !TextUtils.isEmpty(accountInfoRealm.getMobile()) && !TextUtils.isEmpty(accountInfoRealm.getId())) {
-            mPresenter.requestUserIntegralHistory(accountInfoRealm.getMobile(), 1);
+        Intent intent = mActivity.getIntent();
+        mPhoneNum = intent.getStringExtra("phoneNum");
+        LogHelper.releaseLog(TAG + "initView mPhoneNum:" + mPhoneNum);
+        if (!TextUtils.isEmpty(mPhoneNum)) {
+            mPresenter.requestUserIntegralHistory(mPhoneNum, mRequestPageNo);
         }
     }
 
@@ -74,6 +81,9 @@ public class CostHistoryFragment extends BaseFragment implements CostHistoryCont
 
     @Override
     public void setUserIntegralHistoryHttpResult(List<UserIntegralHistoryHttpData> userIntegralHistoryHttpDataList, int pageNo) {
+        if (null != mAdapter) {
+            mAdapter.setLoadingViewVisibility(false);
+        }
         if (null != userIntegralHistoryHttpDataList && userIntegralHistoryHttpDataList.size() > 0) {
             List<CostHistoryInfo> datas = new ArrayList<>();
             for (int i = 0; i < userIntegralHistoryHttpDataList.size(); i++) {
@@ -96,11 +106,35 @@ public class CostHistoryFragment extends BaseFragment implements CostHistoryCont
                 info.setIntegration(integration);
                 datas.add(info);
             }
-            mAdapter = new CostHistoryListAdapter(mActivity, datas, false);
-            recyclerviewCostHistory.setNestedScrollingEnabled(false);
-            // 设置布局管理器
-            recyclerviewCostHistory.setLayoutManager(new FullyLinearLayoutManager(mActivity));
-            recyclerviewCostHistory.setAdapter(mAdapter);
+            LogHelper.releaseLog(TAG + "setUserIntegralHistoryHttpResult size:" + datas.size());
+
+            if (null == mAdapter) {
+                mAdapter = new CostHistoryListAdapter(mActivity, datas, true);
+                mAdapter.setLoadingView(R.layout.cost_history_loading_view);
+                mAdapter.setOnLoadMoreListener(mLoadMoreListener);
+                recyclerviewCostHistory.setNestedScrollingEnabled(false);
+                // 设置布局管理器
+                recyclerviewCostHistory.setLayoutManager(new FullyLinearLayoutManager(mActivity));
+                recyclerviewCostHistory.setAdapter(mAdapter);
+            } else {
+                mAdapter.setLoadMoreData(datas);
+            }
+        } else {
+            mIsLoadFinish = true;
         }
     }
+
+    private OnLoadMoreListener mLoadMoreListener = new OnLoadMoreListener() {
+        @Override
+        public void onLoadMore(boolean isReload) {
+            LogHelper.releaseLog(TAG + "OnLoadMoreListener onLoadMore isReload:" + isReload);
+            if (!isReload && !mIsLoadFinish) {
+                if (null != mAdapter) {
+                    mAdapter.setLoadingViewVisibility(true);
+                }
+                mRequestPageNo++;
+                mPresenter.requestUserIntegralHistory(mPhoneNum, mRequestPageNo);
+            }
+        }
+    };
 }

@@ -89,7 +89,7 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
      * 处理登陆结果
      */
     private void doLoginResult() {
-        AccountInfoRealm accountInfoRealm = AccountHelper.getInstance().getAccountInfo();
+        final AccountInfoRealm accountInfoRealm = AccountHelper.getInstance().getAccountInfo();
         if (null != accountInfoRealm && !TextUtils.isEmpty(accountInfoRealm.getMobile()) && !TextUtils.isEmpty(accountInfoRealm.getId())) {
             mIsLogin = true;
         } else {
@@ -104,7 +104,11 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
                 public void onItemClick(BaseHolder viewHolder, PersonalCenterInfo data, int position) {
                     if (getString(R.string.cost_history).equals(data.getTitle())) {
                         if (mIsLogin) {
-                            startActivity(new Intent(mActivity, CostHistoryActivity.class));
+                            Intent intent = new Intent(mActivity, CostHistoryActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("phoneNum", accountInfoRealm.getMobile());
+                            intent.putExtras(bundle);
+                            startActivity(intent);
                         } else {
                             Toast.makeText(mActivity, getString(R.string.please_login), Toast.LENGTH_SHORT).show();
                         }
