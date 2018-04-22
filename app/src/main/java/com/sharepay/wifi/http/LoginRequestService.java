@@ -10,7 +10,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 /**
- * 登陆页面相关网络请求
+ * 登陆页网络请求
  */
 public interface LoginRequestService {
 

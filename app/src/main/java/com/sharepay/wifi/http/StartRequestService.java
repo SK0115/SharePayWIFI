@@ -8,6 +8,9 @@ import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
+/**
+ * 启动页网络请求
+ */
 public interface StartRequestService {
 
     String DOMAIN_URL = DomainDefine.DOMAIN_URL;

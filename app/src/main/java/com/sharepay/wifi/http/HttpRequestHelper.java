@@ -1,5 +1,7 @@
 package com.sharepay.wifi.http;
 
+import android.os.Bundle;
+
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.sharepay.wifi.base.BaseHttpResultFunction;
 import com.sharepay.wifi.define.WIFIDefine;
@@ -176,6 +178,29 @@ public class HttpRequestHelper {
     public void requestNetSpeedTestUrl(Observer<NetSpeedTestHttpData> observer, WifiDetailRequestService wifiDetailRequestService) {
         if (null != observer && null != wifiDetailRequestService) {
             Observable observable = wifiDetailRequestService.requestNetSpeedTestUrl();
+            toObservable(observable, observer);
+        }
+    }
+
+    /**
+     * wifi分享请求
+     * 
+     * @param observer
+     * @param wifiShareRequestService
+     * @param param
+     */
+    public void requestUserShareWifi(Observer<BaseHttpResult<BaseHttpData>> observer, WifiShareRequestService wifiShareRequestService, Bundle param) {
+        if (null != observer && null != wifiShareRequestService && null != param) {
+            String mobile = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_MOBILE);
+            String name = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_NAME);
+            String pass = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_PASS);
+            String ip = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_IP);
+            String gateway = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_GATEWAY);
+            double xcoordinate = param.getDouble(WIFIDefine.WIFI_SHARE_PARAM.KEY_X_COORDINATE);
+            double ycoordinate = param.getDouble(WIFIDefine.WIFI_SHARE_PARAM.KEY_Y_COORDINATE);
+            int earnings = param.getInt(WIFIDefine.WIFI_SHARE_PARAM.KEY_EARNINGS);
+            Observable observable = wifiShareRequestService.requestUserShareWifi(CommonUtil.getToken(), mobile, CommonUtil.getDeivceID(), name, pass, ip,
+                    gateway, xcoordinate, ycoordinate, earnings);
             toObservable(observable, observer);
         }
     }

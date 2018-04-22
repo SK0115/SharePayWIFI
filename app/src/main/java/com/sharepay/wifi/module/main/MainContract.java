@@ -7,6 +7,7 @@ import com.sharepay.wifi.model.http.BaseHttpResult;
 
 public interface MainContract {
     interface View extends BaseView<Presenter> {
+
         /**
          * 设置签到信息
          * 

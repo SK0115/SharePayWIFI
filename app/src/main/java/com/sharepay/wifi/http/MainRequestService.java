@@ -9,7 +9,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 /**
- * 主页面相关网络请求
+ * 主页网络请求
  */
 public interface MainRequestService {
 

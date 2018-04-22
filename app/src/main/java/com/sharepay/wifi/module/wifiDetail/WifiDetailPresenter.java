@@ -8,6 +8,7 @@ import com.sharepay.wifi.http.WifiDetailRequestService;
 import com.sharepay.wifi.model.http.NetSpeedTestHttpData;
 
 public class WifiDetailPresenter implements WifiDetailContract.Presenter {
+
     private static final String TAG = "WifiDetailPresenter ";
     private WifiDetailContract.View mView;
     private WifiDetailRequestService mWifiDetailRequestService;

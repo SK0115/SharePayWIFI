@@ -8,6 +8,7 @@ import com.sharepay.wifi.model.http.LoginAccountHttpData;
 public interface LoginContract {
 
     interface View extends BaseView<Presenter> {
+
         /**
          * 设置登陆帐号信息
          * 

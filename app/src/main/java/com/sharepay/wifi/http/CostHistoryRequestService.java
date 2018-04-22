@@ -11,7 +11,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 /**
- * 用户积分历史页面相关网络请求
+ * 用户积分历史页网络请求
  */
 public interface CostHistoryRequestService {
 

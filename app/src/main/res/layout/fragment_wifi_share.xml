@@ -120,7 +120,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="32dp"
-        android:background="@drawable/dialog_btn_bg"
+        android:background="@drawable/login_selector_bg"
         android:gravity="center"
         android:text="@string/share"
         android:textColor="@color/white"

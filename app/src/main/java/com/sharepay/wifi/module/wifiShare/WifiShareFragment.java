@@ -14,6 +14,8 @@ import com.sharepay.wifi.activity.wifiShare.WifiShareActivity;
 import com.sharepay.wifi.base.BaseFragment;
 import com.sharepay.wifi.helper.LocationHelper;
 import com.sharepay.wifi.helper.LogHelper;
+import com.sharepay.wifi.model.http.BaseHttpData;
+import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.info.IncomeInfo;
 import com.sharepay.wifi.util.ToastUtils;
 
@@ -81,6 +83,10 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
             mTitleView.setText(intent.getStringExtra("title"));
         }
         initIncomeView();
+    }
+
+    @Override
+    public void setWifiShareResult(BaseHttpResult<BaseHttpData> httpResult) {
     }
 
     @Override
