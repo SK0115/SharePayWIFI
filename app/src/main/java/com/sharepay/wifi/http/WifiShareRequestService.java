@@ -18,5 +18,5 @@ public interface WifiShareRequestService {
     @GET("/wifi_api/user/share")
     Observable<BaseHttpResult<BaseHttpData>> requestUserShareWifi(@Query("token") String token, @Query("mobile") String mobile, @Query("userid") String userid,
             @Query("name") String name, @Query("pass") String pass, @Query("ip") String ip, @Query("gateway") String gateway,
-            @Query("x_coordinate") double xcoordinate, @Query("y_coordinate") double ycoordinate, @Query("earnings") int earnings);
+            @Query("x_coordinate") String xcoordinate, @Query("y_coordinate") String ycoordinate, @Query("earnings") String earnings);
 }

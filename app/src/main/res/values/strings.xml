@@ -57,4 +57,8 @@
     <string name="network_speed_result">当前网速相当于%1$sM宽带</string>
     <string name="network_detect_speed_finished">测速完成</string>
     <string name="network_detect_speed_fail_notification">网络测速失败，请检查网络后再测速或尝试网络诊断</string>
+    <string name="wifi_share_name_null">WIFI名字为空</string>
+    <string name="wifi_share_location_fail">位置信息获取失败</string>
+    <string name="wifi_share_select_income">请选择共享收益</string>
+    <string name="wifi_share_info_null">WIFI信息获取失败</string>
 </resources>

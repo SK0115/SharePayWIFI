@@ -23,7 +23,7 @@ public class LocationHelper {
     }
 
     public void location(Context context) {
-        LogHelper.releaseLog(TAG + "location");
+        LogHelper.releaseLog(TAG + "location!");
         try {
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             Criteria criteria = new Criteria();
@@ -41,16 +41,15 @@ public class LocationHelper {
                             Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             }
             Location location = locationManager.getLastKnownLocation(locationProvider);
-            LogHelper.releaseLog(TAG + "onCreate: " + (location == null) + "..");
+            LogHelper.releaseLog(TAG + "location:" + location);
             if (location != null) {
-                LogHelper.releaseLog(TAG + "onCreate: location");
                 // 不为空,显示地理位置经纬度
-                showLocation(location);
+                setLocation(location);
             }
             // 监视地理位置变化
             locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
         } catch (Exception e) {
-            LogHelper.errorLog(TAG + "location Exception! error:" + e.getMessage());
+            LogHelper.errorLog(TAG + "location Exception! msg:" + e.getMessage());
         }
     }
 
@@ -62,26 +61,26 @@ public class LocationHelper {
 
         @Override
         public void onProviderEnabled(String provider) {
-            LogHelper.releaseLog(TAG + "onProviderEnabled: " + provider + ".." + Thread.currentThread().getName());
+            LogHelper.releaseLog(TAG + "onProviderEnabled:" + provider);
         }
 
         @Override
         public void onProviderDisabled(String provider) {
-            LogHelper.releaseLog(TAG + "onProviderDisabled: " + provider + ".." + Thread.currentThread().getName());
+            LogHelper.releaseLog(TAG + "onProviderDisabled:" + provider);
         }
 
         @Override
         public void onLocationChanged(Location location) {
-            LogHelper.releaseLog(TAG + "onLocationChanged: " + ".." + Thread.currentThread().getName());
+            LogHelper.releaseLog(TAG + "onLocationChanged!");
             // 如果位置发生变化,重新显示
-            showLocation(location);
+            setLocation(location);
         }
     };
 
-    private void showLocation(Location location) {
+    private void setLocation(Location location) {
         // latitude 纬度
         // longitude 经度
-        LogHelper.releaseLog(TAG + "location success" + " latitude:" + location.getLatitude() + " longitude:" + location.getLongitude());
+        LogHelper.releaseLog(TAG + "setLocation success" + " latitude:" + location.getLatitude() + " longitude:" + location.getLongitude());
         if (null != mLocationCallBack) {
             mLocationCallBack.setLocation(location);
         }

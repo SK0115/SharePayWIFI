@@ -4,19 +4,27 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.DhcpInfo;
+import android.net.wifi.WifiInfo;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
+import android.text.format.Formatter;
 import android.view.View;
 import android.widget.TextView;
 
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.activity.wifiShare.WifiShareActivity;
 import com.sharepay.wifi.base.BaseFragment;
+import com.sharepay.wifi.define.WIFIDefine;
+import com.sharepay.wifi.helper.AccountHelper;
 import com.sharepay.wifi.helper.LocationHelper;
 import com.sharepay.wifi.helper.LogHelper;
+import com.sharepay.wifi.helper.WIFIHelper;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.info.IncomeInfo;
+import com.sharepay.wifi.model.realm.AccountInfoRealm;
 import com.sharepay.wifi.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -30,9 +38,13 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
     private final String TAG = "WifiShareFragment ";
     private final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
     private WifiShareActivity mActivity;
+    private WifiShareContract.Presenter mPresenter;
     private List<IncomeInfo> mIncomeInfoList;
     private int mCurShowIncome = 0;
     private LocationHelper mLocationHelper;
+    private double mXCoordinate = 0; // 纬度
+    private double mYCoordinate = 0; // 经度
+    private String mWifiName; // wifi名字
 
     @BindView(R.id.tv_wifi_share_income)
     TextView mIncomeTextView;
@@ -68,6 +80,7 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
 
     @Override
     public void setPresenter(WifiShareContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 
     @Override
@@ -79,10 +92,22 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
     protected void initView() {
         Intent intent = mActivity.getIntent();
         if (null != intent) {
-            LogHelper.releaseLog("WifiShareFragment initView title:" + intent.getStringExtra("title"));
-            mTitleView.setText(intent.getStringExtra("title"));
+            mWifiName = intent.getStringExtra("title");
+            LogHelper.releaseLog(TAG + "initView title:" + mWifiName);
+            mTitleView.setText(mWifiName);
         }
         initIncomeView();
+        List<String> permissionsList = new ArrayList<String>();
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            LogHelper.releaseLog(TAG + "initView no location permission!");
+            permissionsList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            permissionsList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            ActivityCompat.requestPermissions(mActivity, permissionsList.toArray(new String[permissionsList.size()]), REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+        } else {
+            LogHelper.releaseLog(TAG + "initView has location permission!");
+            startLocation();
+        }
     }
 
     @Override
@@ -132,19 +157,56 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
 
     private void shareWifi() {
         if (null != mIncomeInfoList && mIncomeInfoList.size() > 0 && mCurShowIncome < mIncomeInfoList.size()) {
-            String integration = mIncomeInfoList.get(mCurShowIncome).getIntegration();
-            ToastUtils.showShort("您的收益积分：" + integration);
-            List<String> permissionsList = new ArrayList<String>();
-            if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                LogHelper.releaseLog(TAG + "no location permission!");
-                permissionsList.add(Manifest.permission.ACCESS_FINE_LOCATION);
-                permissionsList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-                ActivityCompat.requestPermissions(mActivity, permissionsList.toArray(new String[permissionsList.size()]),
-                        REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+            AccountInfoRealm accountInfoRealm = AccountHelper.getInstance().getAccountInfo();
+            if (null == accountInfoRealm || TextUtils.isEmpty(accountInfoRealm.getMobile())) {
+                ToastUtils.showShort(getResources().getString(R.string.please_login));
             } else {
-                LogHelper.releaseLog(TAG + "has location permission!");
-                startLocation();
+                String integration = mIncomeInfoList.get(mCurShowIncome).getIntegration();
+                Bundle param = new Bundle();
+                // 手机号
+                param.putString(WIFIDefine.WIFI_SHARE_PARAM.KEY_MOBILE, accountInfoRealm.getMobile());
+
+                // wifi名字
+                if (TextUtils.isEmpty(mWifiName)) {
+                    ToastUtils.showShort(getResources().getString(R.string.wifi_share_name_null));
+                    return;
+                }
+                param.putString(WIFIDefine.WIFI_SHARE_PARAM.KEY_NAME, mWifiName);
+
+                // ip和网关
+                WifiInfo wifiInfo = WIFIHelper.getCurrentConnectingWIFI(mActivity);
+                if (null == wifiInfo) {
+                    ToastUtils.showShort(getResources().getString(R.string.wifi_share_info_null));
+                    return;
+                }
+                param.putString(WIFIDefine.WIFI_SHARE_PARAM.KEY_IP, Formatter.formatIpAddress(wifiInfo.getIpAddress()));
+                DhcpInfo dhcpInfo = WIFIHelper.getDhcpInfo(mActivity);
+                if (null != dhcpInfo) {
+                    param.putString(WIFIDefine.WIFI_SHARE_PARAM.KEY_GATEWAY, Formatter.formatIpAddress(dhcpInfo.gateway));
+                }
+
+                // 经纬度
+                try {
+                    if (mXCoordinate <= 0 || mYCoordinate <= 0) {
+                        ToastUtils.showShort(getResources().getString(R.string.wifi_share_location_fail));
+                        return;
+                    }
+                    param.putString(WIFIDefine.WIFI_SHARE_PARAM.KEY_X_COORDINATE, String.valueOf(mXCoordinate));
+                    param.putString(WIFIDefine.WIFI_SHARE_PARAM.KEY_Y_COORDINATE, String.valueOf(mYCoordinate));
+                } catch (Exception e) {
+                    LogHelper.errorLog(TAG + "shareWifi Exception! msg:" + e.getMessage());
+                }
+
+                // 共享收益
+                if (TextUtils.isEmpty(integration)) {
+                    ToastUtils.showShort(getResources().getString(R.string.wifi_share_select_income));
+                    return;
+                }
+                param.putString(WIFIDefine.WIFI_SHARE_PARAM.KEY_EARNINGS, integration);
+                LogHelper.releaseLog(TAG + "shareWifi param:" + param.toString());
+                if (null != mPresenter) {
+                    mPresenter.requestUserShareWifi(param);
+                }
             }
         }
     }
@@ -159,7 +221,11 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
     private LocationCallBack mLocationCallBack = new LocationCallBack() {
         @Override
         public void setLocation(Location location) {
-            LogHelper.releaseLog(TAG + "setLocation" + " latitude:" + location.getLatitude() + " longitude:" + location.getLongitude());
+            if (null != location) {
+                LogHelper.releaseLog(TAG + "LocationCallBack setLocation" + " latitude:" + location.getLatitude() + " longitude:" + location.getLongitude());
+                mXCoordinate = location.getLatitude();
+                mYCoordinate = location.getLongitude();
+            }
         }
     };
 

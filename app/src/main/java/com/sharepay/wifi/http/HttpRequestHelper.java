@@ -196,9 +196,9 @@ public class HttpRequestHelper {
             String pass = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_PASS);
             String ip = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_IP);
             String gateway = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_GATEWAY);
-            double xcoordinate = param.getDouble(WIFIDefine.WIFI_SHARE_PARAM.KEY_X_COORDINATE);
-            double ycoordinate = param.getDouble(WIFIDefine.WIFI_SHARE_PARAM.KEY_Y_COORDINATE);
-            int earnings = param.getInt(WIFIDefine.WIFI_SHARE_PARAM.KEY_EARNINGS);
+            String xcoordinate = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_X_COORDINATE);
+            String ycoordinate = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_Y_COORDINATE);
+            String earnings = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_EARNINGS);
             Observable observable = wifiShareRequestService.requestUserShareWifi(CommonUtil.getToken(), mobile, CommonUtil.getDeivceID(), name, pass, ip,
                     gateway, xcoordinate, ycoordinate, earnings);
             toObservable(observable, observer);
