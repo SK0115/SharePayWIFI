@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -33,12 +34,15 @@ import com.sharepay.wifi.baseCtrl.FullyLinearLayoutManager;
 import com.sharepay.wifi.baseCtrl.ProgressView;
 import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.AccountHelper;
+import com.sharepay.wifi.helper.LocationHelper;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.helper.WIFIConnectManager;
 import com.sharepay.wifi.helper.WIFIHelper;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
+import com.sharepay.wifi.model.http.ShareWifiListHttpData;
 import com.sharepay.wifi.model.info.WIFIInfo;
+import com.sharepay.wifi.model.info.WIFIShareInfo;
 import com.sharepay.wifi.model.realm.AccountInfoRealm;
 import com.sharepay.wifi.util.CommonUtil;
 import com.sharepay.wifi.util.DialogUtils;
@@ -81,6 +85,10 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     private IntentFilter mIntentFilter;
     private WIFIStateChangeReceiver mWIFIStateChangeReceiver;
     private WIFIConnectManager mWifiConnectManager;
+    private LocationHelper mLocationHelper;
+    private double mXCoordinate = 0; // 纬度
+    private double mYCoordinate = 0; // 经度
+    private AccountInfoRealm mAccountInfoRealm;
 
     @OnClick({ R.id.iv_main_personal_enter, R.id.iv_main_share, R.id.tv_sign_in, R.id.layout_main_connect_wifi })
     public void onClick(View view) {
@@ -97,14 +105,13 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             }
             break;
         case R.id.tv_sign_in:
-            AccountInfoRealm accountInfoRealm = AccountHelper.getInstance().getAccountInfo();
-            if (null == accountInfoRealm || TextUtils.isEmpty(accountInfoRealm.getMobile()) || TextUtils.isEmpty(accountInfoRealm.getId())) {
+            if (null == mAccountInfoRealm || TextUtils.isEmpty(mAccountInfoRealm.getMobile()) || TextUtils.isEmpty(mAccountInfoRealm.getId())) {
                 // 未登陆帐号，跳转到登陆界面
                 startActivity(new Intent(mActivity, LoginActivity.class));
                 return;
             }
             if (!mIsSign && null != mPresenter) {
-                mPresenter.requestUserSign(accountInfoRealm.getMobile());
+                mPresenter.requestUserSign(mAccountInfoRealm.getMobile());
             }
             break;
         case R.id.layout_main_connect_wifi:
@@ -183,6 +190,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
 
     @Override
     protected void initView() {
+        mAccountInfoRealm = AccountHelper.getInstance().getAccountInfo();
         layoutMainConnectWifi.setVisibility(View.GONE);
         layoutTips.setFocusable(true);
         layoutTips.setFocusableInTouchMode(true);
@@ -264,6 +272,9 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         super.onDestroy();
         if (null != mScanWIFIThread) {
             mScanWIFIThread = null;
+        }
+        if (null != mLocationHelper) {
+            mLocationHelper = null;
         }
     }
 
@@ -385,6 +396,50 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             Toast.makeText(mActivity, getString(R.string.sign_fail), Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    public void setShareWifiListHttpResult(BaseHttpResult<ShareWifiListHttpData> wifiListHttpResult) {
+        if (null != wifiListHttpResult && WIFIDefine.HttpResultState.SUCCESS.equals(wifiListHttpResult.getStatus())) {
+            // 请求共享wifi列表成功
+        }
+    }
+
+    public void startLocation() {
+        if (null == mLocationHelper) {
+            mLocationHelper = new LocationHelper(mLocationCallBack);
+        }
+        mLocationHelper.location(mActivity);
+    }
+
+    private WIFIDefine.LocationCallBack mLocationCallBack = new WIFIDefine.LocationCallBack() {
+        @Override
+        public void setLocation(Location location) {
+            if (null != location) {
+                LogHelper.releaseLog(TAG + "LocationCallBack setLocation" + " latitude:" + location.getLatitude() + " longitude:" + location.getLongitude());
+                mXCoordinate = location.getLatitude();
+                mYCoordinate = location.getLongitude();
+                if (null == mAccountInfoRealm || TextUtils.isEmpty(mAccountInfoRealm.getMobile()) || TextUtils.isEmpty(mAccountInfoRealm.getId())) {
+                    return;
+                }
+                WIFIShareInfo wifiShareInfo = new WIFIShareInfo();
+                wifiShareInfo.setMobile(mAccountInfoRealm.getMobile());
+                // 经纬度
+                try {
+                    if (mXCoordinate <= 0 || mYCoordinate <= 0) {
+                        return;
+                    }
+                    wifiShareInfo.setXCoordinate(String.valueOf(mXCoordinate));
+                    wifiShareInfo.setYCoordinate(String.valueOf(mYCoordinate));
+                } catch (Exception e) {
+                    LogHelper.errorLog(TAG + "setLocation Exception! msg:" + e.getMessage());
+                }
+                LogHelper.releaseLog(TAG + "setLocation wifiShareInfo:" + wifiShareInfo.toString());
+                if (null != mPresenter) {
+                    mPresenter.requestShareWifiList(wifiShareInfo);
+                }
+            }
+        }
+    };
 
     private class ScanWIFIThread extends Thread {
         @Override

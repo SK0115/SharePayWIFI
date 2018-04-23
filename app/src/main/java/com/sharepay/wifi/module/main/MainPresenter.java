@@ -11,6 +11,8 @@ import com.sharepay.wifi.http.MainRequestService;
 import com.sharepay.wifi.http.HttpRequestHelper;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
+import com.sharepay.wifi.model.http.ShareWifiListHttpData;
+import com.sharepay.wifi.model.info.WIFIShareInfo;
 
 public class MainPresenter implements MainContract.Presenter {
 
@@ -51,5 +53,22 @@ public class MainPresenter implements MainContract.Presenter {
                 Toast.makeText(mContext, mContext.getString(R.string.sign_fail), Toast.LENGTH_SHORT).show();
             }
         }), mMainRequestService, mobile);
+    }
+
+    @Override
+    public void requestShareWifiList(WIFIShareInfo wifiShareInfo) {
+        HttpRequestHelper.getInstance().requestShareWifiList(new BaseHttpObserver<BaseHttpResult<ShareWifiListHttpData>>(new HttpRequestCallBack() {
+            @Override
+            public void onNext(Object shareWifiListHttpData) {
+                if (null != mView && shareWifiListHttpData instanceof BaseHttpResult) {
+                    LogHelper.releaseLog(TAG + "requestShareWifiList onNext! shareWifiListHttpData:" + shareWifiListHttpData.toString());
+                    mView.setShareWifiListHttpResult((BaseHttpResult<ShareWifiListHttpData>) shareWifiListHttpData);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+        }), mMainRequestService, wifiShareInfo);
     }
 }

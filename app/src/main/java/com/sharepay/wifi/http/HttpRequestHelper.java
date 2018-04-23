@@ -8,6 +8,7 @@ import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.http.LoginAccountHttpData;
 import com.sharepay.wifi.model.http.NetSpeedTestHttpData;
+import com.sharepay.wifi.model.http.ShareWifiListHttpData;
 import com.sharepay.wifi.model.http.TokenHttpData;
 import com.sharepay.wifi.model.http.UserIntegralHistoryHttpData;
 import com.sharepay.wifi.model.info.WIFIShareInfo;
@@ -148,6 +149,24 @@ public class HttpRequestHelper {
     public void requestUserSign(Observer<BaseHttpResult<BaseHttpData>> observer, MainRequestService mainRequestService, String mobile) {
         if (null != observer && null != mainRequestService) {
             Observable observable = mainRequestService.requestUserSign(mobile, CommonUtil.getToken(), CommonUtil.getDeivceID());
+            toObservable(observable, observer);
+        }
+    }
+
+    /**
+     * 请求共享wifi列表
+     * 
+     * @param observer
+     * @param mainRequestService
+     * @param wifiShareInfo
+     */
+    public void requestShareWifiList(Observer<BaseHttpResult<ShareWifiListHttpData>> observer, MainRequestService mainRequestService,
+            WIFIShareInfo wifiShareInfo) {
+        if (null != observer && null != mainRequestService && null != wifiShareInfo) {
+            String mobile = wifiShareInfo.getMobile();
+            String xcoordinate = wifiShareInfo.getXCoordinate();
+            String ycoordinate = wifiShareInfo.getYCoordinate();
+            Observable observable = mainRequestService.requestShareWifiList(CommonUtil.getToken(), mobile, CommonUtil.getDeivceID(), xcoordinate, ycoordinate);
             toObservable(observable, observer);
         }
     }

@@ -41,7 +41,9 @@ public class WifiShareActivity extends BaseActivity {
             if ((permissions.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) || (permissions.length == 2
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
                 // 获取到获取位置权限
-                mWifiShareFragment.startLocation();
+                if (null != mWifiShareFragment) {
+                    mWifiShareFragment.startLocation();
+                }
             }
             break;
         }

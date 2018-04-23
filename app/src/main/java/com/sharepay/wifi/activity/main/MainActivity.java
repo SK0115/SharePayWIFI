@@ -20,20 +20,21 @@ import java.util.List;
 public class MainActivity extends BaseActivity {
 
     private final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
+    private MainFragment mMainFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermission();
-        MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.fl_main_container);
-        if (CommonUtil.checkIsNull(mainFragment)) {
-            mainFragment = MainFragment.getInstance();
+        mMainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.fl_main_container);
+        if (CommonUtil.checkIsNull(mMainFragment)) {
+            mMainFragment = MainFragment.getInstance();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.fl_main_container, mainFragment);
+            transaction.add(R.id.fl_main_container, mMainFragment);
             transaction.commit();
         }
-        new MainPresenter(MainActivity.this, mainFragment);
+        new MainPresenter(MainActivity.this, mMainFragment);
     }
 
     private void checkPermission() {
@@ -59,7 +60,9 @@ public class MainActivity extends BaseActivity {
         case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS:
             if (permissions.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED || (permissions.length == 2
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
-            } else {
+                if (null != mMainFragment) {
+                    mMainFragment.startLocation();
+                }
             }
             break;
         }

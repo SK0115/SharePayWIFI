@@ -1,5 +1,7 @@
 package com.sharepay.wifi.define;
 
+import android.location.Location;
+
 public class WIFIDefine {
 
     public static final String KEY_PREFERENCE_SPEEDDETECTIONURL = "key_preference_speedDetectionUrl";
@@ -59,5 +61,15 @@ public class WIFIDefine {
          * @param e
          */
         void onError(Throwable e);
+    }
+
+    public interface LocationCallBack {
+
+        /**
+         * 设置位置信息
+         * 
+         * @param location
+         */
+        void setLocation(Location location);
     }
 }

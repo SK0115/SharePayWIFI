@@ -238,7 +238,7 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
         mLocationHelper.location(mActivity);
     }
 
-    private LocationCallBack mLocationCallBack = new LocationCallBack() {
+    private WIFIDefine.LocationCallBack mLocationCallBack = new WIFIDefine.LocationCallBack() {
         @Override
         public void setLocation(Location location) {
             if (null != location) {
@@ -248,8 +248,4 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
             }
         }
     };
-
-    public interface LocationCallBack {
-        void setLocation(Location location);
-    }
 }

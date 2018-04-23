@@ -10,15 +10,15 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
-import com.sharepay.wifi.module.wifiShare.WifiShareFragment;
+import com.sharepay.wifi.define.WIFIDefine;
 
 public class LocationHelper {
 
     private final String TAG = "LocationHelper ";
 
-    private WifiShareFragment.LocationCallBack mLocationCallBack;
+    private WIFIDefine.LocationCallBack mLocationCallBack;
 
-    public LocationHelper(WifiShareFragment.LocationCallBack callBack) {
+    public LocationHelper(WIFIDefine.LocationCallBack callBack) {
         mLocationCallBack = callBack;
     }
 
