@@ -44,20 +44,6 @@ public class WIFIDefine {
         String TYPE_SPENDING_TEXT = "消费";
     }
 
-    /**
-     * wifi分享参数
-     */
-    public interface WIFI_SHARE_PARAM {
-        String KEY_MOBILE = "mobile";
-        String KEY_NAME = "name";
-        String KEY_PASS = "pass";
-        String KEY_IP = "ip";
-        String KEY_GATEWAY = "gateway";
-        String KEY_X_COORDINATE = "x_coordinate";
-        String KEY_Y_COORDINATE = "y_coordinate";
-        String KEY_EARNINGS = "earnings";
-    }
-
     public interface HttpRequestCallBack {
 
         /**

@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.sharepay.wifi.R;
@@ -24,6 +25,7 @@ import com.sharepay.wifi.helper.WIFIHelper;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.info.IncomeInfo;
+import com.sharepay.wifi.model.info.WIFIShareInfo;
 import com.sharepay.wifi.model.realm.AccountInfoRealm;
 import com.sharepay.wifi.util.ToastUtils;
 
@@ -50,6 +52,8 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
     TextView mIncomeTextView;
     @BindView(R.id.tv_wifi_share_main_title)
     TextView mTitleView;
+    @BindView(R.id.wifi_share_pass_et)
+    EditText mPassView;
 
     public static WifiShareFragment getInstance() {
         WifiShareFragment mPersonalCenterFragment = new WifiShareFragment();
@@ -58,9 +62,12 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
         return mPersonalCenterFragment;
     }
 
-    @OnClick({ R.id.iv_wifi_share_back, R.id.iv_wifi_share_left, R.id.iv_wifi_share_right, R.id.tv_wifi_share_share })
+    @OnClick({ R.id.wifi_share_pass_et, R.id.iv_wifi_share_back, R.id.iv_wifi_share_left, R.id.iv_wifi_share_right, R.id.tv_wifi_share_share })
     public void onClick(View view) {
         switch (view.getId()) {
+        case R.id.wifi_share_pass_et:
+            mPassView.setCursorVisible(true);
+            break;
         case R.id.iv_wifi_share_back:
             mActivity.finish();
             break;
@@ -112,6 +119,11 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
 
     @Override
     public void setWifiShareResult(BaseHttpResult<BaseHttpData> httpResult) {
+        if (null != httpResult && WIFIDefine.HttpResultState.SUCCESS.equals(httpResult.getStatus())) {
+            ToastUtils.showShort(getResources().getString(R.string.wifi_share_info_success));
+        } else {
+            ToastUtils.showShort(getResources().getString(R.string.wifi_share_info_fail));
+        }
     }
 
     @Override
@@ -162,16 +174,24 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
                 ToastUtils.showShort(getResources().getString(R.string.please_login));
             } else {
                 String integration = mIncomeInfoList.get(mCurShowIncome).getIntegration();
-                Bundle param = new Bundle();
+                WIFIShareInfo wifiShareInfo = new WIFIShareInfo();
                 // 手机号
-                param.putString(WIFIDefine.WIFI_SHARE_PARAM.KEY_MOBILE, accountInfoRealm.getMobile());
+                wifiShareInfo.setMobile(accountInfoRealm.getMobile());
 
                 // wifi名字
                 if (TextUtils.isEmpty(mWifiName)) {
                     ToastUtils.showShort(getResources().getString(R.string.wifi_share_name_null));
                     return;
                 }
-                param.putString(WIFIDefine.WIFI_SHARE_PARAM.KEY_NAME, mWifiName);
+                wifiShareInfo.setName(mWifiName);
+
+                // wifi密码
+                String pass = mPassView.getText().toString();
+                if (TextUtils.isEmpty(pass)) {
+                    ToastUtils.showShort(getResources().getString(R.string.wifi_share_info_pass_null));
+                    return;
+                }
+                wifiShareInfo.setPass(pass);
 
                 // ip和网关
                 WifiInfo wifiInfo = WIFIHelper.getCurrentConnectingWIFI(mActivity);
@@ -179,10 +199,10 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
                     ToastUtils.showShort(getResources().getString(R.string.wifi_share_info_null));
                     return;
                 }
-                param.putString(WIFIDefine.WIFI_SHARE_PARAM.KEY_IP, Formatter.formatIpAddress(wifiInfo.getIpAddress()));
+                wifiShareInfo.setIp(Formatter.formatIpAddress(wifiInfo.getIpAddress()));
                 DhcpInfo dhcpInfo = WIFIHelper.getDhcpInfo(mActivity);
                 if (null != dhcpInfo) {
-                    param.putString(WIFIDefine.WIFI_SHARE_PARAM.KEY_GATEWAY, Formatter.formatIpAddress(dhcpInfo.gateway));
+                    wifiShareInfo.setGateway(Formatter.formatIpAddress(dhcpInfo.gateway));
                 }
 
                 // 经纬度
@@ -191,8 +211,8 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
                         ToastUtils.showShort(getResources().getString(R.string.wifi_share_location_fail));
                         return;
                     }
-                    param.putString(WIFIDefine.WIFI_SHARE_PARAM.KEY_X_COORDINATE, String.valueOf(mXCoordinate));
-                    param.putString(WIFIDefine.WIFI_SHARE_PARAM.KEY_Y_COORDINATE, String.valueOf(mYCoordinate));
+                    wifiShareInfo.setXCoordinate(String.valueOf(mXCoordinate));
+                    wifiShareInfo.setYCoordinate(String.valueOf(mYCoordinate));
                 } catch (Exception e) {
                     LogHelper.errorLog(TAG + "shareWifi Exception! msg:" + e.getMessage());
                 }
@@ -202,10 +222,10 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
                     ToastUtils.showShort(getResources().getString(R.string.wifi_share_select_income));
                     return;
                 }
-                param.putString(WIFIDefine.WIFI_SHARE_PARAM.KEY_EARNINGS, integration);
-                LogHelper.releaseLog(TAG + "shareWifi param:" + param.toString());
+                wifiShareInfo.setEarnings(integration);
+                LogHelper.releaseLog(TAG + "shareWifi wifiShareInfo:" + wifiShareInfo.toString());
                 if (null != mPresenter) {
-                    mPresenter.requestUserShareWifi(param);
+                    mPresenter.requestUserShareWifi(wifiShareInfo);
                 }
             }
         }

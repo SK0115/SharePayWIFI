@@ -61,4 +61,7 @@
     <string name="wifi_share_location_fail">位置信息获取失败</string>
     <string name="wifi_share_select_income">请选择共享收益</string>
     <string name="wifi_share_info_null">WIFI信息获取失败</string>
+    <string name="wifi_share_info_pass_null">请输入WIFI密码</string>
+    <string name="wifi_share_info_success">分享成功</string>
+    <string name="wifi_share_info_fail">分享失败</string>
 </resources>

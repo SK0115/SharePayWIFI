@@ -1,7 +1,5 @@
 package com.sharepay.wifi.http;
 
-import android.os.Bundle;
-
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.sharepay.wifi.base.BaseHttpResultFunction;
 import com.sharepay.wifi.define.WIFIDefine;
@@ -12,6 +10,7 @@ import com.sharepay.wifi.model.http.LoginAccountHttpData;
 import com.sharepay.wifi.model.http.NetSpeedTestHttpData;
 import com.sharepay.wifi.model.http.TokenHttpData;
 import com.sharepay.wifi.model.http.UserIntegralHistoryHttpData;
+import com.sharepay.wifi.model.info.WIFIShareInfo;
 import com.sharepay.wifi.util.CommonUtil;
 
 import java.io.IOException;
@@ -187,18 +186,19 @@ public class HttpRequestHelper {
      * 
      * @param observer
      * @param wifiShareRequestService
-     * @param param
+     * @param wifiShareInfo
      */
-    public void requestUserShareWifi(Observer<BaseHttpResult<BaseHttpData>> observer, WifiShareRequestService wifiShareRequestService, Bundle param) {
-        if (null != observer && null != wifiShareRequestService && null != param) {
-            String mobile = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_MOBILE);
-            String name = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_NAME);
-            String pass = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_PASS);
-            String ip = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_IP);
-            String gateway = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_GATEWAY);
-            String xcoordinate = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_X_COORDINATE);
-            String ycoordinate = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_Y_COORDINATE);
-            String earnings = param.getString(WIFIDefine.WIFI_SHARE_PARAM.KEY_EARNINGS);
+    public void requestUserShareWifi(Observer<BaseHttpResult<BaseHttpData>> observer, WifiShareRequestService wifiShareRequestService,
+            WIFIShareInfo wifiShareInfo) {
+        if (null != observer && null != wifiShareRequestService && null != wifiShareInfo) {
+            String mobile = wifiShareInfo.getMobile();
+            String name = wifiShareInfo.getName();
+            String pass = wifiShareInfo.getPass();
+            String ip = wifiShareInfo.getIp();
+            String gateway = wifiShareInfo.getGateway();
+            String xcoordinate = wifiShareInfo.getXCoordinate();
+            String ycoordinate = wifiShareInfo.getYCoordinate();
+            String earnings = wifiShareInfo.getEarnings();
             Observable observable = wifiShareRequestService.requestUserShareWifi(CommonUtil.getToken(), mobile, CommonUtil.getDeivceID(), name, pass, ip,
                     gateway, xcoordinate, ycoordinate, earnings);
             toObservable(observable, observer);

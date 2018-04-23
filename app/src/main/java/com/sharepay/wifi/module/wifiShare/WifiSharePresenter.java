@@ -1,7 +1,5 @@
 package com.sharepay.wifi.module.wifiShare;
 
-import android.os.Bundle;
-
 import com.sharepay.wifi.base.BaseHttpObserver;
 import com.sharepay.wifi.define.WIFIDefine.HttpRequestCallBack;
 import com.sharepay.wifi.helper.LogHelper;
@@ -9,6 +7,7 @@ import com.sharepay.wifi.http.HttpRequestHelper;
 import com.sharepay.wifi.http.WifiShareRequestService;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
+import com.sharepay.wifi.model.info.WIFIShareInfo;
 
 public class WifiSharePresenter implements WifiShareContract.Presenter {
 
@@ -31,7 +30,7 @@ public class WifiSharePresenter implements WifiShareContract.Presenter {
     }
 
     @Override
-    public void requestUserShareWifi(Bundle param) {
+    public void requestUserShareWifi(WIFIShareInfo wifiShareInfo) {
         HttpRequestHelper.getInstance().requestUserShareWifi(new BaseHttpObserver<BaseHttpResult<BaseHttpData>>(new HttpRequestCallBack() {
             @Override
             public void onNext(Object wifiShareData) {
@@ -44,6 +43,6 @@ public class WifiSharePresenter implements WifiShareContract.Presenter {
             @Override
             public void onError(Throwable e) {
             }
-        }), mWifiShareRequestService, param);
+        }), mWifiShareRequestService, wifiShareInfo);
     }
 }

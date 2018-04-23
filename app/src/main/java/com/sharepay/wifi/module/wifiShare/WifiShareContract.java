@@ -1,11 +1,10 @@
 package com.sharepay.wifi.module.wifiShare;
 
-import android.os.Bundle;
-
 import com.sharepay.wifi.base.BasePresenter;
 import com.sharepay.wifi.base.BaseView;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
+import com.sharepay.wifi.model.info.WIFIShareInfo;
 
 public interface WifiShareContract {
 
@@ -24,8 +23,8 @@ public interface WifiShareContract {
         /**
          * wifi分享请求
          * 
-         * @param param
+         * @param wifiShareInfo
          */
-        void requestUserShareWifi(Bundle param);
+        void requestUserShareWifi(WIFIShareInfo wifiShareInfo);
     }
 }
