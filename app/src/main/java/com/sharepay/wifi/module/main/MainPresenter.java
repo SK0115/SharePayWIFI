@@ -14,6 +14,8 @@ import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.http.ShareWifiListHttpData;
 import com.sharepay.wifi.model.info.WIFIShareInfo;
 
+import java.util.List;
+
 public class MainPresenter implements MainContract.Presenter {
 
     private final String TAG = "MainPresenter ";
@@ -57,7 +59,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void requestShareWifiList(WIFIShareInfo wifiShareInfo) {
-        HttpRequestHelper.getInstance().requestShareWifiList(new BaseHttpObserver<BaseHttpResult<ShareWifiListHttpData>>(new HttpRequestCallBack() {
+        HttpRequestHelper.getInstance().requestShareWifiList(new BaseHttpObserver<BaseHttpResult<List<ShareWifiListHttpData>>>(new HttpRequestCallBack() {
             @Override
             public void onNext(Object shareWifiListHttpData) {
                 if (null != mView && shareWifiListHttpData instanceof BaseHttpResult) {

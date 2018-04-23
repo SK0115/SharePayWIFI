@@ -160,7 +160,7 @@ public class HttpRequestHelper {
      * @param mainRequestService
      * @param wifiShareInfo
      */
-    public void requestShareWifiList(Observer<BaseHttpResult<ShareWifiListHttpData>> observer, MainRequestService mainRequestService,
+    public void requestShareWifiList(Observer<BaseHttpResult<List<ShareWifiListHttpData>>> observer, MainRequestService mainRequestService,
             WIFIShareInfo wifiShareInfo) {
         if (null != observer && null != mainRequestService && null != wifiShareInfo) {
             String mobile = wifiShareInfo.getMobile();
