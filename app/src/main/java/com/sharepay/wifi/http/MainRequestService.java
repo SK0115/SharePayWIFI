@@ -22,4 +22,8 @@ public interface MainRequestService {
     @GET("/wifi_api/user/share_list")
     Observable<BaseHttpResult<ShareWifiListHttpData>> requestShareWifiList(@Query("token") String token, @Query("mobile") String mobile,
             @Query("userid") String userid, @Query("x_coordinate") String xcoordinate, @Query("y_coordinate") String ycoordinate);
+
+    @GET("/wifi_api/user/user_expense")
+    Observable<BaseHttpResult<BaseHttpData>> requestJoinWifi(@Query("token") String token, @Query("mobile") String mobile, @Query("userid") String userid,
+            @Query("id") String id, @Query("time") String time);
 }

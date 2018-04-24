@@ -23,6 +23,13 @@ public interface MainContract {
          * @param wifiListHttpResult
          */
         void setShareWifiListHttpResult(BaseHttpResult<ShareWifiListHttpData> wifiListHttpResult);
+
+        /**
+         * 设置加入wifi结果
+         * 
+         * @param joinWifiHttpResult
+         */
+        void setJoinWifiHttpResult(BaseHttpResult<BaseHttpData> joinWifiHttpResult);
     }
 
     interface Presenter extends BasePresenter {
@@ -40,5 +47,14 @@ public interface MainContract {
          * @param wifiShareInfo
          */
         void requestShareWifiList(WIFIShareInfo wifiShareInfo);
+
+        /**
+         * 用户加入wifi消费
+         * 
+         * @param mobile
+         * @param id
+         * @param time
+         */
+        void requestJoinWifi(String mobile, String id, String time);
     }
 }

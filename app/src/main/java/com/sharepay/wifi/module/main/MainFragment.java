@@ -404,6 +404,13 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         }
     }
 
+    @Override
+    public void setJoinWifiHttpResult(BaseHttpResult<BaseHttpData> joinWifiHttpResult) {
+        if (null != joinWifiHttpResult && WIFIDefine.HttpResultState.SUCCESS.equals(joinWifiHttpResult.getStatus())) {
+            // 加入wifi消费成功
+        }
+    }
+
     public void startLocation() {
         if (null == mLocationHelper) {
             mLocationHelper = new LocationHelper(mLocationCallBack);

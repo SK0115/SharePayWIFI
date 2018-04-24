@@ -42,6 +42,7 @@ public class WifiSharePresenter implements WifiShareContract.Presenter {
 
             @Override
             public void onError(Throwable e) {
+                LogHelper.errorLog(TAG + "requestUserShareWifi onError! msg:" + e.getMessage());
             }
         }), mWifiShareRequestService, wifiShareInfo);
     }

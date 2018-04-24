@@ -70,7 +70,26 @@ public class MainPresenter implements MainContract.Presenter {
 
             @Override
             public void onError(Throwable e) {
+                LogHelper.errorLog(TAG + "requestShareWifiList onError! msg:" + e.getMessage());
             }
         }), mMainRequestService, wifiShareInfo);
+    }
+
+    @Override
+    public void requestJoinWifi(String mobile, String id, String time) {
+        HttpRequestHelper.getInstance().requestJoinWifi(new BaseHttpObserver<BaseHttpResult<BaseHttpData>>(new HttpRequestCallBack() {
+            @Override
+            public void onNext(Object joinWifiHttpData) {
+                if (null != mView && joinWifiHttpData instanceof BaseHttpResult) {
+                    LogHelper.releaseLog(TAG + "requestJoinWifi onNext! joinWifiHttpData:" + joinWifiHttpData.toString());
+                    mView.setJoinWifiHttpResult((BaseHttpResult<BaseHttpData>) joinWifiHttpData);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                LogHelper.errorLog(TAG + "requestJoinWifi onError! msg:" + e.getMessage());
+            }
+        }), mMainRequestService, mobile, id, time);
     }
 }

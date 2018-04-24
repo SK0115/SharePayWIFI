@@ -172,6 +172,22 @@ public class HttpRequestHelper {
     }
 
     /**
+     * 加入wifi消费接口请求
+     * 
+     * @param observer
+     * @param mainRequestService
+     * @param mobile
+     * @param id
+     * @param time
+     */
+    public void requestJoinWifi(Observer<BaseHttpResult<BaseHttpData>> observer, MainRequestService mainRequestService, String mobile, String id, String time) {
+        if (null != observer && null != mainRequestService) {
+            Observable observable = mainRequestService.requestJoinWifi(CommonUtil.getToken(), mobile, CommonUtil.getDeivceID(), id, time);
+            toObservable(observable, observer);
+        }
+    }
+
+    /**
      * 请求用户积分历史信息
      * 
      * @param observer
