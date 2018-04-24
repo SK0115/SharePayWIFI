@@ -21,8 +21,9 @@
     <string name="cost_history">消费历史</string>
     <string name="contact_us">联系我们</string>
     <string name="user_agreement">用户协议</string>
-    <string name="version_info">版本信息 v1.0.1</string>
+    <string name="version_info">版本信息 v</string>
     <string name="click_update">点击更新</string>
+    <string name="already_lastver">已是最新版本</string>
     <string name="intergration_mail_building">积分商城在建中，敬请期待...</string>
     <string name="exit_login">退出登录</string>
     <string name="sign">签到</string>

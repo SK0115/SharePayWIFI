@@ -1,7 +1,7 @@
 package com.sharepay.wifi.http;
 
 import com.sharepay.wifi.define.DomainDefine;
-import com.sharepay.wifi.model.http.BaseHttpData;
+import com.sharepay.wifi.model.http.AppVersionHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
 
 import io.reactivex.Observable;
@@ -16,5 +16,5 @@ public interface PersonalCenterRequestService {
     String DOMAIN_URL = DomainDefine.DOMAIN_URL;
 
     @GET("/wifi_api/user/app_version")
-    Observable<BaseHttpResult<BaseHttpData>> requestAppVersion(@Query("token") String token, @Query("userid") String userid);
+    Observable<BaseHttpResult<AppVersionHttpData>> requestAppVersion(@Query("token") String token, @Query("userid") String userid);
 }

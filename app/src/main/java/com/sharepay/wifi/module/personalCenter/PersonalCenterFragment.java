@@ -18,8 +18,12 @@ import com.sharepay.wifi.base.OnBaseItemClickListener;
 import com.sharepay.wifi.baseCtrl.FullyLinearLayoutManager;
 import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.AccountHelper;
+import com.sharepay.wifi.helper.LogHelper;
+import com.sharepay.wifi.model.http.AppVersionHttpData;
+import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.info.PersonalCenterInfo;
 import com.sharepay.wifi.model.realm.AccountInfoRealm;
+import com.sharepay.wifi.util.CommonUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,14 @@ import butterknife.OnClick;
 
 public class PersonalCenterFragment extends BaseFragment implements PersonalCenterContract.View {
 
+    private static final String TAG = "PersonalCenterFragment ";
+    private static final int PERSONAL_CENTER_HEAD_INDEX = 0;
+    private static final int PERSONAL_CENTER_HISTORY_INDEX = 1;
+    private static final int PERSONAL_CENTER_CONTACTUS_INDEX = 2;
+    private static final int PERSONAL_CENTER_USERAGREEMENT_INDEX = 3;
+    private static final int PERSONAL_CENTER_VERSIONINFO_INDEX = 4;
+    private static final int PERSONAL_CENTER_EXIT_INDEX = 5;
+
     @BindView(R.id.recyclerview_personal_center)
     RecyclerView mPersonalCenterRecyclerview;
 
@@ -36,6 +48,8 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
     private PersonalCenterAdapter mAdapter;
     private List<PersonalCenterInfo> mPersonalCenterDataList;
     private boolean mIsLogin = false;
+    private int mVersionCode = 0;
+    private String mVersionName;
 
     @OnClick({ R.id.iv_personal_center_back })
     public void onClick(View view) {
@@ -64,6 +78,12 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
 
     @Override
     protected void initView() {
+        mVersionCode = CommonUtil.getVersionCode(mActivity);
+        mVersionName = CommonUtil.getVersionName(mActivity);
+        LogHelper.releaseLog(TAG + "initView mVersionCode:" + mVersionCode + " mVersionName:" + mVersionName);
+        if (null != mPresenter) {
+            mPresenter.requestAppVersion();
+        }
         doLoginResult();
     }
 
@@ -83,6 +103,32 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
     @Override
     public void setPresenter(PersonalCenterContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    @Override
+    public void setAppVersionHttpResult(BaseHttpResult<AppVersionHttpData> appVersionHttpResult) {
+        if (null != appVersionHttpResult && null != appVersionHttpResult.getHttpData()
+                && WIFIDefine.HttpResultState.SUCCESS.equals(appVersionHttpResult.getStatus())) {
+            // 请求app升级信息成功
+            AppVersionHttpData appVersionHttpData = appVersionHttpResult.getHttpData();
+            try {
+                float httpVersion = Float.valueOf(appVersionHttpData.getVersion());
+                LogHelper.releaseLog(TAG + "setAppVersionHttpResult httpVersion:" + httpVersion + " mVersionCode:" + mVersionCode);
+                if (httpVersion > (float) mVersionCode) {
+                    if (null != mPersonalCenterDataList && mPersonalCenterDataList.size() > 0) {
+                        PersonalCenterInfo personalCenterData = mPersonalCenterDataList.get(PERSONAL_CENTER_VERSIONINFO_INDEX);
+                        personalCenterData.setMessage(getString(R.string.click_update));
+                        mPersonalCenterDataList.set(PERSONAL_CENTER_VERSIONINFO_INDEX, personalCenterData);
+                        if (null != mAdapter) {
+                            mAdapter.setDatas(mPersonalCenterDataList);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                LogHelper.errorLog(TAG + "setAppVersionHttpResult Exception! msg:" + e.getMessage());
+            }
+        }
     }
 
     /**
@@ -153,43 +199,44 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
             personalCenterData.setTitle(accountInfoRealm.getMobile());
             personalCenterData.setMessage(accountInfoRealm.getIntegral() + "");
             personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_ACCOUNT);
-            mPersonalCenterDataList.add(personalCenterData);
+            mPersonalCenterDataList.add(PERSONAL_CENTER_HEAD_INDEX, personalCenterData);
         } else {
             personalCenterData.setImg(R.drawable.ic_account_img);
             personalCenterData.setMessage("0");
             personalCenterData.setTitle(getString(R.string.please_login));
             personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_ACCOUNT);
-            mPersonalCenterDataList.add(personalCenterData);
+            mPersonalCenterDataList.add(PERSONAL_CENTER_HEAD_INDEX, personalCenterData);
         }
 
         personalCenterData = new PersonalCenterInfo();
         personalCenterData.setTitle(getString(R.string.cost_history));
         personalCenterData.setImg(R.drawable.ic_list_next);
         personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_IMG);
-        mPersonalCenterDataList.add(personalCenterData);
+        mPersonalCenterDataList.add(PERSONAL_CENTER_HISTORY_INDEX, personalCenterData);
 
         personalCenterData = new PersonalCenterInfo();
         personalCenterData.setTitle(getString(R.string.contact_us));
         personalCenterData.setImg(R.drawable.ic_list_next);
         personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_IMG);
-        mPersonalCenterDataList.add(personalCenterData);
+        mPersonalCenterDataList.add(PERSONAL_CENTER_CONTACTUS_INDEX, personalCenterData);
 
         personalCenterData = new PersonalCenterInfo();
         personalCenterData.setTitle(getString(R.string.user_agreement));
         personalCenterData.setImg(R.drawable.ic_list_next);
         personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_IMG);
-        mPersonalCenterDataList.add(personalCenterData);
+        mPersonalCenterDataList.add(PERSONAL_CENTER_USERAGREEMENT_INDEX, personalCenterData);
 
         personalCenterData = new PersonalCenterInfo();
-        personalCenterData.setTitle(getString(R.string.version_info));
+        String versionInfo = getString(R.string.version_info) + mVersionName;
+        personalCenterData.setTitle(versionInfo);
         personalCenterData.setImg(0);
-        personalCenterData.setMessage(getString(R.string.click_update));
+        personalCenterData.setMessage(getString(R.string.already_lastver));
         personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_TEXT);
-        mPersonalCenterDataList.add(personalCenterData);
+        mPersonalCenterDataList.add(PERSONAL_CENTER_VERSIONINFO_INDEX, personalCenterData);
 
         personalCenterData = new PersonalCenterInfo();
         personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_EXIT);
         personalCenterData.setIsLogin(mIsLogin);
-        mPersonalCenterDataList.add(personalCenterData);
+        mPersonalCenterDataList.add(PERSONAL_CENTER_EXIT_INDEX, personalCenterData);
     }
 }

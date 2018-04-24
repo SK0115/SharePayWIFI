@@ -4,6 +4,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.sharepay.wifi.base.BaseHttpResultFunction;
 import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.LogHelper;
+import com.sharepay.wifi.model.http.AppVersionHttpData;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.http.LoginAccountHttpData;
@@ -236,6 +237,19 @@ public class HttpRequestHelper {
             String earnings = wifiShareInfo.getEarnings();
             Observable observable = wifiShareRequestService.requestUserShareWifi(CommonUtil.getToken(), mobile, CommonUtil.getDeivceID(), name, pass, ip,
                     gateway, xcoordinate, ycoordinate, earnings);
+            toObservable(observable, observer);
+        }
+    }
+
+    /**
+     * 请求app升级信息
+     * 
+     * @param observer
+     * @param personalCenterRequestService
+     */
+    public void requestAppVersion(Observer<BaseHttpResult<AppVersionHttpData>> observer, PersonalCenterRequestService personalCenterRequestService) {
+        if (null != observer && null != personalCenterRequestService) {
+            Observable observable = personalCenterRequestService.requestAppVersion(CommonUtil.getToken(), CommonUtil.getDeivceID());
             toObservable(observable, observer);
         }
     }

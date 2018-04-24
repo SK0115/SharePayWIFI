@@ -319,6 +319,41 @@ public class CommonUtil {
     }
 
     /**
+     * 获取当前本地apk的版本
+     * 
+     * @param context
+     * @return
+     */
+    public static int getVersionCode(Context context) {
+        LogHelper.releaseLog(TAG + "getVersionCode");
+        int versionCode = 0;
+        try {
+            // 获取软件版本号，android:versionCode
+            versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+        } catch (Exception e) {
+            LogHelper.errorLog(TAG + "getVersionCode Exception! msg:" + e.getMessage());
+        }
+        return versionCode;
+    }
+
+    /**
+     * 获取版本号名称
+     * 
+     * @param context
+     * @return
+     */
+    public static String getVersionName(Context context) {
+        LogHelper.releaseLog(TAG + "getVersionName");
+        String versionName = "";
+        try {
+            versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+        } catch (Exception e) {
+            LogHelper.errorLog(TAG + "getVersionName Exception! msg:" + e.getMessage());
+        }
+        return versionName;
+    }
+
+    /**
      * 获取系统当前剩余的内存
      * 
      * @param context
