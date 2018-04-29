@@ -11,7 +11,7 @@ import com.sharepay.wifi.http.MainRequestService;
 import com.sharepay.wifi.http.HttpRequestHelper;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
-import com.sharepay.wifi.model.http.ShareWifiListHttpData;
+import com.sharepay.wifi.model.http.ShareWifiHttpData;
 import com.sharepay.wifi.model.info.WIFIShareInfo;
 
 import java.util.List;
@@ -59,18 +59,21 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void requestShareWifiList(WIFIShareInfo wifiShareInfo) {
-        HttpRequestHelper.getInstance().requestShareWifiList(new BaseHttpObserver<BaseHttpResult<List<ShareWifiListHttpData>>>(new HttpRequestCallBack() {
+        HttpRequestHelper.getInstance().requestShareWifiList(new BaseHttpObserver<BaseHttpResult<List<ShareWifiHttpData>>>(new HttpRequestCallBack() {
             @Override
             public void onNext(Object shareWifiListHttpData) {
                 if (null != mView && shareWifiListHttpData instanceof BaseHttpResult) {
                     LogHelper.releaseLog(TAG + "requestShareWifiList onNext! shareWifiListHttpData:" + shareWifiListHttpData.toString());
-                    mView.setShareWifiListHttpResult((BaseHttpResult<ShareWifiListHttpData>) shareWifiListHttpData);
+                    mView.setShareWifiListHttpResult((BaseHttpResult<List<ShareWifiHttpData>>) shareWifiListHttpData);
                 }
             }
 
             @Override
             public void onError(Throwable e) {
                 LogHelper.errorLog(TAG + "requestShareWifiList onError! msg:" + e.getMessage());
+                if (null != mView) {
+                    mView.setShareWifiListHttpResult(null);
+                }
             }
         }), mMainRequestService, wifiShareInfo);
     }

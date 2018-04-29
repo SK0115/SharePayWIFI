@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * 共享wifi列表网络请求数据
  */
-public class ShareWifiListHttpData implements Parcelable {
+public class ShareWifiHttpData implements Parcelable {
 
     private String id;
     private String name;
@@ -119,13 +119,13 @@ public class ShareWifiListHttpData implements Parcelable {
 
     @Override
     public String toString() {
-        return "ShareWifiListHttpData={" + "id='" + getId() + '\'' + ", name='" + getName() + '\'' + ", pass='" + getPass() + '\'' + ", ip='" + getIp() + '\''
+        return "ShareWifiHttpData={" + "id='" + getId() + '\'' + ", name='" + getName() + '\'' + ", pass='" + getPass() + '\'' + ", ip='" + getIp() + '\''
                 + ", gateway='" + getGateway() + '\'' + ", x_coordinate='" + getXCoordinate() + '\'' + ", y_coordinate='" + getYCoordinate() + '\''
                 + ", mobile='" + getMobile() + '\'' + ", add_time='" + getAddtime() + '\'' + ", earnings='" + getEarnings() + '\'' + ", status='" + getStatus()
                 + '\'' + ", distanc='" + getDistanc() + '\'' + '}';
     }
 
-    private ShareWifiListHttpData(Parcel in) {
+    private ShareWifiHttpData(Parcel in) {
         id = in.readString();
         name = in.readString();
         pass = in.readString();
@@ -161,15 +161,15 @@ public class ShareWifiListHttpData implements Parcelable {
         return 0;
     }
 
-    public static final Creator<ShareWifiListHttpData> CREATOR = new Creator<ShareWifiListHttpData>() {
+    public static final Creator<ShareWifiHttpData> CREATOR = new Creator<ShareWifiHttpData>() {
         @Override
-        public ShareWifiListHttpData createFromParcel(Parcel in) {
-            return new ShareWifiListHttpData(in);
+        public ShareWifiHttpData createFromParcel(Parcel in) {
+            return new ShareWifiHttpData(in);
         }
 
         @Override
-        public ShareWifiListHttpData[] newArray(int size) {
-            return new ShareWifiListHttpData[size];
+        public ShareWifiHttpData[] newArray(int size) {
+            return new ShareWifiHttpData[size];
         }
     };
 }

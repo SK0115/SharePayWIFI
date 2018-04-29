@@ -65,4 +65,8 @@
     <string name="wifi_share_info_pass_null">请输入WIFI密码</string>
     <string name="wifi_share_info_success">分享成功</string>
     <string name="wifi_share_info_fail">分享失败</string>
+    <string name="wifi_switch_close">WIFI开关处于关闭状态</string>
+    <string name="wifi_switch_need_open">是否需要开启WIFI开关？</string>
+    <string name="wifi_need_pay">该WIFI需要付费连接</string>
+    <string name="wifi_pay_integral">您确定消费%1$s个积分连接到该WIFI</string>
 </resources>

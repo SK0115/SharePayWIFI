@@ -32,12 +32,13 @@ public class WIFIConnectManager {
      *            消息
      */
     private void sendMsg(String info) {
+        LogHelper.releaseLog(TAG + "sendMsg info:" + info);
         if (null != mHandler) {
             Message msg = new Message();
             msg.obj = info;
             mHandler.sendMessage(msg);// 向Handler发送消息
         } else {
-            LogHelper.errorLog(TAG + "sendMsg is error info:" + info);
+            LogHelper.errorLog(TAG + "sendMsg mHandler is null!");
         }
     }
 

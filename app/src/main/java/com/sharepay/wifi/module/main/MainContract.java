@@ -4,8 +4,10 @@ import com.sharepay.wifi.base.BasePresenter;
 import com.sharepay.wifi.base.BaseView;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
-import com.sharepay.wifi.model.http.ShareWifiListHttpData;
+import com.sharepay.wifi.model.http.ShareWifiHttpData;
 import com.sharepay.wifi.model.info.WIFIShareInfo;
+
+import java.util.List;
 
 public interface MainContract {
     interface View extends BaseView<Presenter> {
@@ -22,7 +24,7 @@ public interface MainContract {
          * 
          * @param wifiListHttpResult
          */
-        void setShareWifiListHttpResult(BaseHttpResult<ShareWifiListHttpData> wifiListHttpResult);
+        void setShareWifiListHttpResult(BaseHttpResult<List<ShareWifiHttpData>> wifiListHttpResult);
 
         /**
          * 设置加入wifi结果

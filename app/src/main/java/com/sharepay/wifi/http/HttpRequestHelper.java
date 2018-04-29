@@ -9,7 +9,7 @@ import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.http.LoginAccountHttpData;
 import com.sharepay.wifi.model.http.NetSpeedTestHttpData;
-import com.sharepay.wifi.model.http.ShareWifiListHttpData;
+import com.sharepay.wifi.model.http.ShareWifiHttpData;
 import com.sharepay.wifi.model.http.TokenHttpData;
 import com.sharepay.wifi.model.http.UserIntegralHistoryHttpData;
 import com.sharepay.wifi.model.info.WIFIShareInfo;
@@ -161,7 +161,7 @@ public class HttpRequestHelper {
      * @param mainRequestService
      * @param wifiShareInfo
      */
-    public void requestShareWifiList(Observer<BaseHttpResult<List<ShareWifiListHttpData>>> observer, MainRequestService mainRequestService,
+    public void requestShareWifiList(Observer<BaseHttpResult<List<ShareWifiHttpData>>> observer, MainRequestService mainRequestService,
             WIFIShareInfo wifiShareInfo) {
         if (null != observer && null != mainRequestService && null != wifiShareInfo) {
             String mobile = wifiShareInfo.getMobile();

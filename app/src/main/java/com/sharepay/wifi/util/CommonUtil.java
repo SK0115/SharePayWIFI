@@ -4,15 +4,21 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import com.sharepay.wifi.R;
 import com.sharepay.wifi.SPApplication;
 import com.sharepay.wifi.helper.AccountHelper;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.helper.RealmHelper;
+import com.sharepay.wifi.helper.WIFIConnectManager;
+import com.sharepay.wifi.model.http.ShareWifiHttpData;
 import com.sharepay.wifi.model.http.TokenHttpData;
+import com.sharepay.wifi.model.info.WIFIInfo;
 import com.sharepay.wifi.model.realm.DeviceInfoRealm;
 import com.sharepay.wifi.model.realm.SignInfoRealm;
 import com.sharepay.wifi.model.realm.TokenInfoRealm;
@@ -23,6 +29,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import io.realm.RealmObject;
 
@@ -351,6 +358,74 @@ public class CommonUtil {
             LogHelper.errorLog(TAG + "getVersionName Exception! msg:" + e.getMessage());
         }
         return versionName;
+    }
+
+    /**
+     * 处理wifi连接
+     * 
+     * @param context
+     * @param info
+     * @param shareWifiHttpDataList
+     */
+    public static void doConnectWifi(Context context, final WIFIInfo info, final List<ShareWifiHttpData> shareWifiHttpDataList) {
+        if (null != info && null != context) {
+            final WIFIConnectManager wifiConnectManager = new WIFIConnectManager(context);
+            boolean connectResult = wifiConnectManager.connectExistWIFI(info);
+            if (connectResult) {
+                ToastUtils.showShort(R.string.connect_success);
+            } else {
+                wifiConnectManager.mHandler = new Handler() {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        // 操作界面
+                        if (null != msg) {
+                            LogHelper.releaseLog(TAG + " Wifi Item Click msg:" + msg.obj);
+                            ToastUtils.showShort((String) msg.obj);
+                        }
+                    }
+                };
+                String capabilities = info.getCapabilities().trim();
+                LogHelper.releaseLog(TAG + " Wifi Item Click capabilities:" + capabilities);
+                WIFIConnectManager.WifiCipherType type = WIFIConnectManager.WifiCipherType.WIFICIPHER_NOPASS;
+                if (!TextUtils.isEmpty(capabilities)) {
+                    if (capabilities.contains("WPA") || capabilities.contains("wpa")) {
+                        type = WIFIConnectManager.WifiCipherType.WIFICIPHER_WPA;
+                    } else if (capabilities.contains("WEP") || capabilities.contains("wep")) {
+                        type = WIFIConnectManager.WifiCipherType.WIFICIPHER_WEP;
+                    }
+                }
+                final WIFIConnectManager.WifiCipherType wifiCipherType = type;
+                if (info.isShared()) {
+                    String payInfo = String.format(context.getResources().getString(R.string.wifi_pay_integral), info.getEarnings());
+                    DialogUtils.showDialog(context, context.getResources().getString(R.string.wifi_need_pay), payInfo, new DialogUtils.OnDialogClickListener() {
+                        @Override
+                        public void onClick() {
+                            // 取消
+                        }
+                    }, new DialogUtils.OnDialogClickListener() {
+                        @Override
+                        public void onClick() {
+                            // 确定
+                            if (null != shareWifiHttpDataList && shareWifiHttpDataList.size() > 0) {
+                                String wifiPass = "";
+                                for (int i = 0; i < shareWifiHttpDataList.size(); i++) {
+                                    ShareWifiHttpData shareWifiHttpData = shareWifiHttpDataList.get(i);
+                                    if (TextUtils.equals(shareWifiHttpData.getId(), info.getShareWifiId())) {
+                                        wifiPass = shareWifiHttpData.getPass();
+                                        break;
+                                    }
+                                }
+                                wifiConnectManager.connectWIFI(info.getName(), wifiPass, wifiCipherType);
+                            }
+                        }
+                    });
+                } else {
+                    ToastUtils.showShort(R.string.connect_fail);
+                    wifiConnectManager.connectWIFI(info.getName(), "", type);
+                }
+            }
+        }
     }
 
     /**
