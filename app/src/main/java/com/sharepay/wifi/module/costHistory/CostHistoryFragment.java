@@ -34,7 +34,7 @@ public class CostHistoryFragment extends BaseFragment implements CostHistoryCont
     private boolean mIsLoadFinish = false; // 是否加载结束
 
     @BindView(R.id.recyclerview_costhistory)
-    RecyclerView recyclerviewCostHistory;
+    RecyclerView mCostHistoryRecyclerview;
 
     public static CostHistoryFragment getInstance() {
         CostHistoryFragment mPersonalCenterFragment = new CostHistoryFragment();
@@ -93,13 +93,13 @@ public class CostHistoryFragment extends BaseFragment implements CostHistoryCont
                 String integration = "";
                 if (WIFIDefine.USER_INTEGRAL_HISTORY_TYPE.TYPE_SIGN.equals(data.getType())) {
                     content = WIFIDefine.USER_INTEGRAL_HISTORY_TYPE.TYPE_SIGN_TEXT;
-                    integration = "+ " + data.getIntegral();
+                    integration = "+" + data.getIntegral();
                 } else if (WIFIDefine.USER_INTEGRAL_HISTORY_TYPE.TYPE_SHARE.equals(data.getType())) {
                     content = WIFIDefine.USER_INTEGRAL_HISTORY_TYPE.TYPE_SHARE_TEXT;
-                    integration = "+ " + data.getIntegral();
+                    integration = "+" + data.getIntegral();
                 } else if (WIFIDefine.USER_INTEGRAL_HISTORY_TYPE.TYPE_SPENDING.equals(data.getType())) {
                     content = WIFIDefine.USER_INTEGRAL_HISTORY_TYPE.TYPE_SPENDING_TEXT;
-                    integration = "- " + data.getIntegral();
+                    integration = "" + data.getIntegral();
                 }
                 info.setContent(content);
                 info.setTime(data.getAddTime());
@@ -112,10 +112,10 @@ public class CostHistoryFragment extends BaseFragment implements CostHistoryCont
                 mAdapter = new CostHistoryListAdapter(mActivity, datas, true);
                 mAdapter.setLoadingView(R.layout.cost_history_loading_view);
                 mAdapter.setOnLoadMoreListener(mLoadMoreListener);
-                recyclerviewCostHistory.setNestedScrollingEnabled(false);
+                mCostHistoryRecyclerview.setNestedScrollingEnabled(false);
                 // 设置布局管理器
-                recyclerviewCostHistory.setLayoutManager(new FullyLinearLayoutManager(mActivity));
-                recyclerviewCostHistory.setAdapter(mAdapter);
+                mCostHistoryRecyclerview.setLayoutManager(new FullyLinearLayoutManager(mActivity));
+                mCostHistoryRecyclerview.setAdapter(mAdapter);
             } else {
                 mAdapter.setLoadMoreData(datas);
             }

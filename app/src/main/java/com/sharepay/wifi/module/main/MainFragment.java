@@ -161,7 +161,6 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                                 // 操作界面
                                 if (null != msg) {
                                     LogHelper.releaseLog(TAG + " Wifi Item Click msg:" + msg.obj);
-                                    ToastUtils.showShort((String) msg.obj);
                                 }
                             }
                         };

@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="63dp">
+    android:layout_height="63dp"
+    android:background="@drawable/recyclerview_item_selector_bg"
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:orientation="horizontal"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:layout_centerVertical="true">
+        android:paddingRight="20dp">
+
         <ImageView
             android:id="@+id/iv_wifi_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_common_wifi_locked" />
+
         <TextView
             android:id="@+id/tv_wifi_item_name"
-            android:textSize="16sp"
-            android:textColor="@color/black_60"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="14dp"
             android:singleLine="true"
-            android:layout_gravity="center_vertical"/>
+            android:textColor="@color/black_60"
+            android:textSize="16sp" />
     </LinearLayout>
-    <View style="@style/LineStyle"
-        android:layout_alignParentBottom="true"/>
+
+    <View
+        style="@style/LineStyle"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>
