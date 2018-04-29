@@ -29,7 +29,7 @@ public class DialogUtils {
      *            确定点击监听
      */
     public static void showDialog(Context context, String title, String desc, final OnDialogClickListener mOnCancel, final OnDialogClickListener mOnSure) {
-        show(context,title,desc,mOnCancel,mOnSure);
+        show(context, title, desc, mOnCancel, mOnSure);
     }
 
     /**
@@ -45,18 +45,24 @@ public class DialogUtils {
      *            确定点击监听
      */
     public static void showDialog(Context context, String title, String desc, final OnDialogClickListener mOnSure) {
-        show(context,title,desc,null,mOnSure);
+        show(context, title, desc, null, mOnSure);
     }
 
     /**
      * 显示通用的dialog框的基本方法
-     * @param context   上下文
-     * @param title     标题
-     * @param desc      描述
-     * @param mOnCancel 取消点击监听
-     * @param mOnSure   确定点击监听
+     * 
+     * @param context
+     *            上下文
+     * @param title
+     *            标题
+     * @param desc
+     *            描述
+     * @param mOnCancel
+     *            取消点击监听
+     * @param mOnSure
+     *            确定点击监听
      */
-    private static void show(Context context, String title, String desc, final OnDialogClickListener mOnCancel, final OnDialogClickListener mOnSure){
+    private static void show(Context context, String title, String desc, final OnDialogClickListener mOnCancel, final OnDialogClickListener mOnSure) {
         final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
         alertDialog.show();
         Window window = alertDialog.getWindow();
@@ -69,9 +75,9 @@ public class DialogUtils {
 
         tvTitle.setText(title);
         tvDesc.setText(desc);
-        if(mOnCancel == null){
+        if (mOnCancel == null) {
             tvCancel.setVisibility(View.GONE);
-        }else{
+        } else {
             tvCancel.setVisibility(View.VISIBLE);
             tvCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -81,9 +87,9 @@ public class DialogUtils {
                 }
             });
         }
-        if(mOnSure == null){
+        if (mOnSure == null) {
             tvSure.setVisibility(View.GONE);
-        }else{
+        } else {
             tvSure.setVisibility(View.VISIBLE);
             tvSure.setOnClickListener(new View.OnClickListener() {
                 @Override

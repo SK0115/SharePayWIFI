@@ -12,6 +12,8 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -37,6 +39,7 @@ import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.AccountHelper;
 import com.sharepay.wifi.helper.LocationHelper;
 import com.sharepay.wifi.helper.LogHelper;
+import com.sharepay.wifi.helper.WIFIConnectManager;
 import com.sharepay.wifi.helper.WIFIHelper;
 import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
@@ -89,6 +92,9 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     private double mYCoordinate = 0; // 经度
     private AccountInfoRealm mAccountInfoRealm;
     private List<ShareWifiHttpData> mShareWifiHttpDataList;
+    private WIFIConnectManager mWIFIConnectManager;
+    private WIFIConnectManager.WifiCipherType mWifiCipherType;
+    private ShareWifiHttpData mNeedConnectWifi;
 
     @OnClick({ R.id.iv_main_personal_enter, R.id.iv_main_share, R.id.tv_sign_in, R.id.layout_main_connect_wifi })
     public void onClick(View view) {
@@ -144,7 +150,66 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                 @SuppressLint("HandlerLeak")
                 @Override
                 public void onItemClick(BaseHolder viewHolder, final WIFIInfo info, int position) {
-                    CommonUtil.doConnectWifi(mActivity, info, mShareWifiHttpDataList);
+                    if (null != info) {
+                        mNeedConnectWifi = null;
+                        mWifiCipherType = null;
+                        mWIFIConnectManager = new WIFIConnectManager(mActivity);
+                        mWIFIConnectManager.mHandler = new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                super.handleMessage(msg);
+                                // 操作界面
+                                if (null != msg) {
+                                    LogHelper.releaseLog(TAG + " Wifi Item Click msg:" + msg.obj);
+                                    ToastUtils.showShort((String) msg.obj);
+                                }
+                            }
+                        };
+                        String capabilities = info.getCapabilities().trim();
+                        LogHelper.releaseLog(TAG + " Wifi Item Click capabilities:" + capabilities);
+                        mWifiCipherType = WIFIConnectManager.WifiCipherType.WIFICIPHER_NOPASS;
+                        if (!TextUtils.isEmpty(capabilities)) {
+                            if (capabilities.contains("WPA") || capabilities.contains("wpa")) {
+                                mWifiCipherType = WIFIConnectManager.WifiCipherType.WIFICIPHER_WPA;
+                            } else if (capabilities.contains("WEP") || capabilities.contains("wep")) {
+                                mWifiCipherType = WIFIConnectManager.WifiCipherType.WIFICIPHER_WEP;
+                            }
+                        }
+                        if (info.isShared()) {
+                            String payInfo = String.format(getResources().getString(R.string.wifi_pay_integral), info.getEarnings());
+                            DialogUtils.showDialog(mActivity, getResources().getString(R.string.wifi_need_pay), payInfo,
+                                    new DialogUtils.OnDialogClickListener() {
+                                        @Override
+                                        public void onClick() {
+                                            // 取消
+                                        }
+                                    }, new DialogUtils.OnDialogClickListener() {
+                                        @Override
+                                        public void onClick() {
+                                            // 确定
+                                            if (null != mShareWifiHttpDataList && mShareWifiHttpDataList.size() > 0) {
+                                                for (int i = 0; i < mShareWifiHttpDataList.size(); i++) {
+                                                    ShareWifiHttpData shareWifiHttpData = mShareWifiHttpDataList.get(i);
+                                                    if (TextUtils.equals(shareWifiHttpData.getId(), info.getShareWifiId())) {
+                                                        mNeedConnectWifi = shareWifiHttpData;
+                                                        if (null == mAccountInfoRealm || TextUtils.isEmpty(mAccountInfoRealm.getMobile())
+                                                                || TextUtils.isEmpty(mAccountInfoRealm.getId())) {
+                                                            return;
+                                                        }
+                                                        if (null != mPresenter && null != mNeedConnectWifi) {
+                                                            mPresenter.requestJoinWifi(mAccountInfoRealm.getMobile(), mNeedConnectWifi.getId(), "1");
+                                                        }
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+                        } else {
+                            ToastUtils.showShort(R.string.connect_fail);
+                            mWIFIConnectManager.connectWIFI(info.getName(), "", mWifiCipherType);
+                        }
+                    }
                 }
             });
             recyclerviewMain.setNestedScrollingEnabled(false);
@@ -417,8 +482,13 @@ public class MainFragment extends BaseFragment implements MainContract.View {
 
     @Override
     public void setJoinWifiHttpResult(BaseHttpResult<BaseHttpData> joinWifiHttpResult) {
+        LogHelper.releaseLog(TAG + "setJoinWifiHttpResult result:" + (null != joinWifiHttpResult ? joinWifiHttpResult.toString() : "is null!"));
         if (null != joinWifiHttpResult && WIFIDefine.HttpResultState.SUCCESS.equals(joinWifiHttpResult.getStatus())) {
             // 加入wifi消费成功
+            if (null != mWIFIConnectManager && null != mNeedConnectWifi && null != mWifiCipherType) {
+                WIFIHelper.disconnectWIFI(mActivity);
+                mWIFIConnectManager.connectWIFI(mNeedConnectWifi.getName(), mNeedConnectWifi.getPass(), mWifiCipherType);
+            }
         }
     }
 
