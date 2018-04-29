@@ -1,10 +1,12 @@
 package com.sharepay.wifi.module.main;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
@@ -12,6 +14,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -197,6 +200,18 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         layoutTips.requestFocus();
         layoutTips.requestFocusFromTouch();
         mScanProgressBar.setImageResource(R.drawable.ic_list_loading);
+        List<String> permissionsList = new ArrayList<String>();
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            LogHelper.releaseLog(TAG + "initView no location permission!");
+            permissionsList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            permissionsList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            ActivityCompat.requestPermissions(mActivity, permissionsList.toArray(new String[permissionsList.size()]),
+                    WIFIDefine.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+        } else {
+            LogHelper.releaseLog(TAG + "initView has location permission!");
+            startLocation();
+        }
     }
 
     private void initHasConnectWIFIInfo() {
@@ -274,6 +289,8 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             mScanWIFIThread = null;
         }
         if (null != mLocationHelper) {
+            mLocationHelper.setLocationCallBack(null);
+            mLocationHelper.release();
             mLocationHelper = null;
         }
     }
@@ -413,8 +430,9 @@ public class MainFragment extends BaseFragment implements MainContract.View {
 
     public void startLocation() {
         if (null == mLocationHelper) {
-            mLocationHelper = new LocationHelper(mLocationCallBack);
+            mLocationHelper = new LocationHelper();
         }
+        mLocationHelper.setLocationCallBack(mLocationCallBack);
         mLocationHelper.location(mActivity);
     }
 

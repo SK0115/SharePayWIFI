@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.base.BaseActivity;
+import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.module.main.MainFragment;
 import com.sharepay.wifi.module.main.MainPresenter;
 import com.sharepay.wifi.util.CommonUtil;
@@ -19,7 +20,6 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity {
 
-    private final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
     private MainFragment mMainFragment;
 
     @Override
@@ -49,7 +49,8 @@ public class MainActivity extends BaseActivity {
         }
 
         if (permissionsList.size() > 0) {
-            ActivityCompat.requestPermissions(this, permissionsList.toArray(new String[permissionsList.size()]), REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+            ActivityCompat.requestPermissions(this, permissionsList.toArray(new String[permissionsList.size()]),
+                    WIFIDefine.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
         }
     }
 
@@ -57,7 +58,7 @@ public class MainActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-        case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS:
+        case WIFIDefine.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS:
             if (permissions.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED || (permissions.length == 2
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
                 if (null != mMainFragment) {

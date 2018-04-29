@@ -38,7 +38,6 @@ import butterknife.OnClick;
 public class WifiShareFragment extends BaseFragment implements WifiShareContract.View {
 
     private final String TAG = "WifiShareFragment ";
-    private final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
     private WifiShareActivity mActivity;
     private WifiShareContract.Presenter mPresenter;
     private List<IncomeInfo> mIncomeInfoList;
@@ -110,7 +109,8 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
             LogHelper.releaseLog(TAG + "initView no location permission!");
             permissionsList.add(Manifest.permission.ACCESS_FINE_LOCATION);
             permissionsList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-            ActivityCompat.requestPermissions(mActivity, permissionsList.toArray(new String[permissionsList.size()]), REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+            ActivityCompat.requestPermissions(mActivity, permissionsList.toArray(new String[permissionsList.size()]),
+                    WIFIDefine.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
         } else {
             LogHelper.releaseLog(TAG + "initView has location permission!");
             startLocation();
@@ -121,6 +121,7 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
     public void setWifiShareResult(BaseHttpResult<BaseHttpData> httpResult) {
         if (null != httpResult && WIFIDefine.HttpResultState.SUCCESS.equals(httpResult.getStatus())) {
             ToastUtils.showShort(getResources().getString(R.string.wifi_share_info_success));
+            mActivity.finish();
         } else {
             ToastUtils.showShort(getResources().getString(R.string.wifi_share_info_fail));
         }
@@ -134,7 +135,11 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mLocationHelper = null;
+        if (null != mLocationHelper) {
+            mLocationHelper.setLocationCallBack(null);
+            mLocationHelper.release();
+            mLocationHelper = null;
+        }
     }
 
     private void initIncomeView() {
@@ -233,8 +238,9 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
 
     public void startLocation() {
         if (null == mLocationHelper) {
-            mLocationHelper = new LocationHelper(mLocationCallBack);
+            mLocationHelper = new LocationHelper();
         }
+        mLocationHelper.setLocationCallBack(mLocationCallBack);
         mLocationHelper.location(mActivity);
     }
 

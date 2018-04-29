@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.base.BaseActivity;
+import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.module.wifiShare.WifiShareFragment;
 import com.sharepay.wifi.module.wifiShare.WifiSharePresenter;
 import com.sharepay.wifi.util.CommonUtil;
@@ -14,7 +15,6 @@ import com.sharepay.wifi.util.CommonUtil;
 public class WifiShareActivity extends BaseActivity {
 
     private final String TAG = "WifiShareActivity ";
-    private final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
 
     private WifiShareFragment mWifiShareFragment;
 
@@ -37,7 +37,7 @@ public class WifiShareActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-        case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS:
+        case WIFIDefine.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS:
             if ((permissions.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) || (permissions.length == 2
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
                 // 获取到获取位置权限

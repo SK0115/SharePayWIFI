@@ -14,6 +14,8 @@ public class WIFIDefine {
 
     public static final String ACTIVITY_JUMP_FROM = "activity_from";
 
+    public static final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
+
     public interface WifiSignalStrength {
         int HIGH_MAX = 0;
         int HIGH_MIN = -50;

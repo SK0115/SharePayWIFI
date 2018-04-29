@@ -5,6 +5,8 @@ import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.http.ShareWifiListHttpData;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -20,7 +22,7 @@ public interface MainRequestService {
     Observable<BaseHttpResult<BaseHttpData>> requestUserSign(@Query("mobile") String mobile, @Query("token") String token, @Query("userid") String userid);
 
     @GET("/wifi_api/user/share_list")
-    Observable<BaseHttpResult<ShareWifiListHttpData>> requestShareWifiList(@Query("token") String token, @Query("mobile") String mobile,
+    Observable<BaseHttpResult<List<ShareWifiListHttpData>>> requestShareWifiList(@Query("token") String token, @Query("mobile") String mobile,
             @Query("userid") String userid, @Query("x_coordinate") String xcoordinate, @Query("y_coordinate") String ycoordinate);
 
     @GET("/wifi_api/user/user_expense")

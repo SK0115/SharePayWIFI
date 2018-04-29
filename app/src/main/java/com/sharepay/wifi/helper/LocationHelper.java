@@ -17,15 +17,16 @@ public class LocationHelper {
     private final String TAG = "LocationHelper ";
 
     private WIFIDefine.LocationCallBack mLocationCallBack;
+    private LocationManager mLocationManager;
 
-    public LocationHelper(WIFIDefine.LocationCallBack callBack) {
+    public void setLocationCallBack(WIFIDefine.LocationCallBack callBack) {
         mLocationCallBack = callBack;
     }
 
     public void location(Context context) {
         LogHelper.releaseLog(TAG + "location!");
         try {
-            LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_COARSE);// 低精度，如果设置为高精度，依然获取不了location。
             criteria.setAltitudeRequired(false);// 不要求海拔
@@ -34,26 +35,37 @@ public class LocationHelper {
             criteria.setPowerRequirement(Criteria.POWER_LOW);// 低功耗
 
             // 从可用的位置提供器中，匹配以上标准的最佳提供器
-            String locationProvider = locationManager.getBestProvider(criteria, true);
+            String locationProvider = mLocationManager.getBestProvider(criteria, true);
             if (ActivityCompat.checkSelfPermission(context.getApplicationContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(context.getApplicationContext(),
                             Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
             }
-            Location location = locationManager.getLastKnownLocation(locationProvider);
+            Location location = mLocationManager.getLastKnownLocation(locationProvider);
             LogHelper.releaseLog(TAG + "location:" + location);
-            if (location != null) {
+            if (null != location) {
                 // 不为空,显示地理位置经纬度
                 setLocation(location);
             }
             // 监视地理位置变化
-            locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
+            mLocationManager.requestLocationUpdates(locationProvider, 5000, 5.0f, mLocationListener);
         } catch (Exception e) {
             LogHelper.errorLog(TAG + "location Exception! msg:" + e.getMessage());
         }
     }
 
-    private LocationListener locationListener = new LocationListener() {
+    public void release() {
+        LogHelper.releaseLog(TAG + "release!");
+        if (null != mLocationManager) {
+            mLocationManager.removeUpdates(mLocationListener);
+            mLocationListener = null;
+            mLocationManager = null;
+        }
+        mLocationCallBack = null;
+    }
+
+    private LocationListener mLocationListener = new LocationListener() {
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle arg2) {
