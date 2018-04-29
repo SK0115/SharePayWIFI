@@ -30,7 +30,7 @@ public class CostHistoryFragment extends BaseFragment implements CostHistoryCont
     private CostHistoryActivity mActivity;
     private CostHistoryListAdapter mAdapter;
     private String mPhoneNum;
-    private int mRequestPageNo = 0;
+    private int mRequestPageNo = 1;
     private boolean mIsLoadFinish = false; // 是否加载结束
 
     @BindView(R.id.recyclerview_costhistory)
