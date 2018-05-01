@@ -214,7 +214,6 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                                         @Override
                                         public void onClick(String content) {
                                             // 确定
-                                            LogHelper.releaseLog("hehe " + "onClick content:" + content);
                                             mWIFIConnectManager.connectWIFI(info.getName(), "", mWifiCipherType);
                                         }
                                     });
@@ -517,24 +516,23 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                 LogHelper.releaseLog(TAG + "LocationCallBack setLocation" + " latitude:" + location.getLatitude() + " longitude:" + location.getLongitude());
                 mXCoordinate = location.getLatitude();
                 mYCoordinate = location.getLongitude();
-                if (null == mAccountInfoRealm || TextUtils.isEmpty(mAccountInfoRealm.getMobile()) || TextUtils.isEmpty(mAccountInfoRealm.getId())) {
-                    return;
-                }
                 WIFIShareInfo wifiShareInfo = new WIFIShareInfo();
-                wifiShareInfo.setMobile(mAccountInfoRealm.getMobile());
                 // 经纬度
                 try {
-                    if (mXCoordinate <= 0 || mYCoordinate <= 0) {
-                        return;
-                    }
                     wifiShareInfo.setXCoordinate(String.valueOf(mXCoordinate));
                     wifiShareInfo.setYCoordinate(String.valueOf(mYCoordinate));
                 } catch (Exception e) {
                     LogHelper.errorLog(TAG + "setLocation Exception! msg:" + e.getMessage());
                 }
                 LogHelper.releaseLog(TAG + "setLocation wifiShareInfo:" + wifiShareInfo.toString());
-                if (null != mPresenter) {
-                    mPresenter.requestShareWifiList(wifiShareInfo);
+                if (null == mAccountInfoRealm || TextUtils.isEmpty(mAccountInfoRealm.getMobile()) || TextUtils.isEmpty(mAccountInfoRealm.getId())) {
+                    // 未登陆帐号，直接扫描wifi
+                    startScanThread();
+                } else {
+                    wifiShareInfo.setMobile(mAccountInfoRealm.getMobile());
+                    if (null != mPresenter) {
+                        mPresenter.requestShareWifiList(wifiShareInfo);
+                    }
                 }
             }
         }
@@ -571,7 +569,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                 if (TextUtils.equals(action, WifiManager.WIFI_STATE_CHANGED_ACTION)) {
                     if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
                         // WIFI开关处于打开状态
-                        startScanThread();
+                        startLocation();
                     } else {
                         // WIFI开关处于关闭状态
                     }

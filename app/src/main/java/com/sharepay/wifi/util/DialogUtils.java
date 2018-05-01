@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sharepay.wifi.R;
@@ -95,12 +96,15 @@ public class DialogUtils {
         TextView tvTitle = window.findViewById(R.id.tv_dialog_title);
         TextView tvDesc = window.findViewById(R.id.tv_dialog_describe);
         final EditText etEdit = window.findViewById(R.id.et_dialog_edit);
+        final ImageView ivEditSplitNormal = window.findViewById(R.id.image_edit_split_normal);
+        final ImageView ivEditSplitFocus = window.findViewById(R.id.image_edit_split_focus);
         TextView tvCancel = window.findViewById(R.id.tv_dialog_cancel);
         TextView tvSure = window.findViewById(R.id.tv_dialog_sure);
 
         tvTitle.setText(title);
         if (isEdit) {
             etEdit.setVisibility(View.VISIBLE);
+            ivEditSplitNormal.setVisibility(View.VISIBLE);
             tvDesc.setVisibility(View.GONE);
             WindowManager.LayoutParams windowParams = alertDialog.getWindow().getAttributes();
             windowParams.y = -150;
@@ -108,6 +112,8 @@ public class DialogUtils {
             etEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    ivEditSplitNormal.setVisibility(View.GONE);
+                    ivEditSplitFocus.setVisibility(View.VISIBLE);
                     alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 }
             });
