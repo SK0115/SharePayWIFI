@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.activity.wifiShare.WifiShareActivity;
 import com.sharepay.wifi.base.BaseFragment;
+import com.sharepay.wifi.baseCtrl.MEditText;
 import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.AccountHelper;
 import com.sharepay.wifi.helper.LocationHelper;
@@ -52,7 +53,7 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
     @BindView(R.id.tv_wifi_share_main_title)
     TextView mTitleView;
     @BindView(R.id.wifi_share_pass_et)
-    EditText mPassView;
+    MEditText mPassView;
 
     public static WifiShareFragment getInstance() {
         WifiShareFragment mPersonalCenterFragment = new WifiShareFragment();

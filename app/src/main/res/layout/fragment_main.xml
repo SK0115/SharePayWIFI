@@ -84,7 +84,7 @@
             android:id="@+id/layout_main_connect_wifi"
             android:layout_width="match_parent"
             android:layout_height="63dp"
-            android:background="@color/white_90"
+            android:background="@drawable/recyclerview_item_selector_bg"
             android:paddingLeft="15dp"
             android:paddingRight="15dp">
 

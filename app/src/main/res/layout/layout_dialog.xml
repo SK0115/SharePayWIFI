@@ -40,14 +40,6 @@
             android:textSize="15sp" />
 
         <ImageView
-            android:id="@+id/image_edit_split_normal"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="-5dp"
-            android:src="@color/black_40"
-            android:visibility="gone" />
-
-        <ImageView
             android:id="@+id/image_edit_split_focus"
             android:layout_width="match_parent"
             android:layout_height="2dp"

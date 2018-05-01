@@ -10,21 +10,25 @@
         <item name="colorControlActivated">@color/color_login_bg</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
+
     <style name="DialogTitleTextStyle" parent="AppTheme">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/black_60</item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="DialogTextStyle" parent="AppTheme">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/black_40</item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="ToastTextStyle" parent="AppTheme">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
     <style name="SwitchStyle" parent="AppTheme">
         <!-- switch 打开时的拇指按钮的颜色 轨迹颜色默认为30%这个颜色-->
         <item name="colorControlActivated">@color/color_login_bg</item>
@@ -33,6 +37,7 @@
         <!-- switch关闭时的轨迹的颜色  30%这个颜色 -->
         <!--<item name="android:colorForeground">@color/color_login_bg</item>-->
     </style>
+
     <style name="AnimationActivity" mce_bogus="1" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/push_left_in</item>
         <item name="android:activityOpenExitAnimation">@anim/push_left_out</item>
@@ -50,6 +55,17 @@
         <item name="android:background">@color/black_10</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0.5dp</item>
+    </style>
+
+    <style name="EditLineStyle" parent="AppTheme">
+        <item name="android:background">@color/color_login_bg</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+    </style>
+
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@android:color/darker_gray</item>
+        <item name="colorControlActivated">@android:color/holo_orange_dark</item>
     </style>
 
 </resources>

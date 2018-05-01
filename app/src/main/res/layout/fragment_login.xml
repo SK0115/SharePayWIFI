@@ -6,10 +6,12 @@
     android:background="@color/white">
 
     <ImageView
+        android:id="@+id/iv_login_colse"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginLeft="25dp"
-        android:layout_marginTop="42dp" />
+        android:layout_marginTop="42dp"
+        android:src="@drawable/icon_dialog_colse" />
 
     <TextView
         android:id="@+id/text_mobile_login"

@@ -38,6 +38,9 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
     private BaseTimer mTimer;
     private boolean mIsTiming = false;
 
+    @BindView(R.id.iv_login_colse)
+    ImageView mCloseImg;
+
     @BindView(R.id.edittext_mobile_num)
     EditText mNumEditText;
     @BindView(R.id.image_mobile_num_split_normal)
@@ -66,10 +69,15 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
 
     private String mActivityFormText;
 
-    @OnClick({ R.id.edittext_mobile_num, R.id.edittext_mobile_verifcode, R.id.text_getverifi_code, R.id.text_login_view, R.id.text_jumplogin_view,
-            R.id.layout_loading })
+    @OnClick({ R.id.iv_login_colse, R.id.edittext_mobile_num, R.id.edittext_mobile_verifcode, R.id.text_getverifi_code, R.id.text_login_view,
+            R.id.text_jumplogin_view, R.id.layout_loading })
     public void onClick(View view) {
         switch (view.getId()) {
+        case R.id.iv_login_colse:
+            if (null != mActivity) {
+                mActivity.finish();
+            }
+            break;
         case R.id.edittext_mobile_num:
             mNumEditText.setCursorVisible(true);
             mNumNormalSplitImg.setVisibility(View.INVISIBLE);
