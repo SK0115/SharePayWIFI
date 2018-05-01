@@ -21,7 +21,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.activity.login.LoginActivity;
@@ -179,12 +178,12 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                             DialogUtils.showDialog(mActivity, getResources().getString(R.string.wifi_need_pay), payInfo,
                                     new DialogUtils.OnDialogClickListener() {
                                         @Override
-                                        public void onClick() {
+                                        public void onClick(String content) {
                                             // 取消
                                         }
                                     }, new DialogUtils.OnDialogClickListener() {
                                         @Override
-                                        public void onClick() {
+                                        public void onClick(String content) {
                                             // 确定
                                             if (null != mShareWifiHttpDataList && mShareWifiHttpDataList.size() > 0) {
                                                 for (int i = 0; i < mShareWifiHttpDataList.size(); i++) {
@@ -205,8 +204,20 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                                         }
                                     });
                         } else {
-                            ToastUtils.showShort(R.string.connect_fail);
-                            mWIFIConnectManager.connectWIFI(info.getName(), "", mWifiCipherType);
+                            DialogUtils.showDialog(mActivity, getResources().getString(R.string.wifi_need_pass), "", true,
+                                    new DialogUtils.OnDialogClickListener() {
+                                        @Override
+                                        public void onClick(String content) {
+                                            // 取消
+                                        }
+                                    }, new DialogUtils.OnDialogClickListener() {
+                                        @Override
+                                        public void onClick(String content) {
+                                            // 确定
+                                            LogHelper.releaseLog("hehe " + "onClick content:" + content);
+                                            mWIFIConnectManager.connectWIFI(info.getName(), "", mWifiCipherType);
+                                        }
+                                    });
                         }
                     }
                 }
@@ -363,14 +374,14 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             DialogUtils.showDialog(mActivity, getResources().getString(R.string.wifi_switch_close), getResources().getString(R.string.wifi_switch_need_open),
                     new DialogUtils.OnDialogClickListener() {
                         @Override
-                        public void onClick() {
+                        public void onClick(String content) {
                             // 取消
                             mScanProgressBar.setVisibility(View.GONE);
                             registerWIFIStateBroadcast();
                         }
                     }, new DialogUtils.OnDialogClickListener() {
                         @Override
-                        public void onClick() {
+                        public void onClick(String content) {
                             // 确定
                             WIFIHelper.setWIFIEnabled(mActivity, true);
                         }
@@ -464,7 +475,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             AccountHelper.getInstance().addUserSignInfo();
             AccountHelper.getInstance().updataAccountInfo("", "");
         } else {
-            Toast.makeText(mActivity, getString(R.string.sign_fail), Toast.LENGTH_SHORT).show();
+            ToastUtils.showShort(R.string.sign_fail);
         }
     }
 

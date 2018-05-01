@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.activity.login.LoginActivity;
@@ -25,6 +24,7 @@ import com.sharepay.wifi.helper.BaseTimer;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.http.LoginAccountHttpData;
+import com.sharepay.wifi.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -87,11 +87,11 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
             String mobile = mNumEditText.getText().toString();
             LogHelper.releaseLog(TAG + "getVerifiCode mobile:" + mobile);
             if (TextUtils.isEmpty(mobile)) {
-                Toast.makeText(mActivity, getString(R.string.phonenum_is_null), Toast.LENGTH_SHORT).show();
+                ToastUtils.showShort(R.string.phonenum_is_null);
             } else if (mobile.length() < 11) {
-                Toast.makeText(mActivity, getString(R.string.phonenum_less_eleven), Toast.LENGTH_SHORT).show();
+                ToastUtils.showShort(R.string.phonenum_less_eleven);
             } else if (mobile.length() > 11) {
-                Toast.makeText(mActivity, getString(R.string.phonenum_more_eleven), Toast.LENGTH_SHORT).show();
+                ToastUtils.showShort(R.string.phonenum_more_eleven);
             } else {
                 mPresenter.requestVerificationCode(mobile);
                 startCountdown();
@@ -102,23 +102,23 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
             String code = mVerifCodeEditText.getText().toString();
             LogHelper.releaseLog(TAG + "login mobileNum:" + mobileNum + " verifiCode:" + code);
             if (TextUtils.isEmpty(mobileNum)) {
-                Toast.makeText(mActivity, getString(R.string.phonenum_is_null), Toast.LENGTH_SHORT).show();
+                ToastUtils.showShort(R.string.phonenum_is_null);
                 return;
             } else if (mobileNum.length() < 11) {
-                Toast.makeText(mActivity, getString(R.string.phonenum_less_eleven), Toast.LENGTH_SHORT).show();
+                ToastUtils.showShort(R.string.phonenum_less_eleven);
                 return;
             } else if (mobileNum.length() > 11) {
-                Toast.makeText(mActivity, getString(R.string.phonenum_more_eleven), Toast.LENGTH_SHORT).show();
+                ToastUtils.showShort(R.string.phonenum_more_eleven);
                 return;
             }
             if (TextUtils.isEmpty(code)) {
-                Toast.makeText(mActivity, getString(R.string.verificode_is_null), Toast.LENGTH_SHORT).show();
+                ToastUtils.showShort(R.string.verificode_is_null);
                 return;
             } else if (code.length() < 6) {
-                Toast.makeText(mActivity, getString(R.string.verificode_less_six), Toast.LENGTH_SHORT).show();
+                ToastUtils.showShort(R.string.verificode_less_six);
                 return;
             } else if (code.length() > 6) {
-                Toast.makeText(mActivity, getString(R.string.verificode_more_six), Toast.LENGTH_SHORT).show();
+                ToastUtils.showShort(R.string.verificode_more_six);
                 return;
             }
             mLoadingLayout.setVisibility(View.VISIBLE);
@@ -207,14 +207,14 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
             AccountHelper.getInstance().addAccountInfoToRealm(loginAccountHttpData);
             doLoginResult();
         } else {
-            Toast.makeText(mActivity, getString(R.string.login_fail), Toast.LENGTH_SHORT).show();
+            ToastUtils.showShort(R.string.login_fail);
             mLoadingLayout.setVisibility(View.INVISIBLE);
             mLoadingProgressBar.stopRotateAnimation();
         }
     }
 
     private void doLoginResult() {
-        Toast.makeText(mActivity, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
+        ToastUtils.showShort(R.string.login_success);
         if (WIFIDefine.JUMP_ACTIVITY.PERSONAL_CENTER.equals(mActivityFormText)) {
             mActivity.setResult(WIFIDefine.JUMP_PAGE_REQUESTCODE.JUMP_PAGE_REQUESTCODE);
         } else {

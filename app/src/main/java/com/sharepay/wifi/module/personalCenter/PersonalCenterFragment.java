@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
 
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.activity.costHistory.CostHistoryActivity;
@@ -24,6 +23,7 @@ import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.info.PersonalCenterInfo;
 import com.sharepay.wifi.model.realm.AccountInfoRealm;
 import com.sharepay.wifi.util.CommonUtil;
+import com.sharepay.wifi.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,7 +141,7 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
         } else {
             mIsLogin = false;
         }
-        resetPersonalCenterDataList(accountInfoRealm);
+        doPersonalCenterDataList(accountInfoRealm);
         if (null == mAdapter) {
             mAdapter = new PersonalCenterAdapter(mActivity, mPersonalCenterDataList, false);
             mAdapter.setClickListener(mClickListener);
@@ -156,7 +156,7 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
                             intent.putExtras(bundle);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(mActivity, getString(R.string.please_login), Toast.LENGTH_SHORT).show();
+                            ToastUtils.showShort(R.string.please_login);
                         }
                     }
                 }
@@ -189,14 +189,23 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
         }
     };
 
-    private void resetPersonalCenterDataList(AccountInfoRealm accountInfoRealm) {
+    /**
+     * 处理个人中心数据
+     * 
+     * @param accountInfoRealm
+     */
+    private void doPersonalCenterDataList(AccountInfoRealm accountInfoRealm) {
         if (null == mPersonalCenterDataList) {
             mPersonalCenterDataList = new ArrayList<PersonalCenterInfo>();
         }
         mPersonalCenterDataList.clear();
         PersonalCenterInfo personalCenterData = new PersonalCenterInfo();
         if (mIsLogin && null != accountInfoRealm) {
-            personalCenterData.setTitle(accountInfoRealm.getMobile());
+            String mobile = accountInfoRealm.getMobile();
+            if (mobile.length() == 11) {
+                mobile = mobile.substring(0, 3) + "****" + mobile.substring(7, 11);
+            }
+            personalCenterData.setTitle(mobile);
             personalCenterData.setMessage(accountInfoRealm.getIntegral() + "");
             personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_ACCOUNT);
             mPersonalCenterDataList.add(PERSONAL_CENTER_HEAD_INDEX, personalCenterData);

@@ -1,7 +1,6 @@
 package com.sharepay.wifi.module.main;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.base.BaseHttpObserver;
@@ -13,6 +12,7 @@ import com.sharepay.wifi.model.http.BaseHttpData;
 import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.http.ShareWifiHttpData;
 import com.sharepay.wifi.model.info.WIFIShareInfo;
+import com.sharepay.wifi.util.ToastUtils;
 
 import java.util.List;
 
@@ -52,7 +52,7 @@ public class MainPresenter implements MainContract.Presenter {
             @Override
             public void onError(Throwable e) {
                 LogHelper.errorLog(TAG + "requestUserSign onError! msg:" + e.getMessage());
-                Toast.makeText(mContext, mContext.getString(R.string.sign_fail), Toast.LENGTH_SHORT).show();
+                ToastUtils.showShort(R.string.sign_fail);
             }
         }), mMainRequestService, mobile);
     }

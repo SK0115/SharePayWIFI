@@ -46,7 +46,7 @@
     <string name="ip_address">IP地址</string>
     <string name="gateway">网关</string>
     <string name="default_address">0.0.0.0</string>
-    <string name="wifi_password">WiFi密码</string>
+    <string name="wifi_password">WIFI密码</string>
     <string name="please_input_password">请务必输入正确的WiFi密码，确保正常获得收益</string>
     <string name="share_income">共享收益</string>
     <string name="share">共享</string>
@@ -68,6 +68,7 @@
     <string name="wifi_switch_close">WIFI开关处于关闭状态</string>
     <string name="wifi_switch_need_open">是否需要开启WIFI开关？</string>
     <string name="wifi_need_pay">该WIFI需要付费连接</string>
+    <string name="wifi_need_pass">该WIFI需要密码连接</string>
     <string name="wifi_pay_integral">您确定消费%1$s个积分连接到该WIFI</string>
     <string name="dialog_confirm">确定</string>
     <string name="dialog_cancel">取消</string>
