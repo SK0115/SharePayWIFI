@@ -22,3 +22,5 @@ https://github.com/guozhengXia/OkHttpUtils.git
 https://github.com/tough1985/RxjavaRetrofitDemo.git
 
 http://118.25.103.119/wifi_api/user/sms?userid=f303b14f9bb9492982af94014765821c&mobile=13166362552&token=55d7f29ffbef97de6a1f00876f3a20cf
+
+http://uv.aiseewhaley.aisee.tv/version/20180305/SNMMoreTV_V3.1.9_0301.apk
