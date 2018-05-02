@@ -24,3 +24,5 @@ https://github.com/tough1985/RxjavaRetrofitDemo.git
 http://118.25.103.119/wifi_api/user/sms?userid=f303b14f9bb9492982af94014765821c&mobile=13166362552&token=55d7f29ffbef97de6a1f00876f3a20cf
 
 http://uv.aiseewhaley.aisee.tv/version/20180305/SNMMoreTV_V3.1.9_0301.apk
+
+http://u.aiseewhaley.aisee.tv/upgrade/Service/V2/upgrade?version=3.1.8&mac=3E21EDD83F9E&series=MoreTV_TVApp3.0_Medusa&ProductModel=WTV55K1&ProductSerial=unknown&ProductVersion=helios-userdebug5.0.1HELIOSD-02.04.001748200test-keys&WifiMac=2824ff050b44&ip=180.169.235.10&desc=5260884025&deviceId=50c1a7d9464bb0a880553eedd1c0d50a&aoc=0201&promotionChannelCode=general
