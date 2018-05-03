@@ -205,6 +205,7 @@ public class WifiShareFragment extends BaseFragment implements WifiShareContract
                     ToastUtils.showShort(getResources().getString(R.string.wifi_share_info_null));
                     return;
                 }
+                wifiShareInfo.setMac(wifiInfo.getBSSID());
                 wifiShareInfo.setIp(Formatter.formatIpAddress(wifiInfo.getIpAddress()));
                 DhcpInfo dhcpInfo = WIFIHelper.getDhcpInfo(mActivity);
                 if (null != dhcpInfo) {

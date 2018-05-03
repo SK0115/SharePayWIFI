@@ -10,6 +10,7 @@ public class WIFIShareInfo implements Parcelable {
 
     private String mobile; // 手机号
     private String name; // wifi名字
+    private String mac; // wifimac地址
     private String pass; // wifi密码
     private String ip; // ip地址
     private String gateway; // 网关
@@ -34,6 +35,14 @@ public class WIFIShareInfo implements Parcelable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getMac() {
+        return mac;
+    }
+
+    public void setMac(String mac) {
+        this.mac = mac;
     }
 
     public String getPass() {
@@ -86,14 +95,15 @@ public class WIFIShareInfo implements Parcelable {
 
     @Override
     public String toString() {
-        return "WIFIShareInfo={" + "mobile='" + getMobile() + '\'' + ", name='" + getName() + '\'' + ", pass='" + getPass() + '\'' + ", ip='" + getIp() + '\''
-                + ", gateway='" + getGateway() + '\'' + ", xcoordinate='" + getXCoordinate() + '\'' + ", ycoordinate='" + getYCoordinate() + '\''
-                + ", earnings='" + getEarnings() + '\'' + '}';
+        return "WIFIShareInfo={" + "mobile='" + getMobile() + '\'' + ", name='" + getName() + '\'' + ", mac='" + getMac() + '\'' + ", pass='" + getPass() + '\''
+                + ", ip='" + getIp() + '\'' + ", gateway='" + getGateway() + '\'' + ", xcoordinate='" + getXCoordinate() + '\'' + ", ycoordinate='"
+                + getYCoordinate() + '\'' + ", earnings='" + getEarnings() + '\'' + '}';
     }
 
     private WIFIShareInfo(Parcel in) {
         mobile = in.readString();
         name = in.readString();
+        mac = in.readString();
         pass = in.readString();
         ip = in.readString();
         gateway = in.readString();
@@ -106,6 +116,7 @@ public class WIFIShareInfo implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mobile);
         dest.writeString(name);
+        dest.writeString(mac);
         dest.writeString(pass);
         dest.writeString(ip);
         dest.writeString(gateway);
