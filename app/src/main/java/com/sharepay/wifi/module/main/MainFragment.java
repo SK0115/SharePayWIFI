@@ -316,7 +316,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             LogHelper.releaseLog(TAG + "getShareWifiData shareWifiList size:" + mShareWifiHttpDataList.size());
             for (int i = 0; i < mShareWifiHttpDataList.size(); i++) {
                 ShareWifiHttpData shareWifiHttpData = mShareWifiHttpDataList.get(i);
-                if (TextUtils.equals(shareWifiHttpData.getName(), scanResult.SSID)) {
+                if (TextUtils.equals(shareWifiHttpData.getName(), scanResult.SSID) && TextUtils.equals(shareWifiHttpData.getMac(), scanResult.BSSID)) {
                     LogHelper.releaseLog(TAG + "getShareWifiData shareWifiHttpData:" + shareWifiHttpData.toString() + " scanResult:" + scanResult.toString());
                     return shareWifiHttpData;
                 }

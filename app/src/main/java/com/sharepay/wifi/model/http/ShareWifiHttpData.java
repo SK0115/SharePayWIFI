@@ -10,6 +10,7 @@ public class ShareWifiHttpData implements Parcelable {
 
     private String id;
     private String name;
+    private String mac;
     private String pass;
     private String ip;
     private String gateway;
@@ -35,6 +36,14 @@ public class ShareWifiHttpData implements Parcelable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getMac() {
+        return mac;
+    }
+
+    public void setMac(String mac) {
+        this.mac = mac;
     }
 
     public String getPass() {
@@ -119,15 +128,16 @@ public class ShareWifiHttpData implements Parcelable {
 
     @Override
     public String toString() {
-        return "ShareWifiHttpData={" + "id='" + getId() + '\'' + ", name='" + getName() + '\'' + ", pass='" + getPass() + '\'' + ", ip='" + getIp() + '\''
-                + ", gateway='" + getGateway() + '\'' + ", x_coordinate='" + getXCoordinate() + '\'' + ", y_coordinate='" + getYCoordinate() + '\''
-                + ", mobile='" + getMobile() + '\'' + ", add_time='" + getAddtime() + '\'' + ", earnings='" + getEarnings() + '\'' + ", status='" + getStatus()
-                + '\'' + ", distanc='" + getDistanc() + '\'' + '}';
+        return "ShareWifiHttpData={" + "id='" + getId() + '\'' + ", name='" + getName() + '\'' + ", mac='" + getMac() + '\'' + ", pass='" + getPass() + '\''
+                + ", ip='" + getIp() + '\'' + ", gateway='" + getGateway() + '\'' + ", x_coordinate='" + getXCoordinate() + '\'' + ", y_coordinate='"
+                + getYCoordinate() + '\'' + ", mobile='" + getMobile() + '\'' + ", add_time='" + getAddtime() + '\'' + ", earnings='" + getEarnings() + '\''
+                + ", status='" + getStatus() + '\'' + ", distanc='" + getDistanc() + '\'' + '}';
     }
 
     private ShareWifiHttpData(Parcel in) {
         id = in.readString();
         name = in.readString();
+        mac = in.readString();
         pass = in.readString();
         ip = in.readString();
         gateway = in.readString();
@@ -144,6 +154,7 @@ public class ShareWifiHttpData implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(name);
+        dest.writeString(mac);
         dest.writeString(pass);
         dest.writeString(ip);
         dest.writeString(gateway);

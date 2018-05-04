@@ -229,13 +229,14 @@ public class HttpRequestHelper {
         if (null != observer && null != wifiShareRequestService && null != wifiShareInfo) {
             String mobile = wifiShareInfo.getMobile();
             String name = wifiShareInfo.getName();
+            String mac = wifiShareInfo.getMac();
             String pass = wifiShareInfo.getPass();
             String ip = wifiShareInfo.getIp();
             String gateway = wifiShareInfo.getGateway();
             String xcoordinate = wifiShareInfo.getXCoordinate();
             String ycoordinate = wifiShareInfo.getYCoordinate();
             String earnings = wifiShareInfo.getEarnings();
-            Observable observable = wifiShareRequestService.requestUserShareWifi(CommonUtil.getToken(), mobile, CommonUtil.getDeivceID(), name, pass, ip,
+            Observable observable = wifiShareRequestService.requestUserShareWifi(CommonUtil.getToken(), mobile, CommonUtil.getDeivceID(), name, mac, pass, ip,
                     gateway, xcoordinate, ycoordinate, earnings);
             toObservable(observable, observer);
         }
