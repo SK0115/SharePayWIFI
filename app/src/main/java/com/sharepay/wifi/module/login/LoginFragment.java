@@ -178,16 +178,18 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
         mNumEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    mNumEditText.setCursorVisible(true);
-                    mNumNormalSplitImg.setVisibility(View.INVISIBLE);
-                    mNumFocusSplitImg.setVisibility(View.VISIBLE);
-                } else {
-                    String num = mNumEditText.getText().toString();
-                    if (TextUtils.isEmpty(num)) {
-                        mNumEditText.setCursorVisible(false);
-                        mNumNormalSplitImg.setVisibility(View.VISIBLE);
-                        mNumFocusSplitImg.setVisibility(View.INVISIBLE);
+                if (null != mNumEditText && null != mNumNormalSplitImg && null != mNumFocusSplitImg) {
+                    if (hasFocus) {
+                        mNumEditText.setCursorVisible(true);
+                        mNumNormalSplitImg.setVisibility(View.INVISIBLE);
+                        mNumFocusSplitImg.setVisibility(View.VISIBLE);
+                    } else {
+                        String num = mNumEditText.getText().toString();
+                        if (TextUtils.isEmpty(num)) {
+                            mNumEditText.setCursorVisible(false);
+                            mNumNormalSplitImg.setVisibility(View.VISIBLE);
+                            mNumFocusSplitImg.setVisibility(View.INVISIBLE);
+                        }
                     }
                 }
             }
@@ -195,17 +197,19 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
         mVerifCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    mVerifCodeEditText.setCursorVisible(true);
-                    mVerifNormalSplitImg.setVisibility(View.INVISIBLE);
-                    mVerifFocusSplitImg.setImageResource(R.color.color_login_bg);
-                    mVerifFocusSplitImg.setVisibility(View.VISIBLE);
-                } else {
-                    String code = mVerifCodeEditText.getText().toString();
-                    if (TextUtils.isEmpty(code)) {
-                        mVerifCodeEditText.setCursorVisible(false);
-                        mVerifNormalSplitImg.setVisibility(View.VISIBLE);
-                        mVerifFocusSplitImg.setVisibility(View.INVISIBLE);
+                if (null != mVerifCodeEditText && null != mVerifNormalSplitImg && null != mVerifFocusSplitImg) {
+                    if (hasFocus) {
+                        mVerifCodeEditText.setCursorVisible(true);
+                        mVerifNormalSplitImg.setVisibility(View.INVISIBLE);
+                        mVerifFocusSplitImg.setImageResource(R.color.color_login_bg);
+                        mVerifFocusSplitImg.setVisibility(View.VISIBLE);
+                    } else {
+                        String code = mVerifCodeEditText.getText().toString();
+                        if (TextUtils.isEmpty(code)) {
+                            mVerifCodeEditText.setCursorVisible(false);
+                            mVerifNormalSplitImg.setVisibility(View.VISIBLE);
+                            mVerifFocusSplitImg.setVisibility(View.INVISIBLE);
+                        }
                     }
                 }
             }
