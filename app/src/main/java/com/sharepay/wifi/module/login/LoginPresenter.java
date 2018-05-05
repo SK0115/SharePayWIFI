@@ -60,6 +60,9 @@ public class LoginPresenter implements LoginContract.Presenter {
             @Override
             public void onError(Throwable e) {
                 LogHelper.errorLog(TAG + "requestUserlogin onError! msg:" + e.getMessage());
+                if (null != mView) {
+                    mView.setLoginAccountHttpResult(null);
+                }
             }
         }), mLoginRequestService, mobile, code);
     }

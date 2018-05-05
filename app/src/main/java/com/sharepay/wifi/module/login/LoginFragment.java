@@ -8,7 +8,6 @@ import android.text.SpannedString;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,6 +16,7 @@ import com.sharepay.wifi.R;
 import com.sharepay.wifi.activity.login.LoginActivity;
 import com.sharepay.wifi.activity.main.MainActivity;
 import com.sharepay.wifi.base.BaseFragment;
+import com.sharepay.wifi.baseCtrl.MEditText;
 import com.sharepay.wifi.baseCtrl.ProgressView;
 import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.AccountHelper;
@@ -42,18 +42,23 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
     ImageView mCloseImg;
 
     @BindView(R.id.edittext_mobile_num)
-    EditText mNumEditText;
+    MEditText mNumEditText;
+    @BindView(R.id.iv_phone_clean)
+    ImageView mNumCleanImg;
     @BindView(R.id.image_mobile_num_split_normal)
     ImageView mNumNormalSplitImg;
     @BindView(R.id.image_mobile_num_split_focus)
     ImageView mNumFocusSplitImg;
 
     @BindView(R.id.edittext_mobile_verifcode)
-    EditText mVerifCodeEditText;
+    MEditText mVerifCodeEditText;
     @BindView(R.id.image_verification_code_split_normal)
     ImageView mVerifNormalSplitImg;
     @BindView(R.id.image_verification_code_split_focus)
     ImageView mVerifFocusSplitImg;
+
+    @BindView(R.id.text_verificode_error)
+    TextView mVerifCodeError;
 
     @BindView(R.id.text_getverifi_code)
     TextView mGetVeriCodeText;
@@ -69,8 +74,8 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
 
     private String mActivityFormText;
 
-    @OnClick({ R.id.iv_login_colse, R.id.edittext_mobile_num, R.id.edittext_mobile_verifcode, R.id.text_getverifi_code, R.id.text_login_view,
-            R.id.text_jumplogin_view, R.id.layout_loading })
+    @OnClick({ R.id.iv_login_colse, R.id.iv_phone_clean, R.id.text_getverifi_code, R.id.text_login_view, R.id.text_jumplogin_view, R.id.layout_loading })
+
     public void onClick(View view) {
         switch (view.getId()) {
         case R.id.iv_login_colse:
@@ -78,20 +83,21 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
                 mActivity.finish();
             }
             break;
-        case R.id.edittext_mobile_num:
-            mNumEditText.setCursorVisible(true);
-            mNumNormalSplitImg.setVisibility(View.INVISIBLE);
-            mNumFocusSplitImg.setVisibility(View.VISIBLE);
-            break;
-        case R.id.edittext_mobile_verifcode:
-            mVerifCodeEditText.setCursorVisible(true);
-            mVerifNormalSplitImg.setVisibility(View.INVISIBLE);
-            mVerifFocusSplitImg.setVisibility(View.VISIBLE);
+        case R.id.iv_phone_clean:
+            String num = mNumEditText.getText().toString();
+            if (!TextUtils.isEmpty(num)) {
+                mNumEditText.setText("");
+            }
             break;
         case R.id.text_getverifi_code:
             if (mIsTiming) {
                 return;
             }
+            mVerifCodeEditText.setText("");
+            mVerifFocusSplitImg.setImageResource(R.color.color_login_bg);
+            mVerifNormalSplitImg.setVisibility(mVerifCodeEditText.hasFocus() ? View.INVISIBLE : View.VISIBLE);
+            mVerifFocusSplitImg.setVisibility(mVerifCodeEditText.hasFocus() ? View.VISIBLE : View.INVISIBLE);
+            mVerifCodeError.setVisibility(View.INVISIBLE);
             String mobile = mNumEditText.getText().toString();
             LogHelper.releaseLog(TAG + "getVerifiCode mobile:" + mobile);
             if (TextUtils.isEmpty(mobile)) {
@@ -168,6 +174,42 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
         mActivityFormText = intent.getStringExtra(WIFIDefine.ACTIVITY_JUMP_FROM);
         setHintTextSize(mNumEditText, getResources().getString(R.string.mobile_num), 17);
         setHintTextSize(mVerifCodeEditText, getResources().getString(R.string.verification_code), 17);
+
+        mNumEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    mNumEditText.setCursorVisible(true);
+                    mNumNormalSplitImg.setVisibility(View.INVISIBLE);
+                    mNumFocusSplitImg.setVisibility(View.VISIBLE);
+                } else {
+                    String num = mNumEditText.getText().toString();
+                    if (TextUtils.isEmpty(num)) {
+                        mNumEditText.setCursorVisible(false);
+                        mNumNormalSplitImg.setVisibility(View.VISIBLE);
+                        mNumFocusSplitImg.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        });
+        mVerifCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    mVerifCodeEditText.setCursorVisible(true);
+                    mVerifNormalSplitImg.setVisibility(View.INVISIBLE);
+                    mVerifFocusSplitImg.setImageResource(R.color.color_login_bg);
+                    mVerifFocusSplitImg.setVisibility(View.VISIBLE);
+                } else {
+                    String code = mVerifCodeEditText.getText().toString();
+                    if (TextUtils.isEmpty(code)) {
+                        mVerifCodeEditText.setCursorVisible(false);
+                        mVerifNormalSplitImg.setVisibility(View.VISIBLE);
+                        mVerifFocusSplitImg.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -215,7 +257,8 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
             AccountHelper.getInstance().addAccountInfoToRealm(loginAccountHttpData);
             doLoginResult();
         } else {
-            ToastUtils.showShort(R.string.login_fail);
+            mVerifFocusSplitImg.setImageResource(R.color.color_verificode_error);
+            mVerifCodeError.setVisibility(View.VISIBLE);
             mLoadingLayout.setVisibility(View.INVISIBLE);
             mLoadingProgressBar.stopRotateAnimation();
         }
@@ -231,7 +274,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
         mActivity.finish();
     }
 
-    private void setHintTextSize(EditText editText, String hintText, int textSize) {
+    private void setHintTextSize(MEditText editText, String hintText, int textSize) {
         // 新建一个可以添加属性的文本对象
         SpannableString ss = new SpannableString(hintText);
         // 新建一个属性对象,设置文字的大小

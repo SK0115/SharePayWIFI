@@ -29,15 +29,13 @@ public class MEditText extends EditText {
     }
 
     private void modifyCursorDrawable(Context context, AttributeSet attrs) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.HQEditText);
-        int drawable = a.getResourceId(R.styleable.HQEditText_textCursorDrawable, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MEditTextStyle);
+        int drawable = a.getResourceId(R.styleable.MEditTextStyle_textCursorDrawable, 0);
         if (drawable != 0) {
             try {
-
                 Field setCursor = TextView.class.getDeclaredField("mCursorDrawableRes");
                 setCursor.setAccessible(true);
                 setCursor.set(this, drawable);
-
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (NoSuchFieldException e) {

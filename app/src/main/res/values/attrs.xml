@@ -1,5 +1,5 @@
 <resources>
-    <declare-styleable name="HQEditText">
+    <declare-styleable name="MEditTextStyle">
         <attr name="textCursorDrawable" format="reference" />
     </declare-styleable>
 </resources>
