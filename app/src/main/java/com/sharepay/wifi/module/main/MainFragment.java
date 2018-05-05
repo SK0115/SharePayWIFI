@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.DhcpInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -17,6 +18,7 @@ import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -46,6 +48,7 @@ import com.sharepay.wifi.model.http.ShareWifiHttpData;
 import com.sharepay.wifi.model.info.WIFIInfo;
 import com.sharepay.wifi.model.info.WIFIShareInfo;
 import com.sharepay.wifi.model.realm.AccountInfoRealm;
+import com.sharepay.wifi.model.realm.CurrentWifiInfoRealm;
 import com.sharepay.wifi.util.CommonUtil;
 import com.sharepay.wifi.util.DialogUtils;
 import com.sharepay.wifi.util.ToastUtils;
@@ -94,6 +97,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     private WIFIConnectManager mWIFIConnectManager;
     private WIFIConnectManager.WifiCipherType mWifiCipherType;
     private ShareWifiHttpData mNeedConnectWifi;
+    private CurrentWifiInfoRealm mCurrentWifiInfoRealm;
 
     @OnClick({ R.id.iv_main_personal_enter, R.id.iv_main_share, R.id.tv_sign_in, R.id.layout_main_connect_wifi })
     public void onClick(View view) {
@@ -256,12 +260,32 @@ public class MainFragment extends BaseFragment implements MainContract.View {
 
     private void initHasConnectWIFIInfo() {
         LogHelper.releaseLog(TAG + "initHasConnectWIFIInfo");
-        String currentWifiSSID = WIFIHelper.getCurrentConnectWIFISSID(mActivity);
-        if (!TextUtils.isEmpty(currentWifiSSID)) {
+        WifiInfo wifiInfo = WIFIHelper.getCurrentConnectingWIFI(mActivity);
+        String currentWifiName = CommonUtil.getCurrentConnectWIFIName(wifiInfo);
+        if (!TextUtils.isEmpty(currentWifiName)) {
+            CurrentWifiInfoRealm currentWifiInfoRealm = CommonUtil.getCurrentConnectWifiRealm();
+            String currentWifiMac = WIFIHelper.getCurrentConnectWIFIMac(mActivity);
+            if (null == currentWifiInfoRealm || TextUtils.isEmpty(currentWifiInfoRealm.getName()) || TextUtils.isEmpty(currentWifiInfoRealm.getMac())) {
+                // 数据库中当前连接的wifi数据为空，表示当前连接的wifi为非分享类型，将当前连接的wifi存入数据库中
+                mCurrentWifiInfoRealm = new CurrentWifiInfoRealm();
+                mCurrentWifiInfoRealm.setShared(false);
+                mCurrentWifiInfoRealm.setName(currentWifiName);
+                mCurrentWifiInfoRealm.setMac(currentWifiMac);
+                mCurrentWifiInfoRealm.setIp(Formatter.formatIpAddress(wifiInfo.getIpAddress()));
+                DhcpInfo dhcpInfo = WIFIHelper.getDhcpInfo(mActivity);
+                if (null != dhcpInfo) {
+                    mCurrentWifiInfoRealm.setGateway(Formatter.formatIpAddress(dhcpInfo.gateway));
+                }
+                mCurrentWifiInfoRealm.setSignalStrength(wifiInfo.getRssi());
+                CommonUtil.saveCurrentConnectWifiRealm(mCurrentWifiInfoRealm);
+            } else {
+                // 数据库中当前连接的wifi数据不为空，需要判断当前的连接的wifi和数据库中的wifi信息是否一致
+            }
             mShareView.setImageResource(R.drawable.share_bg);
             layoutMainConnectWifi.setVisibility(View.VISIBLE);
-            mConnectWifiName.setText(currentWifiSSID);
-            boolean isLocked = WIFIHelper.checkWifiHasPassword(mActivity, currentWifiSSID);
+            mConnectWifiTime.setVisibility(View.INVISIBLE);
+            mConnectWifiName.setText(currentWifiName);
+            boolean isLocked = WIFIHelper.checkWifiHasPassword(mActivity, currentWifiName);
             if (isLocked) {
                 mConnectWifiImage.setImageResource(R.drawable.ic_common_wifi_locked);
             } else {
@@ -269,6 +293,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             }
         } else {
             mShareView.setImageResource(R.drawable.ic_nav_share_pressed);
+            CommonUtil.deleteCurrentWifiRealm();
             layoutMainConnectWifi.setVisibility(View.GONE);
         }
     }

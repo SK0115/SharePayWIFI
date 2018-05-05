@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.net.wifi.WifiInfo;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -17,6 +18,7 @@ import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.helper.RealmHelper;
 import com.sharepay.wifi.model.http.ShareWifiHttpData;
 import com.sharepay.wifi.model.http.TokenHttpData;
+import com.sharepay.wifi.model.realm.CurrentWifiInfoRealm;
 import com.sharepay.wifi.model.realm.DeviceInfoRealm;
 import com.sharepay.wifi.model.realm.SignInfoRealm;
 import com.sharepay.wifi.model.realm.TokenInfoRealm;
@@ -106,6 +108,73 @@ public class CommonUtil {
             }
             RealmHelper.getInstance().close();
         }
+    }
+
+    /**
+     * 获取当前正在连接的wifi
+     * 
+     * @return
+     */
+    public static CurrentWifiInfoRealm getCurrentConnectWifiRealm() {
+        CurrentWifiInfoRealm currentWifiInfoRealm = new CurrentWifiInfoRealm();
+        RealmObject realmObject = RealmHelper.getInstance().queryRealmObjectByValue(currentWifiInfoRealm, "connectWifiKey",
+                CurrentWifiInfoRealm.CONNECT_WIFI_KEY);
+        if (realmObject instanceof CurrentWifiInfoRealm) {
+            currentWifiInfoRealm = (CurrentWifiInfoRealm) realmObject;
+            LogHelper.releaseLog(TAG + "getCurrConnectWifiRealm currentWifiInfoRealm:" + currentWifiInfoRealm.toString());
+        } else {
+            currentWifiInfoRealm = null;
+            LogHelper.errorLog(TAG + "getCurrConnectWifiRealm currentWifiInfoRealm is null!");
+        }
+        return currentWifiInfoRealm;
+
+    }
+
+    /**
+     * 存储当前连接的wifi信息
+     * 
+     * @param currentWifiInfoRealm
+     */
+    public static void saveCurrentConnectWifiRealm(CurrentWifiInfoRealm currentWifiInfoRealm) {
+        if (null != currentWifiInfoRealm) {
+            LogHelper.releaseLog(TAG + "saveCurrentConnectWifiRealm currentWifiInfoRealm:" + currentWifiInfoRealm.toString());
+            RealmHelper.getInstance().addRealmObject(currentWifiInfoRealm);
+        }
+    }
+
+    /**
+     * 删除数据库中当前正在连接的wifi信息
+     */
+    public static void deleteCurrentWifiRealm() {
+        CurrentWifiInfoRealm currentWifiInfoRealm = new CurrentWifiInfoRealm();
+        if (RealmHelper.getInstance().isRealmObjectExist(currentWifiInfoRealm, "connectWifiKey", CurrentWifiInfoRealm.CONNECT_WIFI_KEY)) {
+            LogHelper.releaseLog(TAG + "deleteCurrentWifiRealm!");
+            RealmHelper.getInstance().deleteRealmObject(currentWifiInfoRealm, "connectWifiKey", CurrentWifiInfoRealm.CONNECT_WIFI_KEY);
+        }
+    }
+
+    /**
+     * 获取当前正在连接的wifi的name
+     *
+     * @param wifiInfo
+     * @return
+     */
+    public static String getCurrentConnectWIFIName(WifiInfo wifiInfo) {
+        try {
+            if (null != wifiInfo) {
+                String currentSSID = wifiInfo.getSSID();
+                if (!TextUtils.isEmpty(currentSSID) && currentSSID.length() > 2) {
+                    if (currentSSID.startsWith("\"") && currentSSID.endsWith("\"")) {
+                        currentSSID = currentSSID.substring(1, currentSSID.length() - 1);
+                    }
+                    LogHelper.releaseLog(TAG + "getCurrentConnectWIFIName wifiName:" + currentSSID);
+                    return currentSSID;
+                }
+            }
+        } catch (Exception e) {
+            LogHelper.errorLog(TAG + "getCurrentConnectWIFIName Exception! message:" + e.getMessage());
+        }
+        return "";
     }
 
     /**

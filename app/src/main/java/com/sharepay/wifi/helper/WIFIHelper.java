@@ -77,9 +77,27 @@ public class WIFIHelper {
                     if (currentSSID.startsWith("\"") && currentSSID.endsWith("\"")) {
                         currentSSID = currentSSID.substring(1, currentSSID.length() - 1);
                     }
-                    LogHelper.releaseLog(TAG + "getCurrentConnectWIFIName wifiName:" + currentSSID);
+                    LogHelper.releaseLog(TAG + "getCurrentConnectWIFISSID wifiName:" + currentSSID);
                     return currentSSID;
                 }
+            }
+        } catch (Exception e) {
+            LogHelper.errorLog(TAG + "getCurrentConnectWIFISSID Exception! message:" + e.getMessage());
+        }
+        return "";
+    }
+
+    /**
+     * 获取当前连接wifi的mac地址
+     * 
+     * @param context
+     * @return
+     */
+    public static String getCurrentConnectWIFIMac(Context context) {
+        try {
+            WifiInfo wifiInfo = getCurrentConnectingWIFI(context);
+            if (null != wifiInfo) {
+                return wifiInfo.getBSSID();
             }
         } catch (Exception e) {
             LogHelper.errorLog(TAG + "getCurrentConnectWIFIName Exception! message:" + e.getMessage());

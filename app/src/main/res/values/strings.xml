@@ -70,6 +70,7 @@
     <string name="wifi_need_pay">该WIFI需要付费连接</string>
     <string name="wifi_need_pass">该WIFI需要密码连接</string>
     <string name="wifi_pay_integral">您确定消费%1$s个积分连接到该WIFI</string>
+    <string name="wifi_has_connect_time">已连接%1$s分钟</string>
     <string name="dialog_confirm">确定</string>
     <string name="dialog_cancel">取消</string>
     <string name="immediate_experience">立即体验</string>
