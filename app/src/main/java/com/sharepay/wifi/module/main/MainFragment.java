@@ -263,10 +263,32 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         WifiInfo wifiInfo = WIFIHelper.getCurrentConnectingWIFI(mActivity);
         String currentWifiName = CommonUtil.getCurrentConnectWIFIName(wifiInfo);
         if (!TextUtils.isEmpty(currentWifiName)) {
+            layoutMainConnectWifi.setVisibility(View.VISIBLE);
             CurrentWifiInfoRealm currentWifiInfoRealm = CommonUtil.getCurrentConnectWifiRealm();
             String currentWifiMac = WIFIHelper.getCurrentConnectWIFIMac(mActivity);
-            if (null == currentWifiInfoRealm || TextUtils.isEmpty(currentWifiInfoRealm.getName()) || TextUtils.isEmpty(currentWifiInfoRealm.getMac())) {
-                // 数据库中当前连接的wifi数据为空，表示当前连接的wifi为非分享类型，将当前连接的wifi存入数据库中
+
+            // 数据库中当前连接的wifi数据不为空，需要判断当前的连接的wifi和数据库中的wifi信息是否一致
+            if (TextUtils.equals(currentWifiMac, currentWifiInfoRealm.getMac()) && TextUtils.equals(currentWifiName, currentWifiInfoRealm.getName())
+                    && currentWifiInfoRealm.isShared()) {
+                // 连接的网络跟数据库中的网络一致，并且是共享类型
+                long connectTime = currentWifiInfoRealm.getConnectTime();
+                long currentTime = System.currentTimeMillis();
+                long alreadyConnectTime = currentTime - connectTime;
+                int min = (int) (alreadyConnectTime / (60 * 1000));
+                int sec = (int) (alreadyConnectTime % (60 * 1000));
+                if (sec > 0) {
+                    min++;
+                }
+                if (min >= 60) {
+                    WIFIHelper.disconnectWIFI(mActivity);
+                    mShareView.setImageResource(R.drawable.ic_nav_share_pressed);
+                    CommonUtil.deleteCurrentWifiRealm();
+                    layoutMainConnectWifi.setVisibility(View.GONE);
+                } else {
+                    mConnectWifiTime.setText(String.format(getResources().getString(R.string.wifi_has_connect_time), min + ""));
+                    mConnectWifiTime.setVisibility(View.VISIBLE);
+                }
+            } else {
                 mCurrentWifiInfoRealm = new CurrentWifiInfoRealm();
                 mCurrentWifiInfoRealm.setShared(false);
                 mCurrentWifiInfoRealm.setName(currentWifiName);
@@ -278,12 +300,11 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                 }
                 mCurrentWifiInfoRealm.setSignalStrength(wifiInfo.getRssi());
                 CommonUtil.saveCurrentConnectWifiRealm(mCurrentWifiInfoRealm);
-            } else {
-                // 数据库中当前连接的wifi数据不为空，需要判断当前的连接的wifi和数据库中的wifi信息是否一致
+                mConnectWifiTime.setVisibility(View.INVISIBLE);
             }
+
             mShareView.setImageResource(R.drawable.share_bg);
             layoutMainConnectWifi.setVisibility(View.VISIBLE);
-            mConnectWifiTime.setVisibility(View.INVISIBLE);
             mConnectWifiName.setText(currentWifiName);
             boolean isLocked = WIFIHelper.checkWifiHasPassword(mActivity, currentWifiName);
             if (isLocked) {
@@ -522,6 +543,21 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             if (null != mWIFIConnectManager && null != mNeedConnectWifi && null != mWifiCipherType) {
                 WIFIHelper.disconnectWIFI(mActivity);
                 mWIFIConnectManager.connectWIFI(mNeedConnectWifi.getName(), mNeedConnectWifi.getPass(), mWifiCipherType);
+                mCurrentWifiInfoRealm = new CurrentWifiInfoRealm();
+                mCurrentWifiInfoRealm.setShared(true);
+                mCurrentWifiInfoRealm.setId(mNeedConnectWifi.getId());
+                mCurrentWifiInfoRealm.setName(mNeedConnectWifi.getName());
+                mCurrentWifiInfoRealm.setMac(mNeedConnectWifi.getMac());
+                mCurrentWifiInfoRealm.setPass(mNeedConnectWifi.getPass());
+                mCurrentWifiInfoRealm.setIp(mNeedConnectWifi.getIp());
+                mCurrentWifiInfoRealm.setGateway(mNeedConnectWifi.getGateway());
+                mCurrentWifiInfoRealm.setXCoordinate(mNeedConnectWifi.getXCoordinate());
+                mCurrentWifiInfoRealm.setYCoordinate(mNeedConnectWifi.getYCoordinate());
+                mCurrentWifiInfoRealm.setMobile(mNeedConnectWifi.getMobile());
+                mCurrentWifiInfoRealm.setAddTime(mNeedConnectWifi.getAddtime());
+                mCurrentWifiInfoRealm.setConnectTime(System.currentTimeMillis());
+                mCurrentWifiInfoRealm.setEarnings(mNeedConnectWifi.getEarnings());
+                CommonUtil.saveCurrentConnectWifiRealm(mCurrentWifiInfoRealm);
             }
         }
     }

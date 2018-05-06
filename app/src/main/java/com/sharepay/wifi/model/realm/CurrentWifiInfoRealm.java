@@ -25,13 +25,13 @@ public class CurrentWifiInfoRealm extends RealmObject implements Parcelable {
     private String y_coordinate; // 当前连接wifi的经度
     private String mobile; // 当前连接wifi分享者的手机号
     private String add_time; // 当前连接wifi的分享时间
-    private String connect_time; // 当前连接wifi的连接时间
     private String earnings; // 当前连接wifi的收益
     private String status; // 当前连接wifi的状态
     private String distanc; // 当前连接wifi的距离
     private String capabilities; // 当前连接wifi的加密方案
     private int signalStrength; // 当前连接wifi的信号强度
     private boolean isShared; // 当前wifi是否为共享的
+    private long connect_time; // 当前连接wifi的连接时间
 
     public CurrentWifiInfoRealm() {
         setConnectWifiKey(CONNECT_WIFI_KEY);
@@ -126,11 +126,11 @@ public class CurrentWifiInfoRealm extends RealmObject implements Parcelable {
         this.add_time = add_time;
     }
 
-    public String getConnectTime() {
+    public long getConnectTime() {
         return connect_time;
     }
 
-    public void setConnectTime(String connect_time) {
+    public void setConnectTime(long connect_time) {
         this.connect_time = connect_time;
     }
 
@@ -203,7 +203,7 @@ public class CurrentWifiInfoRealm extends RealmObject implements Parcelable {
         y_coordinate = in.readString();
         mobile = in.readString();
         add_time = in.readString();
-        connect_time = in.readString();
+        connect_time = in.readLong();
         earnings = in.readString();
         status = in.readString();
         distanc = in.readString();
@@ -225,7 +225,7 @@ public class CurrentWifiInfoRealm extends RealmObject implements Parcelable {
         dest.writeString(y_coordinate);
         dest.writeString(mobile);
         dest.writeString(add_time);
-        dest.writeString(connect_time);
+        dest.writeLong(connect_time);
         dest.writeString(earnings);
         dest.writeString(status);
         dest.writeString(distanc);
