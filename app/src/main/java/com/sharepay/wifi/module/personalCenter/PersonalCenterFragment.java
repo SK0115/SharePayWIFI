@@ -1,7 +1,12 @@
 package com.sharepay.wifi.module.personalCenter;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -23,8 +28,10 @@ import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.info.PersonalCenterInfo;
 import com.sharepay.wifi.model.realm.AccountInfoRealm;
 import com.sharepay.wifi.util.CommonUtil;
+import com.sharepay.wifi.util.HttpDownloader;
 import com.sharepay.wifi.util.ToastUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +57,7 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
     private boolean mIsLogin = false;
     private int mVersionCode = 0;
     private String mVersionName;
+    private AppVersionHttpData mAppVersionHttpData;
 
     @OnClick({ R.id.iv_personal_center_back })
     public void onClick(View view) {
@@ -110,11 +118,16 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
         if (null != appVersionHttpResult && null != appVersionHttpResult.getHttpData()
                 && WIFIDefine.HttpResultState.SUCCESS.equals(appVersionHttpResult.getStatus())) {
             // 请求app升级信息成功
-            AppVersionHttpData appVersionHttpData = appVersionHttpResult.getHttpData();
+            mAppVersionHttpData = appVersionHttpResult.getHttpData();
+            mAppVersionHttpData.setVersion("1.0.2");
             try {
-                float httpVersion = Float.valueOf(appVersionHttpData.getVersion());
-                LogHelper.releaseLog(TAG + "setAppVersionHttpResult httpVersion:" + httpVersion + " mVersionCode:" + mVersionCode);
-                if (httpVersion > (float) mVersionCode) {
+                String httpVersionCode = CommonUtil.getSplitString(mAppVersionHttpData.getVersion());
+                int httpVersionFloat = Integer.valueOf(httpVersionCode);
+                LogHelper.releaseLog(TAG + "setAppVersionHttpResult httpVersionFloat:" + httpVersionFloat + " mVersionCode:" + mVersionCode);
+                if (httpVersionFloat > mVersionCode) {
+                    if (!TextUtils.isEmpty(mAppVersionHttpData.getUrl())) {
+                        downloadApk();
+                    }
                     if (null != mPersonalCenterDataList && mPersonalCenterDataList.size() > 0) {
                         PersonalCenterInfo personalCenterData = mPersonalCenterDataList.get(PERSONAL_CENTER_VERSIONINFO_INDEX);
                         personalCenterData.setMessage(getString(R.string.click_update));
@@ -247,5 +260,39 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
         personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_EXIT);
         personalCenterData.setIsLogin(mIsLogin);
         mPersonalCenterDataList.add(PERSONAL_CENTER_EXIT_INDEX, personalCenterData);
+    }
+
+    public void downloadApk() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(mActivity, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                        WIFIDefine.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSIONS);
+                return;
+            }
+        }
+        new DownloadApkThread().start();
+    }
+
+    class DownloadApkThread extends Thread {
+        @Override
+        public void run() {
+            super.run();
+            HttpDownloader httpDownloader = new HttpDownloader(mActivity);
+            File file = httpDownloader
+                    .downLoadFile("http://uv.aiseewhaley.aisee.tv/version/20180503/moretv_3.2.1_32100_201804282036_master_proguard_signed.apk");
+            openFile(file);
+            int fileData = httpDownloader.downloadFiles(
+                    "http://uv.aiseewhaley.aisee.tv/version/20180503/moretv_3.2.1_32100_201804282036_master_proguard_signed.apk",
+                    CommonUtil.getCurProcessName(mActivity), "SharePayWifi.apk");
+            LogHelper.releaseLog(TAG + "DownloadApkThread fileData:" + fileData);
+        }
+    }
+
+    private void openFile(File file) {
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(android.content.Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+        startActivity(intent);
     }
 }

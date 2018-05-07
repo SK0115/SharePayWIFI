@@ -268,8 +268,8 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             String currentWifiMac = WIFIHelper.getCurrentConnectWIFIMac(mActivity);
 
             // 数据库中当前连接的wifi数据不为空，需要判断当前的连接的wifi和数据库中的wifi信息是否一致
-            if (TextUtils.equals(currentWifiMac, currentWifiInfoRealm.getMac()) && TextUtils.equals(currentWifiName, currentWifiInfoRealm.getName())
-                    && currentWifiInfoRealm.isShared()) {
+            if (null != currentWifiInfoRealm && TextUtils.equals(currentWifiMac, currentWifiInfoRealm.getMac())
+                    && TextUtils.equals(currentWifiName, currentWifiInfoRealm.getName()) && currentWifiInfoRealm.isShared()) {
                 // 连接的网络跟数据库中的网络一致，并且是共享类型
                 long connectTime = currentWifiInfoRealm.getConnectTime();
                 long currentTime = System.currentTimeMillis();

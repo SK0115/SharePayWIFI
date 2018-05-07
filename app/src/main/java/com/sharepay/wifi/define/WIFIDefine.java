@@ -14,6 +14,7 @@ public class WIFIDefine {
 
     public static final String ACTIVITY_JUMP_FROM = "activity_from";
 
+    public static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSIONS = 101;
     public static final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
 
     public interface WifiSignalStrength {

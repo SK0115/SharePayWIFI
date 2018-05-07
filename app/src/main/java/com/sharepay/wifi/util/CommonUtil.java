@@ -519,6 +519,30 @@ public class CommonUtil {
     }
 
     /**
+     * 根据点切割字符串
+     * 
+     * @param str
+     * @return
+     */
+    public static String getSplitString(String str) {
+        LogHelper.releaseLog(TAG + "getSplitString str:" + str);
+        if (TextUtils.isEmpty(str)) {
+            return str;
+        }
+        String[] splitStrings = str.split("\\.");
+        String splitStr = "";
+        for (int i = 0; i < splitStrings.length; i++) {
+            LogHelper.releaseLog(TAG + "getSplitString splitString:" + splitStrings[i]);
+            splitStr = splitStr + splitStrings[i];
+        }
+        if (TextUtils.isEmpty(splitStr)) {
+            splitStr = str;
+        }
+        LogHelper.releaseLog(TAG + "getSplitString splitStringResult:" + splitStr);
+        return splitStr;
+    }
+
+    /**
      * 解析本地共享wifi数据
      * 
      * @param str
