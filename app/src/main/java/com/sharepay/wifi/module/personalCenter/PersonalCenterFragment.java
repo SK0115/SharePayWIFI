@@ -1,15 +1,18 @@
 package com.sharepay.wifi.module.personalCenter;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.activity.costHistory.CostHistoryActivity;
@@ -263,12 +266,17 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
     }
 
     public void downloadApk() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(mActivity, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
-                        WIFIDefine.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSIONS);
-                return;
-            }
+        List<String> permissionsList = new ArrayList<String>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS) != PackageManager.PERMISSION_GRANTED) {
+            LogHelper.releaseLog(TAG + "initView no storage permission!");
+            permissionsList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            permissionsList.add(Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS);
+            ActivityCompat.requestPermissions(mActivity, permissionsList.toArray(new String[permissionsList.size()]),
+                    WIFIDefine.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSIONS);
         }
         new DownloadApkThread().start();
     }
@@ -278,21 +286,93 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
         public void run() {
             super.run();
             HttpDownloader httpDownloader = new HttpDownloader(mActivity);
-            File file = httpDownloader
-                    .downLoadFile("http://uv.aiseewhaley.aisee.tv/version/20180503/moretv_3.2.1_32100_201804282036_master_proguard_signed.apk");
-            openFile(file);
-            int fileData = httpDownloader.downloadFiles(
+            // File file = httpDownloader
+            // .downLoadFile("http://uv.aiseewhaley.aisee.tv/version/20180503/moretv_3.2.1_32100_201804282036_master_proguard_signed.apk");
+            // openFile(file);
+            File fileData = httpDownloader.downloadFiles(
                     "http://uv.aiseewhaley.aisee.tv/version/20180503/moretv_3.2.1_32100_201804282036_master_proguard_signed.apk",
                     CommonUtil.getCurProcessName(mActivity), "SharePayWifi.apk");
+            openFile(fileData);
+//             openFile(fileData, mActivity);
             LogHelper.releaseLog(TAG + "DownloadApkThread fileData:" + fileData);
         }
     }
 
-    private void openFile(File file) {
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction(android.content.Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-        startActivity(intent);
+    // private void openFile(File file) {
+    // if (null == file) {
+    // return;
+    // }
+    // Intent intent = new Intent();
+    // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    // intent.setAction(android.content.Intent.ACTION_VIEW);
+    // intent.setDataAndType(Uri.fromFile(file),
+    // "application/vnd.android.package-archive");
+    // startActivity(intent);
+    // }
+
+    public void openFile(File file) {
+        LogHelper.releaseLog(TAG + "openFile file:" + file);
+        if (Build.VERSION.SDK_INT >= 23) {// 判读版本是否在7.0以上
+            Uri apkUri = FileProvider.getUriForFile(mActivity, "com.sharepay.wifi.fileprovider", file);
+            Intent install = new Intent(Intent.ACTION_VIEW);
+            install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);// 添加这一句表示对目标应用临时授权该Uri所代表的文件
+            install.setDataAndType(apkUri, "application/vnd.android.package-archive");
+            startActivity(install);
+        } else {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+    }
+
+    public void openFile(File var0, Context var1) {
+        Intent var2 = new Intent();
+        var2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        var2.setAction(Intent.ACTION_VIEW);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            Uri uriForFile = FileProvider.getUriForFile(var1, var1.getApplicationContext().getPackageName() + ".provider", var0);
+//            var2.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//            var2.setDataAndType(uriForFile, var1.getContentResolver().getType(uriForFile));
+
+            Intent intent = new Intent();
+            intent.addFlags(268435456);
+            intent.setAction("android.intent.action.VIEW");
+            String type = getMIMEType(var0);
+            intent.setDataAndType(Uri.fromFile(var0), type);
+            try {
+                startActivity(intent);
+            } catch (Exception var5) {
+                var5.printStackTrace();
+            }
+
+        } else {
+            var2.setDataAndType(Uri.fromFile(var0), getMIMEType(var0));
+        }
+        try {
+            var1.startActivity(var2);
+        } catch (Exception var5) {
+            var5.printStackTrace();
+        }
+    }
+
+    public String getMIMEType(File var0) {
+        String var1 = "";
+        String var2 = var0.getName();
+        String var3 = var2.substring(var2.lastIndexOf(".") + 1, var2.length()).toLowerCase();
+        var1 = MimeTypeMap.getSingleton().getMimeTypeFromExtension(var3);
+        return var1;
+    }
+
+    public static boolean deleteFileWithPath(String filePath) {
+        SecurityManager checker = new SecurityManager();
+        File f = new File(filePath);
+        checker.checkDelete(filePath);
+        if (f.isFile()) {
+            f.delete();
+            return true;
+        }
+        return false;
     }
 }

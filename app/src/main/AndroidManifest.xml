@@ -65,6 +65,16 @@
             android:name="com.sharepay.wifi.activity.costHistory.CostHistoryActivity"
             android:screenOrientation="portrait" />
 
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.sharepay.wifi.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="5a98c79e8f4a9d378c00001d" />

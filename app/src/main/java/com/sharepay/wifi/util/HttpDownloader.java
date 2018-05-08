@@ -2,6 +2,7 @@ package com.sharepay.wifi.util;
 
 import android.content.Context;
 
+import com.sharepay.wifi.SPApplication;
 import com.sharepay.wifi.helper.LogHelper;
 
 import java.io.BufferedReader;
@@ -60,33 +61,50 @@ public class HttpDownloader {
      * @param fileName
      * @return
      */
-    public int downloadFiles(String urlStr, String path, String fileName) {
+    public File downloadFiles(String urlStr, String path, String fileName) {
         try {
-            FileUtils fileUtils = new FileUtils();
+            FileUtil fileUtils = new FileUtil();
             if (fileUtils.isFileExist(fileName, path)) {
-                return 1;// 判断文件是否存在
+                // return 1;// 判断文件是否存在
+                String path1 = SPApplication.getContext().getFilesDir().getAbsolutePath();
+                File file = new File(path1 + File.separator + "SharePayWifi" + File.separator + "download" + File.separator + "SharePayWifi.apk");
+                boolean isDelete = file.delete();
+                LogHelper.releaseLog(TAG + "downloadFiles isFileExist! isDelete:"+isDelete);
+                return file;
             } else {
                 InputStream inputStream = getInputStreamFromUrl(urlStr);
                 File resultFile = fileUtils.write2SDFromInput(fileName, path, inputStream);
-                if (resultFile == null) {
-                    return -1;
-                }
+                // if (resultFile == null) {
+                // return -1;
+                // }
+                LogHelper.releaseLog(TAG + "downloadFiles resultFile:"+resultFile);
+                return resultFile;
             }
         } catch (Exception e) {
             LogHelper.errorLog(TAG + "download any Files Exception! msg:" + e.getMessage());
-            return -1;
+            // return -1;
+            return null;
         }
-        return 0;
+        // return 0;
+        // return null;
     }
 
+    /**
+     * 从网络上获取到文件流
+     * 
+     * @param urlStr
+     * @return
+     */
     public InputStream getInputStreamFromUrl(String urlStr) {
         try {
             // 创建一个URL对象
             URL url = new URL(urlStr);
             // 创建一个HTTP链接
             HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+            urlConn.connect();
             // 使用IO流获取数据
             InputStream inputStream = urlConn.getInputStream();
+            urlConn.disconnect();
             return inputStream;
         } catch (Exception e) {
             LogHelper.errorLog(TAG + "getInputStreamFromUrl Exception! msg:" + e.getMessage());
