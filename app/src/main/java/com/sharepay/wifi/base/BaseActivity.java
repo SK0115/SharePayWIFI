@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.SPApplication;
 import com.sharepay.wifi.util.StatusBarUtil;
+import com.umeng.analytics.MobclickAgent;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -19,6 +20,18 @@ public class BaseActivity extends AppCompatActivity {
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
         setStatusBar();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     protected void setStatusBar() {

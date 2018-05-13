@@ -8,6 +8,7 @@ import com.sharepay.wifi.base.BaseActivity;
 import com.sharepay.wifi.module.costHistory.CostHistoryFragment;
 import com.sharepay.wifi.module.costHistory.CostHistoryPresenter;
 import com.sharepay.wifi.util.CommonUtil;
+import com.umeng.analytics.MobclickAgent;
 
 public class CostHistoryActivity extends BaseActivity {
 
@@ -24,5 +25,17 @@ public class CostHistoryActivity extends BaseActivity {
             transaction.commit();
         }
         new CostHistoryPresenter(costHistoryFragment);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("MainActivity");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("MainActivity");
     }
 }

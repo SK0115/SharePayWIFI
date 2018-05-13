@@ -14,6 +14,7 @@ import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.module.main.MainFragment;
 import com.sharepay.wifi.module.main.MainPresenter;
 import com.sharepay.wifi.util.CommonUtil;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,18 @@ public class MainActivity extends BaseActivity {
             transaction.commit();
         }
         new MainPresenter(MainActivity.this, mMainFragment);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("MainActivity");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("MainActivity");
     }
 
     private void checkPermission() {

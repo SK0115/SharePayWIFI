@@ -22,6 +22,7 @@ import com.sharepay.wifi.model.http.TokenHttpData;
 import com.sharepay.wifi.model.realm.AccountInfoRealm;
 import com.sharepay.wifi.util.CommonUtil;
 import com.sharepay.wifi.util.PreferenceUtil;
+import com.umeng.analytics.MobclickAgent;
 
 public class StartActivity extends BaseActivity {
     private final String TAG = "StartActivity ";
@@ -62,6 +63,18 @@ public class StartActivity extends BaseActivity {
                 startDelay(LoginActivity.class);
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("StartActivity");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("StartActivity");
     }
 
     @Override

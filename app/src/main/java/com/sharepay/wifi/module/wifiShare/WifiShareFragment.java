@@ -11,7 +11,6 @@ import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.sharepay.wifi.R;

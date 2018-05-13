@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.sharepay.wifi.define.WIFIDefine;
+import com.umeng.commonsdk.UMConfigure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,8 @@ public class SPApplication extends Application {
         Realm.init(this);
         RealmConfiguration configuration = new RealmConfiguration.Builder().name(WIFIDefine.DB_NAME).deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(configuration);
+
+        UMConfigure.init(this, "5a98c79e8f4a9d378c00001d", "Umeng", UMConfigure.DEVICE_TYPE_PHONE, "");
     }
 
     @Override

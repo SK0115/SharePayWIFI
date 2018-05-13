@@ -64,13 +64,6 @@
         <activity
             android:name="com.sharepay.wifi.activity.costHistory.CostHistoryActivity"
             android:screenOrientation="portrait" />
-
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="5a98c79e8f4a9d378c00001d" />
-        <meta-data
-            android:name="UMENG_CHANNEL"
-            android:value="zx" />
     </application>
 
 </manifest>

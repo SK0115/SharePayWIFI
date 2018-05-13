@@ -8,6 +8,7 @@ import com.sharepay.wifi.base.BaseActivity;
 import com.sharepay.wifi.module.login.LoginFragment;
 import com.sharepay.wifi.module.login.LoginPresenter;
 import com.sharepay.wifi.util.CommonUtil;
+import com.umeng.analytics.MobclickAgent;
 
 public class LoginActivity extends BaseActivity {
 
@@ -23,6 +24,18 @@ public class LoginActivity extends BaseActivity {
             transaction.commit();
         }
         new LoginPresenter(loginFragment);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("LoginActivity");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("LoginActivity");
     }
 
     @Override

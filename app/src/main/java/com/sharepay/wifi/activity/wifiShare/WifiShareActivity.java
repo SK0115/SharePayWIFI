@@ -11,6 +11,7 @@ import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.module.wifiShare.WifiShareFragment;
 import com.sharepay.wifi.module.wifiShare.WifiSharePresenter;
 import com.sharepay.wifi.util.CommonUtil;
+import com.umeng.analytics.MobclickAgent;
 
 public class WifiShareActivity extends BaseActivity {
 
@@ -31,6 +32,18 @@ public class WifiShareActivity extends BaseActivity {
             transaction.commit();
         }
         new WifiSharePresenter(mWifiShareFragment);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("WifiShareActivity");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("WifiShareActivity");
     }
 
     @Override

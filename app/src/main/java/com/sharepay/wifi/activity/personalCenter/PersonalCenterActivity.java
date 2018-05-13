@@ -11,6 +11,7 @@ import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.module.personalCenter.PersonalCenterFragment;
 import com.sharepay.wifi.module.personalCenter.PersonalCenterPresenter;
 import com.sharepay.wifi.util.CommonUtil;
+import com.umeng.analytics.MobclickAgent;
 
 public class PersonalCenterActivity extends BaseActivity {
 
@@ -29,6 +30,18 @@ public class PersonalCenterActivity extends BaseActivity {
             transaction.commit();
         }
         new PersonalCenterPresenter(mPersonalCenterFragment);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("PersonalCenterActivity");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("PersonalCenterActivity");
     }
 
     @Override

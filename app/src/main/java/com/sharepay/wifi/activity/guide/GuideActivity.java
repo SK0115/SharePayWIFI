@@ -9,6 +9,7 @@ import com.sharepay.wifi.module.guide.GuideFragment;
 import com.sharepay.wifi.module.guide.GuidePresenter;
 import com.sharepay.wifi.util.CommonUtil;
 import com.sharepay.wifi.util.StatusBarUtil;
+import com.umeng.analytics.MobclickAgent;
 
 public class GuideActivity extends BaseActivity {
 
@@ -25,6 +26,18 @@ public class GuideActivity extends BaseActivity {
             transaction.commit();
         }
         new GuidePresenter(guideFragment);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("GuideActivity");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("GuideActivity");
     }
 
     @Override
