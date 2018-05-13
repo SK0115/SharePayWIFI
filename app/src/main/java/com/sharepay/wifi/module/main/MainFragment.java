@@ -260,6 +260,9 @@ public class MainFragment extends BaseFragment implements MainContract.View {
 
     private void initHasConnectWIFIInfo() {
         LogHelper.releaseLog(TAG + "initHasConnectWIFIInfo");
+        if (null == layoutMainConnectWifi) {
+            return;
+        }
         WifiInfo wifiInfo = WIFIHelper.getCurrentConnectingWIFI(mActivity);
         String currentWifiName = CommonUtil.getCurrentConnectWIFIName(wifiInfo);
         if (!TextUtils.isEmpty(currentWifiName)) {
@@ -595,6 +598,9 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                         mPresenter.requestShareWifiList(wifiShareInfo);
                     }
                 }
+            } else {
+                LogHelper.releaseLog(TAG + "setLocation location is null! startScanThread");
+                startScanThread();
             }
         }
     };

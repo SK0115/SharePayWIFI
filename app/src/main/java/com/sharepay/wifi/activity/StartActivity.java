@@ -3,6 +3,7 @@ package com.sharepay.wifi.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.SPApplication;
@@ -29,6 +30,7 @@ public class StartActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        getWindow().getDecorView().setSystemUiVisibility(View.INVISIBLE);
 
         HttpRequestHelper.getInstance().requestToken(new BaseHttpObserver<BaseHttpResult<TokenHttpData>>(new WIFIDefine.HttpRequestCallBack() {
             @Override
@@ -60,6 +62,10 @@ public class StartActivity extends BaseActivity {
                 startDelay(LoginActivity.class);
             }
         }
+    }
+
+    @Override
+    protected void setStatusBar() {
     }
 
     private void startDelay(final Class cls) {

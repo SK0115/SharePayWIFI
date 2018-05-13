@@ -23,12 +23,6 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
-    <style name="ToastTextStyle" parent="AppTheme">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:includeFontPadding">false</item>
-    </style>
-
     <style name="SwitchStyle" parent="AppTheme">
         <!-- switch 打开时的拇指按钮的颜色 轨迹颜色默认为30%这个颜色-->
         <item name="colorControlActivated">@color/color_login_bg</item>

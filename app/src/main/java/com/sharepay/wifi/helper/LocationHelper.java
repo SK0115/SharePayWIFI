@@ -44,14 +44,12 @@ public class LocationHelper {
             }
             Location location = mLocationManager.getLastKnownLocation(locationProvider);
             LogHelper.releaseLog(TAG + "location:" + location);
-            if (null != location) {
-                // 不为空,显示地理位置经纬度
-                setLocation(location);
-            }
+            setLocation(location);
             // 监视地理位置变化
             mLocationManager.requestLocationUpdates(locationProvider, 5000, 5.0f, mLocationListener);
         } catch (Exception e) {
             LogHelper.errorLog(TAG + "location Exception! msg:" + e.getMessage());
+            setLocation(null);
         }
     }
 
@@ -92,7 +90,9 @@ public class LocationHelper {
     private void setLocation(Location location) {
         // latitude 纬度
         // longitude 经度
-        LogHelper.releaseLog(TAG + "setLocation success" + " latitude:" + location.getLatitude() + " longitude:" + location.getLongitude());
+        if (null != location) {
+            LogHelper.releaseLog(TAG + "setLocation success!" + " latitude:" + location.getLatitude() + " longitude:" + location.getLongitude());
+        }
         if (null != mLocationCallBack) {
             mLocationCallBack.setLocation(location);
         }

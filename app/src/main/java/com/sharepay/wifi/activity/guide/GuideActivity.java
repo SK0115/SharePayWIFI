@@ -8,6 +8,7 @@ import com.sharepay.wifi.base.BaseActivity;
 import com.sharepay.wifi.module.guide.GuideFragment;
 import com.sharepay.wifi.module.guide.GuidePresenter;
 import com.sharepay.wifi.util.CommonUtil;
+import com.sharepay.wifi.util.StatusBarUtil;
 
 public class GuideActivity extends BaseActivity {
 
@@ -26,4 +27,8 @@ public class GuideActivity extends BaseActivity {
         new GuidePresenter(guideFragment);
     }
 
+    @Override
+    protected void setStatusBar() {
+        StatusBarUtil.setColor(this, getResources().getColor(R.color.white));
+    }
 }

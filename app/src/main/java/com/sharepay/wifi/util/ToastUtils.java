@@ -65,9 +65,9 @@ public class ToastUtils {
         // 加载Toast布局
         View customView = LayoutInflater.from(SPApplication.getContext()).inflate(R.layout.layout_toast, null);
         // 初始化布局控件
-        TextView mTextView = customView.findViewById(R.id.tv_toast_text);
+        TextView textView = customView.findViewById(R.id.tv_toast_text);
         // 为控件设置属性
-        mTextView.setText(text);
+        textView.setText(text);
         mToast = new Toast(SPApplication.getContext());
         mToast.setView(customView);
         mToast.setDuration(duration);

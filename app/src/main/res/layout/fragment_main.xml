@@ -4,11 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:background="@color/color_login_bg" />
-
     <RelativeLayout
         android:id="@+id/layout_main_title"
         android:layout_width="match_parent"

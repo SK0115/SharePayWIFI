@@ -1,15 +1,10 @@
 package com.sharepay.wifi.util;
 
-import android.content.Context;
-
-import com.sharepay.wifi.SPApplication;
 import com.sharepay.wifi.helper.LogHelper;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -17,142 +12,60 @@ public class HttpDownloader {
 
     private static final String TAG = "HttpDownloader ";
 
-    private Context mContext;
-    private String line = null;
-    private StringBuffer strBuffer = new StringBuffer();
-    private BufferedReader bufferReader = null;
-
-    public HttpDownloader(Context context) {
-        mContext = context;
-    }
-
     /**
-     * 下载小型的文档文件，返回文档的String字符串
+     * 下载文件
      * 
-     * @param urlStr
-     * @return
-     */
-    public String downloadFiles(String urlStr) {
-        try {
-            InputStream inputStream = getInputStreamFromUrl(urlStr);
-            bufferReader = new BufferedReader(new InputStreamReader(inputStream));
-            while ((line = bufferReader.readLine()) != null) {
-                strBuffer.append(line + '\n');
-            }
-        } catch (Exception e) {
-            strBuffer.append("something is wrong!!");
-            LogHelper.errorLog(TAG + "download small Files Exception! msg:" + e.getMessage());
-        } finally {
-            try {
-                bufferReader.close();
-            } catch (Exception e) {
-                strBuffer.append("something is wrong!!");
-                e.printStackTrace();
-            }
-        }
-        return strBuffer.toString();
-    }
-
-    /**
-     * 可以下载任意文件，例如MP3，并把文件存储在制定目录（-1：下载失败，0：下载成功，1：文件已存在）
-     * 
-     * @param urlStr
-     * @param path
+     * @param httpUrl
      * @param fileName
      * @return
      */
-    public File downloadFiles(String urlStr, String path, String fileName) {
+    public File downloadFile(String httpUrl, String fileName) {
+        LogHelper.releaseLog(TAG + "downloadFile downloadFile:" + fileName);
+        File file = null;
+        InputStream input = null;
+        FileOutputStream output = null;
         try {
-            FileUtil fileUtils = new FileUtil();
-            if (fileUtils.isFileExist(fileName, path)) {
-                // return 1;// 判断文件是否存在
-                String path1 = SPApplication.getContext().getFilesDir().getAbsolutePath();
-                File file = new File(path1 + File.separator + "SharePayWifi" + File.separator + "download" + File.separator + "SharePayWifi.apk");
-                boolean isDelete = file.delete();
-                LogHelper.releaseLog(TAG + "downloadFiles isFileExist! isDelete:"+isDelete);
+            FileManagerUtil.getInstance().createDownloadPath();
+            if (FileManagerUtil.getInstance().isFileExist(fileName)) {
+                file = new File(FileManagerUtil.getInstance().getDownloadFilePath());
+                LogHelper.releaseLog(TAG + "downloadFile isFileExist! file:" + file);
                 return file;
-            } else {
-                InputStream inputStream = getInputStreamFromUrl(urlStr);
-                File resultFile = fileUtils.write2SDFromInput(fileName, path, inputStream);
-                // if (resultFile == null) {
-                // return -1;
-                // }
-                LogHelper.releaseLog(TAG + "downloadFiles resultFile:"+resultFile);
-                return resultFile;
             }
-        } catch (Exception e) {
-            LogHelper.errorLog(TAG + "download any Files Exception! msg:" + e.getMessage());
-            // return -1;
-            return null;
-        }
-        // return 0;
-        // return null;
-    }
-
-    /**
-     * 从网络上获取到文件流
-     * 
-     * @param urlStr
-     * @return
-     */
-    public InputStream getInputStreamFromUrl(String urlStr) {
-        try {
-            // 创建一个URL对象
-            URL url = new URL(urlStr);
-            // 创建一个HTTP链接
-            HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-            urlConn.connect();
-            // 使用IO流获取数据
-            InputStream inputStream = urlConn.getInputStream();
-            urlConn.disconnect();
-            return inputStream;
-        } catch (Exception e) {
-            LogHelper.errorLog(TAG + "getInputStreamFromUrl Exception! msg:" + e.getMessage());
-        }
-        return null;
-    }
-
-    public File downLoadFile(String httpUrl) {
-        final String fileName = "SharePayWifi.apk";
-        String filePath = "/data/data/" + CommonUtil.getCurProcessName(mContext) + "/download";
-        LogHelper.releaseLog(TAG + "downLoadFile filePath:" + filePath);
-        File tmpFile = new File(filePath);
-        if (!tmpFile.exists()) {
-            tmpFile.mkdir();
-        }
-        final File file = new File(filePath + "/" + fileName);
-        try {
+            file = FileManagerUtil.getInstance().createFile(fileName);
             URL url = new URL(httpUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            InputStream is = conn.getInputStream();
-            FileOutputStream fos = new FileOutputStream(file);
+            input = conn.getInputStream();
+            output = new FileOutputStream(file);
             byte[] buf = new byte[256];
             conn.connect();
             double count = 0;
             if (conn.getResponseCode() >= 400) {
-                // Toast.makeText(Main.this, "连接超时", Toast.LENGTH_SHORT).show();
             } else {
                 while (count <= 100) {
-                    if (is != null) {
-                        int numRead = is.read(buf);
+                    if (input != null) {
+                        int numRead = input.read(buf);
                         if (numRead <= 0) {
                             break;
                         } else {
-                            fos.write(buf, 0, numRead);
+                            output.write(buf, 0, numRead);
                         }
 
                     } else {
                         break;
                     }
-
                 }
             }
+            output.flush();
             conn.disconnect();
-            fos.close();
-            is.close();
         } catch (Exception e) {
-            e.printStackTrace();
-            LogHelper.errorLog(TAG + "downLoadFile Exception! msg:" + e.getMessage());
+            LogHelper.errorLog(TAG + "downloadFile Exception! msg:" + e.getMessage());
+        } finally {
+            try {
+                output.close();
+                input.close();
+            } catch (Exception e) {
+                LogHelper.errorLog(TAG + "downloadFile OutputStream Exception! msg:" + e.getMessage());
+            }
         }
         return file;
     }

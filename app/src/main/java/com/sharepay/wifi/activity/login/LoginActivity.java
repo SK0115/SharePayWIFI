@@ -15,7 +15,6 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         LoginFragment loginFragment = (LoginFragment) getSupportFragmentManager().findFragmentById(R.id.fl_login_container);
         if (CommonUtil.checkIsNull(loginFragment)) {
             loginFragment = LoginFragment.getInstance();
@@ -24,5 +23,9 @@ public class LoginActivity extends BaseActivity {
             transaction.commit();
         }
         new LoginPresenter(loginFragment);
+    }
+
+    @Override
+    protected void setStatusBar() {
     }
 }

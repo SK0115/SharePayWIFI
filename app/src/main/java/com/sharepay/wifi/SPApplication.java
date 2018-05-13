@@ -3,6 +3,7 @@ package com.sharepay.wifi;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.sharepay.wifi.define.WIFIDefine;
 
@@ -23,6 +24,12 @@ public class SPApplication extends Application {
         Realm.init(this);
         RealmConfiguration configuration = new RealmConfiguration.Builder().name(WIFIDefine.DB_NAME).deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(configuration);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(base);
     }
 
     public static Context getContext() {
