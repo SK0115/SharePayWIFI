@@ -8,12 +8,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sharepay.wifi.R;
+import com.sharepay.wifi.adapter.PersonalCenterAdapter.PersonalCenterItemClickListener;
 import com.sharepay.wifi.model.info.PersonalCenterInfo;
 
 public class PersonalCenterTextItemView extends RelativeLayout {
 
     private TextView mTitleView;
     private TextView mContentView;
+    private PersonalCenterItemClickListener mClickListener;
 
     public PersonalCenterTextItemView(Context context) {
         super(context);
@@ -31,9 +33,21 @@ public class PersonalCenterTextItemView extends RelativeLayout {
     }
 
     private void initView(Context context) {
-        View view = LayoutInflater.from(context).inflate(R.layout.layout_personal_center_text_list_item, this, true);
-        mTitleView = view.findViewById(R.id.tv_personal_textitem_title);
-        mContentView = view.findViewById(R.id.tv_personal_textitem_content);
+        LayoutInflater.from(context).inflate(R.layout.layout_personal_center_text_list_item, this, true);
+        mTitleView = findViewById(R.id.tv_personal_textitem_title);
+        mContentView = findViewById(R.id.tv_personal_textitem_content);
+        mContentView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (null != mClickListener) {
+                    mClickListener.click(PersonalCenterInfo.PERSONAL_CENTER_TEXT);
+                }
+            }
+        });
+    }
+
+    public void setClickListener(PersonalCenterItemClickListener clickListener) {
+        mClickListener = clickListener;
     }
 
     public void setData(PersonalCenterInfo data) {

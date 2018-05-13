@@ -484,7 +484,6 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             tvSignIn.setBackgroundResource(R.drawable.bg_sign_in);
             tvSignIn.setTextColor(getResources().getColor(R.color.color_login_bg));
             tvSignIn.setText(R.string.sign);
-            ToastUtils.showShort(R.string.no_sign);
         }
     }
 

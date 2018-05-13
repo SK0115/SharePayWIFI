@@ -21,6 +21,16 @@ public class FileManagerUtil {
     private String mDownloadFilePath;
     private boolean mDownloadFileCreatSuccess = false;
 
+    public boolean isDownloadSuccess() {
+        return mDownloadSuccess;
+    }
+
+    public void setDownloadSuccess(boolean downloadSuccess) {
+        this.mDownloadSuccess = downloadSuccess;
+    }
+
+    private boolean mDownloadSuccess = false;
+
     public static FileManagerUtil getInstance() {
         if (null == mFileManagerUtil) {
             mFileManagerUtil = new FileManagerUtil();
@@ -217,12 +227,65 @@ public class FileManagerUtil {
     }
 
     /**
+     * 获取下载的apk文件
+     * 
+     * @return
+     */
+    public File getApkFile() {
+        LogHelper.releaseLog(TAG + "getApkFile mDownloadFilePath:" + mDownloadFilePath);
+        File file = new File(mDownloadFilePath);
+        return file;
+    }
+
+    /**
      * 删除文件
      */
     public boolean deleteFile() {
-        File file = new File(mDownloadFilePath);
-        boolean isDelete = file.delete();
-        return isDelete;
+        boolean downloadFileIsDelete = false;
+        if (!TextUtils.isEmpty(mDownloadPath)) {
+            File file = new File(mDownloadFilePath);
+            downloadFileIsDelete = file.delete();
+        }
+        LogHelper.releaseLog(TAG + "deleteFile mDownloadFilePath:" + mDownloadFilePath + " downloadFileIsDelete:" + downloadFileIsDelete);
+
+        String primaryStoragePath = getPrimaryStoragePath() + File.separator + "SharePayWifi";
+        boolean primaryStorageFileIsDelete = false;
+        if (!TextUtils.isEmpty(primaryStoragePath)) {
+            File primaryStorageFile = new File(primaryStoragePath);
+            primaryStorageFileIsDelete = deleteDirWithFile(primaryStorageFile);
+        }
+        LogHelper.releaseLog(TAG + "deleteFile primaryStoragePath:" + primaryStoragePath + " primaryStorageFileIsDelete:" + primaryStorageFileIsDelete);
+
+        String secondaryStoragePath = getSecondaryStoragePath() + File.separator + "SharePayWifi";
+        boolean secondaryStorageFileIsDelete = false;
+        if (!TextUtils.isEmpty(secondaryStoragePath)) {
+            File secondaryStorageFile = new File(secondaryStoragePath);
+            secondaryStorageFileIsDelete = deleteDirWithFile(secondaryStorageFile);
+        }
+        LogHelper.releaseLog(TAG + "deleteFile secondaryStoragePath:" + secondaryStoragePath + " secondaryStorageFileIsDelete:" + secondaryStorageFileIsDelete);
+
+        mDownloadFilePath = "";
+        mDownloadPath = "";
+        setDownloadSuccess(false);
+        return downloadFileIsDelete;
+    }
+
+    /**
+     * 删除文件夹及里面所有的文件
+     * 
+     * @param dir
+     * @return
+     */
+    private boolean deleteDirWithFile(File dir) {
+        if (dir == null || !dir.exists() || !dir.isDirectory())
+            return false;
+        for (File file : dir.listFiles()) {
+            if (file.isFile())
+                file.delete(); // 删除所有文件
+            else if (file.isDirectory())
+                deleteDirWithFile(file); // 递规的方式删除文件夹
+        }
+        return dir.delete();// 删除目录本身
     }
 
     /**

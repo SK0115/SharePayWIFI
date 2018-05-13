@@ -29,41 +29,36 @@ public class HttpDownloader {
             if (FileManagerUtil.getInstance().isFileExist(fileName)) {
                 file = new File(FileManagerUtil.getInstance().getDownloadFilePath());
                 LogHelper.releaseLog(TAG + "downloadFile isFileExist! file:" + file);
-                return file;
+                if (null != file) {
+                    FileManagerUtil.getInstance().setDownloadSuccess(true);
+                    return file;
+                }
             }
             file = FileManagerUtil.getInstance().createFile(fileName);
             URL url = new URL(httpUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(10 * 1000);
+            conn.setReadTimeout(10 * 1000);
+            conn.connect();
             input = conn.getInputStream();
             output = new FileOutputStream(file);
-            byte[] buf = new byte[256];
-            conn.connect();
-            double count = 0;
-            if (conn.getResponseCode() >= 400) {
-            } else {
-                while (count <= 100) {
-                    if (input != null) {
-                        int numRead = input.read(buf);
-                        if (numRead <= 0) {
-                            break;
-                        } else {
-                            output.write(buf, 0, numRead);
-                        }
-
-                    } else {
-                        break;
-                    }
-                }
+            int numRead;
+            byte buf[] = new byte[1536];
+            while ((numRead = input.read(buf)) >= 0) {
+                output.write(buf, 0, numRead);
+                output.flush();
             }
-            output.flush();
+            FileManagerUtil.getInstance().setDownloadSuccess(true);
             conn.disconnect();
         } catch (Exception e) {
+            FileManagerUtil.getInstance().setDownloadSuccess(false);
             LogHelper.errorLog(TAG + "downloadFile Exception! msg:" + e.getMessage());
         } finally {
             try {
                 output.close();
                 input.close();
             } catch (Exception e) {
+                FileManagerUtil.getInstance().setDownloadSuccess(false);
                 LogHelper.errorLog(TAG + "downloadFile OutputStream Exception! msg:" + e.getMessage());
             }
         }

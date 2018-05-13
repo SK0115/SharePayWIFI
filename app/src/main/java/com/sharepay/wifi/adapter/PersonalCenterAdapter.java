@@ -66,6 +66,7 @@ public class PersonalCenterAdapter extends BaseAdapter<PersonalCenterInfo> {
     @Override
     protected void convert(BaseHolder holder, PersonalCenterInfo data) {
         if (PersonalCenterInfo.PERSONAL_CENTER_TEXT.equals(data.getType())) {
+            ((PersonalCenterTextItemView) holder.getConvertView()).setClickListener(mClickListener);
             ((PersonalCenterTextItemView) holder.getConvertView()).setData(data);
         } else if (PersonalCenterInfo.PERSONAL_CENTER_IMG.equals(data.getType())) {
             ((PersonalCenterImgItemView) holder.getConvertView()).setData(data);

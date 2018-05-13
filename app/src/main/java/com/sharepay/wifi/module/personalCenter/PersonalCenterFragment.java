@@ -28,6 +28,7 @@ import com.sharepay.wifi.model.http.BaseHttpResult;
 import com.sharepay.wifi.model.info.PersonalCenterInfo;
 import com.sharepay.wifi.model.realm.AccountInfoRealm;
 import com.sharepay.wifi.util.CommonUtil;
+import com.sharepay.wifi.util.FileManagerUtil;
 import com.sharepay.wifi.util.HttpDownloader;
 import com.sharepay.wifi.util.ToastUtils;
 
@@ -55,6 +56,7 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
     private PersonalCenterAdapter mAdapter;
     private List<PersonalCenterInfo> mPersonalCenterDataList;
     private boolean mIsLogin = false;
+    private boolean mHasNewVersion = false;
     private int mVersionCode = 0;
     private String mVersionName;
     private AppVersionHttpData mAppVersionHttpData;
@@ -119,7 +121,7 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
                 && WIFIDefine.HttpResultState.SUCCESS.equals(appVersionHttpResult.getStatus())) {
             // 请求app升级信息成功
             mAppVersionHttpData = appVersionHttpResult.getHttpData();
-            mAppVersionHttpData.setVersion("1.0.2");
+            // mAppVersionHttpData.setVersion("1.0.2");
             try {
                 String httpVersionCode = CommonUtil.getSplitString(mAppVersionHttpData.getVersion());
                 int httpVersionFloat = Integer.valueOf(httpVersionCode);
@@ -198,6 +200,24 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
                 mIsLogin = false;
                 AccountHelper.getInstance().logout();
                 doLoginResult();
+            } else if (PersonalCenterInfo.PERSONAL_CENTER_TEXT.equals(type)) {
+                if (!mHasNewVersion) {
+                    return;
+                }
+                boolean downloadSuccess = FileManagerUtil.getInstance().isDownloadSuccess();
+                if (downloadSuccess) {
+                    File file = FileManagerUtil.getInstance().getApkFile();
+                    if (null == file) {
+                        FileManagerUtil.getInstance().deleteFile();
+                        if (null != mPresenter) {
+                            mPresenter.requestAppVersion();
+                        }
+                    } else {
+                        openFile(FileManagerUtil.getInstance().getApkFile());
+                    }
+                } else {
+                    ToastUtils.showShort(R.string.apk_downloading);
+                }
             }
         }
     };
@@ -263,6 +283,7 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
     }
 
     public void downloadApk() {
+        mHasNewVersion = true;
         List<String> permissionsList = new ArrayList<String>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
@@ -284,22 +305,30 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
         public void run() {
             super.run();
             HttpDownloader httpDownloader = new HttpDownloader();
-            File fileData = httpDownloader.downloadFile(
-                    "http://uv.aiseewhaley.aisee.tv/version/20180503/moretv_3.2.1_32100_201804282036_master_proguard_signed.apk", "SharePayWifi.apk");
-            openFile(fileData);
+            if (null != mAppVersionHttpData) {
+                // httpDownloader.downloadFile("http://uv.aiseewhaley.aisee.tv/version/20180503/moretv_3.2.1_32100_201804282036_master_proguard_signed.apk",
+                // "SharePayWifi.apk");
+                httpDownloader.downloadFile(mAppVersionHttpData.getUrl(), "SharePayWifi.apk");
+            }
         }
     }
 
-    public void openFile(File file) {
+    private void openFile(File file) {
         LogHelper.releaseLog(TAG + "openFile file:" + file);
         if (null == file) {
             return;
         }
-
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         File apkfile = new File(file.getPath());
         i.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android.package-archive");
         startActivity(i);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mHasNewVersion = false;
+        FileManagerUtil.getInstance().deleteFile();
     }
 }
