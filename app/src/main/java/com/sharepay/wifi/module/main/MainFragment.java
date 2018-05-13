@@ -218,7 +218,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                                         @Override
                                         public void onClick(String content) {
                                             // 确定
-                                            mWIFIConnectManager.connectWIFI(info.getName(), "", mWifiCipherType);
+                                            mWIFIConnectManager.connectWIFI(info.getName(), content, mWifiCipherType);
                                         }
                                     });
                         }
@@ -290,6 +290,9 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                 } else {
                     mConnectWifiTime.setText(String.format(getResources().getString(R.string.wifi_has_connect_time), min + ""));
                     mConnectWifiTime.setVisibility(View.VISIBLE);
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mConnectWifiName.getLayoutParams();
+                    params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    mConnectWifiName.setLayoutParams(params);
                 }
             } else {
                 mCurrentWifiInfoRealm = new CurrentWifiInfoRealm();
@@ -304,6 +307,9 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                 mCurrentWifiInfoRealm.setSignalStrength(wifiInfo.getRssi());
                 CommonUtil.saveCurrentConnectWifiRealm(mCurrentWifiInfoRealm);
                 mConnectWifiTime.setVisibility(View.INVISIBLE);
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mConnectWifiName.getLayoutParams();
+                params.addRule(RelativeLayout.CENTER_VERTICAL);
+                mConnectWifiName.setLayoutParams(params);
             }
 
             mShareView.setImageResource(R.drawable.share_bg);
@@ -400,6 +406,10 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        CurrentWifiInfoRealm currentWifiInfoRealm = CommonUtil.getCurrentConnectWifiRealm();
+        if (null != currentWifiInfoRealm && currentWifiInfoRealm.isShared()) {
+            WIFIHelper.disconnectWIFI(mActivity);
+        }
         if (null != mScanWIFIThread) {
             mScanWIFIThread = null;
         }
@@ -560,6 +570,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                 mCurrentWifiInfoRealm.setConnectTime(System.currentTimeMillis());
                 mCurrentWifiInfoRealm.setEarnings(mNeedConnectWifi.getEarnings());
                 CommonUtil.saveCurrentConnectWifiRealm(mCurrentWifiInfoRealm);
+                ToastUtils.showShort(R.string.do_not_exit);
             }
         }
     }

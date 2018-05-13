@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -101,7 +101,6 @@
                     android:id="@+id/tv_has_connect_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:includeFontPadding="false"
                     android:singleLine="true"
                     android:textColor="@color/black_60"
@@ -111,14 +110,14 @@
                     android:id="@+id/tv_has_connect_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
+                    android:layout_alignLeft="@id/tv_has_connect_name"
+                    android:layout_below="@id/tv_has_connect_name"
                     android:layout_marginTop="4dp"
                     android:includeFontPadding="false"
                     android:singleLine="true"
                     android:textColor="@color/black_40"
                     android:textSize="14sp" />
-            </LinearLayout>
+            </RelativeLayout>
 
             <ImageView
                 android:layout_width="wrap_content"

@@ -75,4 +75,5 @@
     <string name="dialog_cancel">取消</string>
     <string name="immediate_experience">立即体验</string>
     <string name="apk_downloading">apk下载中，请稍后点击安装</string>
+    <string name="do_not_exit">WIFI连接成功！请不要退出应用，应用退出可能导致WIFI连接断开，应用可在后台运行</string>
 </resources>

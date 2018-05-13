@@ -295,4 +295,26 @@ public class WIFIHelper {
             LogHelper.errorLog(TAG + "disconnectWIFI Exception! message:" + e.getMessage());
         }
     }
+
+    public static void removeWifiBySsid(Context context) {
+        try {
+            WifiInfo wifiInfo = WIFIHelper.getCurrentConnectingWIFI(context);
+            WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            if (null != wifiManager) {
+                List<WifiConfiguration> wifiConfigs = wifiManager.getConfiguredNetworks();
+                for (WifiConfiguration wifiConfig : wifiConfigs) {
+                    String ssid = wifiConfig.SSID;
+                    LogHelper.releaseLog(TAG + "removeWifiBySsid ssid=" + ssid);
+                    if (ssid.equals(wifiInfo.getSSID())) {
+                        LogHelper.releaseLog(TAG + "removeWifiBySsid success, SSID = " + wifiConfig.SSID + " netId = " + wifiConfig.networkId + " wifiInfoID:"
+                                + wifiInfo.getNetworkId());
+                        wifiManager.removeNetwork(wifiConfig.networkId);
+                        wifiManager.saveConfiguration();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            LogHelper.errorLog(TAG + "removeWifiBySsid Exception! message:" + e.getMessage());
+        }
+    }
 }
