@@ -24,6 +24,8 @@ import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.helper.NetSpeedDownload;
 import com.sharepay.wifi.helper.WIFIHelper;
+import com.sharepay.wifi.model.realm.CurrentWifiInfoRealm;
+import com.sharepay.wifi.util.CommonUtil;
 import com.sharepay.wifi.util.PreferenceUtil;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -74,7 +76,13 @@ public class WifiDetailFragment extends BaseFragment implements WifiDetailContra
             showSpeedDialog();
             break;
         case R.id.tv_network_disconnect:
-            WIFIHelper.disconnectWIFI(mActivity);
+            CurrentWifiInfoRealm currentWifiInfoRealm = CommonUtil.getCurrentConnectWifiRealm();
+            if (null != currentWifiInfoRealm && currentWifiInfoRealm.isShared()) {
+                WIFIHelper.disconnectWIFI(mActivity);
+                WIFIHelper.removeWifiBySsid(mActivity);
+            } else {
+                WIFIHelper.disconnectWIFI(mActivity);
+            }
             mActivity.finish();
             break;
         default:
@@ -216,22 +224,6 @@ public class WifiDetailFragment extends BaseFragment implements WifiDetailContra
             mSpeedFinishText.setText(t);
             mSpeedFinishUnitText.setText("Mb/s");
         }
-    }
-
-    /**
-     * 获取不带单位文字的速度信息，速度信息以Kb为单位
-     * 
-     * @return
-     */
-    public String getSpeedWithoutUnit() {
-        String speedInfo = "";
-        speedInfo = (String) mSpeedText.getText();
-        if (speedInfo.contains("Kb/s")) {
-            return speedInfo.split("K")[0];
-        } else if (speedInfo.contains("Mb/s")) {
-            return String.valueOf((int) ((Float.valueOf(speedInfo.split("M")[0])) * 1024));
-        }
-        return "";
     }
 
     private float getComputAngle(float speed) {

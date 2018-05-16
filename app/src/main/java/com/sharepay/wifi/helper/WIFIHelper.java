@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.define.WIFIDefine;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -315,6 +316,31 @@ public class WIFIHelper {
             }
         } catch (Exception e) {
             LogHelper.errorLog(TAG + "removeWifiBySsid Exception! message:" + e.getMessage());
+        }
+    }
+
+    public static void removeWifi(Context context) {
+        try {
+            WifiInfo wifiInfo = WIFIHelper.getCurrentConnectingWIFI(context);
+            WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            if (null != wifiManager) {
+                Class actionListener = Class.forName("android.net.wifi.WifiManager$ActionListener");
+                Method method = wifiManager.getClass().getMethod("forget", int.class, actionListener);
+                List<WifiConfiguration> wifiConfigs = wifiManager.getConfiguredNetworks();
+                for (WifiConfiguration wifiConfig : wifiConfigs) {
+                    String ssid = wifiConfig.SSID;
+                    LogHelper.releaseLog(TAG + "removeWifi ssid=" + ssid);
+                    if (ssid.equals(wifiInfo.getSSID())) {
+                        LogHelper.releaseLog(TAG + "removeWifi success, SSID = " + wifiConfig.SSID + " netId = " + wifiConfig.networkId + " wifiInfoID:"
+                                + wifiInfo.getNetworkId());
+                        // wifiManager.removeNetwork(wifiConfig.networkId);
+                        // wifiManager.saveConfiguration();
+                        method.invoke(wifiManager, new Object[] { wifiConfig.networkId, null });
+                    }
+                }
+            }
+        } catch (Exception e) {
+            LogHelper.errorLog(TAG + "removeWifi Exception! message:" + e.getMessage());
         }
     }
 }

@@ -30,12 +30,12 @@ public class CostHistoryActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onPageStart("MainActivity");
+        MobclickAgent.onPageStart("CostHistoryActivity");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPageEnd("MainActivity");
+        MobclickAgent.onPageEnd("CostHistoryActivity");
     }
 }
