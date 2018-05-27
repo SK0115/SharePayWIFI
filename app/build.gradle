@@ -14,10 +14,39 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
+    signingConfigs {
+        debug {
+            storeFile file('../sign/signkey.jks')
+            storePassword "android"
+            keyAlias "androidsignkey"
+            keyPassword "android"
+        }
+
         release {
-            minifyEnabled false
+            storeFile file('../sign/signkey.jks')
+            storePassword "android"
+            keyAlias "androidsignkey"
+            keyPassword "android"
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled rootProject.ext.minifyEnabledDebug
+            zipAlignEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+
+        release {
+            minifyEnabled rootProject.ext.minifyEnabledRelease
+            // Zipalign优化
+            zipAlignEnabled false
+            // 移除无用的resource文件
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
