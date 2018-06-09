@@ -34,7 +34,7 @@ public class WIFIDefine {
     }
 
     public interface JUMP_PAGE_REQUESTCODE {
-        int JUMP_PAGE_REQUESTCODE = 110;
+        int JUMP_LOGIN_PAGE_REQUESTCODE = 110;
     }
 
     /**
@@ -53,14 +53,14 @@ public class WIFIDefine {
 
         /**
          * 请求结果
-         * 
+         *
          * @param obj
          */
         void onNext(Object obj);
 
         /**
          * 错误信息
-         * 
+         *
          * @param e
          */
         void onError(Throwable e);
@@ -70,7 +70,7 @@ public class WIFIDefine {
 
         /**
          * 设置位置信息
-         * 
+         *
          * @param location
          */
         void setLocation(Location location);

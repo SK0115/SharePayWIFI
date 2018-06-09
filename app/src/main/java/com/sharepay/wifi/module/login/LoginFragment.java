@@ -142,7 +142,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
             break;
         case R.id.text_jumplogin_view:
             if (WIFIDefine.JUMP_ACTIVITY.PERSONAL_CENTER.equals(mActivityFormText)) {
-                mActivity.setResult(WIFIDefine.JUMP_PAGE_REQUESTCODE.JUMP_PAGE_REQUESTCODE);
+                mActivity.setResult(WIFIDefine.JUMP_PAGE_REQUESTCODE.JUMP_LOGIN_PAGE_REQUESTCODE);
             } else {
                 startActivity(new Intent(mActivity, MainActivity.class));
             }
@@ -271,7 +271,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
     private void doLoginResult() {
         ToastUtils.showShort(R.string.login_success);
         if (WIFIDefine.JUMP_ACTIVITY.PERSONAL_CENTER.equals(mActivityFormText)) {
-            mActivity.setResult(WIFIDefine.JUMP_PAGE_REQUESTCODE.JUMP_PAGE_REQUESTCODE);
+            mActivity.setResult(WIFIDefine.JUMP_PAGE_REQUESTCODE.JUMP_LOGIN_PAGE_REQUESTCODE);
         } else {
             startActivity(new Intent(mActivity, MainActivity.class));
         }
@@ -317,7 +317,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
 
     /**
      * 停止获取验证码倒计时
-     * 
+     *
      * @param isResetGetVeriCodeView
      *            是否重置获取验证码view
      */

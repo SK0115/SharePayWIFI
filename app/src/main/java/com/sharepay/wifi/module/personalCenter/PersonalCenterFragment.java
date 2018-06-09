@@ -105,7 +105,7 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == WIFIDefine.JUMP_PAGE_REQUESTCODE.JUMP_PAGE_REQUESTCODE) {
+        if (requestCode == WIFIDefine.JUMP_PAGE_REQUESTCODE.JUMP_LOGIN_PAGE_REQUESTCODE) {
             doLoginResult();
         }
     }
@@ -194,7 +194,7 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
                     Bundle bundle = new Bundle();
                     bundle.putString(WIFIDefine.ACTIVITY_JUMP_FROM, WIFIDefine.JUMP_ACTIVITY.PERSONAL_CENTER);
                     intent.putExtras(bundle);
-                    startActivityForResult(intent, WIFIDefine.JUMP_PAGE_REQUESTCODE.JUMP_PAGE_REQUESTCODE);
+                    startActivityForResult(intent, WIFIDefine.JUMP_PAGE_REQUESTCODE.JUMP_LOGIN_PAGE_REQUESTCODE);
                 }
             } else if (PersonalCenterInfo.PERSONAL_CENTER_EXIT.equals(type)) {
                 mIsLogin = false;
@@ -224,7 +224,7 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
 
     /**
      * 处理个人中心数据
-     * 
+     *
      * @param accountInfoRealm
      */
     private void doPersonalCenterDataList(AccountInfoRealm accountInfoRealm) {
