@@ -66,7 +66,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     @BindView(R.id.iv_main_share)
     ImageView mShareView;
     @BindView(R.id.layout_main_connect_wifi)
-    RelativeLayout layoutMainConnectWifi;
+    RelativeLayout mConnectWifiLayout;
     @BindView(R.id.recyclerview_main)
     RecyclerView recyclerviewMain;
     @BindView(R.id.layout_tips)
@@ -124,7 +124,11 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             }
             break;
         case R.id.layout_main_connect_wifi:
-            startActivity(new Intent(mActivity, WifiDetailActivity.class));
+            Intent intent = new Intent(mActivity, WifiDetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(WIFIDefine.ACTIVITY_JUMP_FROM, WIFIDefine.JUMP_ACTIVITY.WIFI_MAIN);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, WIFIDefine.JUMP_PAGE_REQUESTCODE.JUMP_WIFIDETAIL_PAGE_REQUESTCODE);
             break;
         default:
             break;
@@ -238,7 +242,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     @Override
     protected void initView() {
         mAccountInfoRealm = AccountHelper.getInstance().getAccountInfo();
-        layoutMainConnectWifi.setVisibility(View.GONE);
+        mConnectWifiLayout.setVisibility(View.GONE);
         layoutTips.setFocusable(true);
         layoutTips.setFocusableInTouchMode(true);
         layoutTips.requestFocus();
@@ -258,15 +262,24 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        LogHelper.releaseLog(TAG + "onActivityResult requestCode:" + requestCode + " resultCode:" + resultCode);
+        if (resultCode == WIFIDefine.JUMP_PAGE_REQUESTCODE.JUMP_WIFIDETAIL_PAGE_REQUESTCODE && null != mConnectWifiLayout) {
+            mConnectWifiLayout.setVisibility(View.GONE);
+        }
+    }
+
     private void initHasConnectWIFIInfo() {
         LogHelper.releaseLog(TAG + "initHasConnectWIFIInfo");
-        if (null == layoutMainConnectWifi) {
+        if (null == mConnectWifiLayout) {
             return;
         }
         WifiInfo wifiInfo = WIFIHelper.getCurrentConnectingWIFI(mActivity);
-        String currentWifiName = CommonUtil.getCurrentConnectWIFIName(wifiInfo);
+        String currentWifiName = WIFIHelper.getCurrentConnectWIFISSID(mActivity);
         if (!TextUtils.isEmpty(currentWifiName)) {
-            layoutMainConnectWifi.setVisibility(View.VISIBLE);
+            mConnectWifiLayout.setVisibility(View.VISIBLE);
             CurrentWifiInfoRealm currentWifiInfoRealm = CommonUtil.getCurrentConnectWifiRealm();
             String currentWifiMac = WIFIHelper.getCurrentConnectWIFIMac(mActivity);
 
@@ -286,7 +299,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                     WIFIHelper.disconnectWIFI(mActivity);
                     mShareView.setImageResource(R.drawable.ic_nav_share_pressed);
                     CommonUtil.deleteCurrentWifiRealm();
-                    layoutMainConnectWifi.setVisibility(View.GONE);
+                    mConnectWifiLayout.setVisibility(View.GONE);
                 } else {
                     mConnectWifiTime.setText(String.format(getResources().getString(R.string.wifi_has_connect_time), min + ""));
                     mConnectWifiTime.setVisibility(View.VISIBLE);
@@ -313,7 +326,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             }
 
             mShareView.setImageResource(R.drawable.share_bg);
-            layoutMainConnectWifi.setVisibility(View.VISIBLE);
+            mConnectWifiLayout.setVisibility(View.VISIBLE);
             mConnectWifiName.setText(currentWifiName);
             boolean isLocked = WIFIHelper.checkWifiHasPassword(mActivity, currentWifiName);
             if (isLocked) {
@@ -324,7 +337,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         } else {
             mShareView.setImageResource(R.drawable.ic_nav_share_pressed);
             CommonUtil.deleteCurrentWifiRealm();
-            layoutMainConnectWifi.setVisibility(View.GONE);
+            mConnectWifiLayout.setVisibility(View.GONE);
         }
     }
 

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.net.wifi.WifiInfo;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -151,30 +150,6 @@ public class CommonUtil {
             LogHelper.releaseLog(TAG + "deleteCurrentWifiRealm!");
             RealmHelper.getInstance().deleteRealmObject(currentWifiInfoRealm, "connectWifiKey", CurrentWifiInfoRealm.CONNECT_WIFI_KEY);
         }
-    }
-
-    /**
-     * 获取当前正在连接的wifi的name
-     *
-     * @param wifiInfo
-     * @return
-     */
-    public static String getCurrentConnectWIFIName(WifiInfo wifiInfo) {
-        try {
-            if (null != wifiInfo) {
-                String currentSSID = wifiInfo.getSSID();
-                if (!TextUtils.isEmpty(currentSSID) && currentSSID.length() > 2) {
-                    if (currentSSID.startsWith("\"") && currentSSID.endsWith("\"")) {
-                        currentSSID = currentSSID.substring(1, currentSSID.length() - 1);
-                    }
-                    LogHelper.releaseLog(TAG + "getCurrentConnectWIFIName wifiName:" + currentSSID);
-                    return currentSSID;
-                }
-            }
-        } catch (Exception e) {
-            LogHelper.errorLog(TAG + "getCurrentConnectWIFIName Exception! message:" + e.getMessage());
-        }
-        return "";
     }
 
     /**

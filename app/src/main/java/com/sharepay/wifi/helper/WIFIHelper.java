@@ -3,6 +3,7 @@ package com.sharepay.wifi.helper;
 import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.ScanResult;
+import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -74,6 +75,10 @@ public class WIFIHelper {
             WifiInfo wifiInfo = getCurrentConnectingWIFI(context);
             if (null != wifiInfo) {
                 String currentSSID = wifiInfo.getSSID();
+                SupplicantState supplicantState = wifiInfo.getSupplicantState();
+                if (!SupplicantState.COMPLETED.equals(supplicantState)) {
+                    return "";
+                }
                 if (!TextUtils.isEmpty(currentSSID) && currentSSID.length() > 2) {
                     if (currentSSID.startsWith("\"") && currentSSID.endsWith("\"")) {
                         currentSSID = currentSSID.substring(1, currentSSID.length() - 1);

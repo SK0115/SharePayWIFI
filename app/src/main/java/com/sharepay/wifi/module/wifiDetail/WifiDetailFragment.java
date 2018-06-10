@@ -1,6 +1,7 @@
 package com.sharepay.wifi.module.wifiDetail;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiInfo;
 import android.os.Bundle;
@@ -60,6 +61,7 @@ public class WifiDetailFragment extends BaseFragment implements WifiDetailContra
     private boolean flag = false;
     private RotateAnimation fristRotaAinimation;
     private NetSpeedDownload download = null;
+    private String mActivityFormText;
 
     @OnClick({ R.id.wifi_detail_iv_back, R.id.layout_signal_strength, R.id.tv_network_disconnect, R.id.tv_network_speed })
     public void onClick(View view) {
@@ -82,6 +84,9 @@ public class WifiDetailFragment extends BaseFragment implements WifiDetailContra
                 WIFIHelper.removeWifiBySsid(mActivity);
             } else {
                 WIFIHelper.disconnectWIFI(mActivity);
+            }
+            if (WIFIDefine.JUMP_ACTIVITY.WIFI_MAIN.equals(mActivityFormText)) {
+                mActivity.setResult(WIFIDefine.JUMP_PAGE_REQUESTCODE.JUMP_WIFIDETAIL_PAGE_REQUESTCODE);
             }
             mActivity.finish();
             break;
@@ -107,6 +112,8 @@ public class WifiDetailFragment extends BaseFragment implements WifiDetailContra
 
     @Override
     protected void initView() {
+        Intent intent = mActivity.getIntent();
+        mActivityFormText = intent.getStringExtra(WIFIDefine.ACTIVITY_JUMP_FROM);
     }
 
     @Override

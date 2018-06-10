@@ -105,7 +105,8 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == WIFIDefine.JUMP_PAGE_REQUESTCODE.JUMP_LOGIN_PAGE_REQUESTCODE) {
+        LogHelper.releaseLog(TAG + "onActivityResult requestCode:" + requestCode + " resultCode:" + resultCode);
+        if (resultCode == WIFIDefine.JUMP_PAGE_REQUESTCODE.JUMP_LOGIN_PAGE_REQUESTCODE) {
             doLoginResult();
         }
     }

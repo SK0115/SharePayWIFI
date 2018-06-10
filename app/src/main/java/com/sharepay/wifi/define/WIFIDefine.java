@@ -31,10 +31,12 @@ public class WIFIDefine {
 
     public interface JUMP_ACTIVITY {
         String PERSONAL_CENTER = "personalcenter";
+        String WIFI_MAIN = "wifimain";
     }
 
     public interface JUMP_PAGE_REQUESTCODE {
         int JUMP_LOGIN_PAGE_REQUESTCODE = 110;
+        int JUMP_WIFIDETAIL_PAGE_REQUESTCODE = 111;
     }
 
     /**
