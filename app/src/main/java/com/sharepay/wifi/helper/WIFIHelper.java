@@ -302,6 +302,26 @@ public class WIFIHelper {
         }
     }
 
+    /**
+     * 判断WiFi是否为免费wifi
+     * 
+     * @param capabilities
+     *            加密方式
+     * @return
+     */
+    public static boolean isFreeWifi(String capabilities) {
+        if (TextUtils.isEmpty(capabilities) || WIFIDefine.WIFI_CAPABILITIES.WIFI_CAPABILITIES_OPEN.equals(capabilities)
+                || WIFIDefine.WIFI_CAPABILITIES.WIFI_CAPABILITIES_ROAM.equals(capabilities)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 移除并且断开wifi
+     * 
+     * @param context
+     */
     public static void removeWifiBySsid(Context context) {
         try {
             WifiInfo wifiInfo = WIFIHelper.getCurrentConnectingWIFI(context);
@@ -324,6 +344,11 @@ public class WIFIHelper {
         }
     }
 
+    /**
+     * 移除wifi
+     * 
+     * @param context
+     */
     public static void removeWifi(Context context) {
         try {
             WifiInfo wifiInfo = WIFIHelper.getCurrentConnectingWIFI(context);

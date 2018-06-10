@@ -215,19 +215,27 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                                         }
                                     });
                         } else {
-                            DialogUtils.showDialog(mActivity, getResources().getString(R.string.wifi_need_pass), "", true,
-                                    new DialogUtils.OnDialogClickListener() {
-                                        @Override
-                                        public void onClick(String content) {
-                                            // 取消
-                                        }
-                                    }, new DialogUtils.OnDialogClickListener() {
-                                        @Override
-                                        public void onClick(String content) {
-                                            // 确定
-                                            mWIFIConnectManager.connectWIFI(info.getName(), content, mWifiCipherType);
-                                        }
-                                    });
+                            if (WIFIHelper.isFreeWifi(info.getCapabilities())) {
+                                // 免费wifi直接连接
+                                WIFIHelper.disconnectWIFI(mActivity);
+                                mWIFIConnectManager.connectWIFI(info.getName(), "", mWifiCipherType);
+                            } else {
+                                // 付费wifi需要密码连接
+                                DialogUtils.showDialog(mActivity, getResources().getString(R.string.wifi_need_pass), "", true,
+                                        new DialogUtils.OnDialogClickListener() {
+                                            @Override
+                                            public void onClick(String content) {
+                                                // 取消
+                                            }
+                                        }, new DialogUtils.OnDialogClickListener() {
+                                            @Override
+                                            public void onClick(String content) {
+                                                // 确定
+                                                WIFIHelper.disconnectWIFI(mActivity);
+                                                mWIFIConnectManager.connectWIFI(info.getName(), content, mWifiCipherType);
+                                            }
+                                        });
+                            }
                         }
                     }
                 }

@@ -51,6 +51,15 @@ public class WIFIDefine {
         String TYPE_SPENDING_TEXT = "消费";
     }
 
+    public interface WIFI_CAPABILITIES {
+        String WIFI_CAPABILITIES_ESS = "ESS";
+        String WIFI_CAPABILITIES_WEP = "WEP";
+        String WIFI_CAPABILITIES_PSK = "PSK";
+        String WIFI_CAPABILITIES_EAP = "EAP";
+        String WIFI_CAPABILITIES_OPEN = "";
+        String WIFI_CAPABILITIES_ROAM = "[ESS]";
+    }
+
     public interface HttpRequestCallBack {
 
         /**

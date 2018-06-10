@@ -1,7 +1,6 @@
 package com.sharepay.wifi.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,9 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainWifiListAdapter extends BaseAdapter<WIFIInfo> {
-
-    private static final String WIFI_AUTH_OPEN = "";
-    private static final String WIFI_AUTH_ROAM = "[ESS]";
 
     public MainWifiListAdapter(Context context, List<WIFIInfo> datas, boolean isOpenLoadMore) {
         super(context, datas, isOpenLoadMore);
@@ -38,7 +34,8 @@ public class MainWifiListAdapter extends BaseAdapter<WIFIInfo> {
         ImageView ivItem = holder.getView(R.id.iv_wifi_item);
         textview.setText(data.getName());
         String capabilities = data.getCapabilities().trim();
-        if (!TextUtils.isEmpty(capabilities) && (capabilities.equals(WIFI_AUTH_OPEN) || capabilities.equals(WIFI_AUTH_ROAM))) {
+        if (WIFIHelper.isFreeWifi(capabilities)) {
+            // 免费wifi根据信号强度显示不同icon
             ivItem.setImageResource(WIFIHelper.getWIFIStateImageBySignalStrength(data.getSignalStrength()));
         } else {
             ivItem.setImageResource(R.drawable.ic_common_wifi_locked);
