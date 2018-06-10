@@ -137,6 +137,17 @@ public class CommonUtil {
     public static void saveCurrentConnectWifiRealm(CurrentWifiInfoRealm currentWifiInfoRealm) {
         if (null != currentWifiInfoRealm) {
             LogHelper.releaseLog(TAG + "saveCurrentConnectWifiRealm currentWifiInfoRealm:" + currentWifiInfoRealm.toString());
+            CurrentWifiInfoRealm infoRealm = new CurrentWifiInfoRealm();
+            if (RealmHelper.getInstance().isRealmObjectExist(infoRealm, "connectWifiKey", CurrentWifiInfoRealm.CONNECT_WIFI_KEY)) {
+                CurrentWifiInfoRealm wifiInfoRealm = getCurrentConnectWifiRealm();
+                LogHelper.releaseLog(TAG + "saveCurrentConnectWifiRealm wifiInfoRealm:" + (null != wifiInfoRealm ? wifiInfoRealm.toString() : " is null!"));
+                if (null != wifiInfoRealm && currentWifiInfoRealm.getName().equals(wifiInfoRealm.getName())
+                        && currentWifiInfoRealm.getMac().equals(wifiInfoRealm.getMac())) {
+                    // wifi相同
+                    return;
+                }
+                RealmHelper.getInstance().deleteRealmObject(infoRealm, "connectWifiKey", CurrentWifiInfoRealm.CONNECT_WIFI_KEY);
+            }
             RealmHelper.getInstance().addRealmObject(currentWifiInfoRealm);
         }
     }

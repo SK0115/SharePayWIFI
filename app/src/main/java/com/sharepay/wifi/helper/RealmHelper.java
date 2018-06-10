@@ -31,7 +31,9 @@ public class RealmHelper {
     public void addRealmObject(RealmObject obj) {
         LogHelper.releaseLog(TAG + "addRealmObject obj:" + obj);
         try {
-            mRealm.beginTransaction();
+            if (!mRealm.isInTransaction()) {
+                mRealm.beginTransaction();
+            }
             mRealm.insert(obj);
             mRealm.commitTransaction();
         } catch (Exception e) {
@@ -46,7 +48,9 @@ public class RealmHelper {
         LogHelper.releaseLog(TAG + "deleteRealmObject obj:" + obj + " fieldName:" + fieldName + " value:" + value);
         try {
             RealmObject realmObject = mRealm.where(obj.getClass()).equalTo(fieldName, value).findFirst();
-            mRealm.beginTransaction();
+            if (!mRealm.isInTransaction()) {
+                mRealm.beginTransaction();
+            }
             if (null != realmObject) {
                 realmObject.deleteFromRealm();
             }
@@ -80,7 +84,9 @@ public class RealmHelper {
     public void updateRealmObject(RealmObject obj) {
         LogHelper.releaseLog(TAG + "updateRealmObject obj:" + obj);
         try {
-            mRealm.beginTransaction();
+            if (!mRealm.isInTransaction()) {
+                mRealm.beginTransaction();
+            }
             mRealm.insertOrUpdate(obj);
             mRealm.commitTransaction();
         } catch (Exception e) {
