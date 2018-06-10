@@ -2,8 +2,6 @@ package com.sharepay.wifi.module.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -50,6 +48,7 @@ import com.sharepay.wifi.model.info.WIFIInfo;
 import com.sharepay.wifi.model.info.WIFIShareInfo;
 import com.sharepay.wifi.model.realm.AccountInfoRealm;
 import com.sharepay.wifi.model.realm.CurrentWifiInfoRealm;
+import com.sharepay.wifi.receiver.WIFIStateChangeReceiver;
 import com.sharepay.wifi.util.CommonUtil;
 import com.sharepay.wifi.util.DialogUtils;
 import com.sharepay.wifi.util.ToastUtils;
@@ -63,15 +62,15 @@ import butterknife.OnClick;
 public class MainFragment extends BaseFragment implements MainContract.View {
 
     private static final String TAG = "MainFragment ";
-    private static final int SCAN_WIFI_TIME = 30 * 1000;
+    private static final int SCAN_WIFI_TIME = 15 * 1000;
     private static final int HIDE_LOADING_TIME = 5 * 1000;
 
     @BindView(R.id.iv_main_share)
     ImageView mShareView;
     @BindView(R.id.layout_main_connect_wifi)
     RelativeLayout mConnectWifiLayout;
-    @BindView(R.id.recyclerview_main)
-    RecyclerView recyclerviewMain;
+    @BindView(R.id.wifilist_recyclerview_main)
+    RecyclerView mWIFIListRecyclerview;
     @BindView(R.id.layout_tips)
     RelativeLayout layoutTips;
     @BindView(R.id.tv_sign_in)
@@ -87,7 +86,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     @BindView(R.id.pb_scan_loading)
     ProgressView mScanProgressBar;
 
-    private MainWifiListAdapter mAdapter;
+    private MainWifiListAdapter mWIFIListAdapter;
     private boolean mIsSign; // 是否已签到
     private BaseTimer mScanWIFITimer;
     private IntentFilter mIntentFilter;
@@ -154,9 +153,12 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     }
 
     private void initRecyclerView(List<WIFIInfo> wifiInfoList) {
-        if (null == mAdapter) {
-            mAdapter = new MainWifiListAdapter(mActivity, wifiInfoList, false);
-            mAdapter.setOnItemClickListener(new OnBaseItemClickListener<WIFIInfo>() {
+        if (mWIFIListRecyclerview.getVisibility() != View.VISIBLE) {
+            mWIFIListRecyclerview.setVisibility(View.VISIBLE);
+        }
+        if (null == mWIFIListAdapter) {
+            mWIFIListAdapter = new MainWifiListAdapter(mActivity, wifiInfoList, false);
+            mWIFIListAdapter.setOnItemClickListener(new OnBaseItemClickListener<WIFIInfo>() {
                 @SuppressLint("HandlerLeak")
                 @Override
                 public void onItemClick(BaseHolder viewHolder, final WIFIInfo info, int position) {
@@ -240,13 +242,13 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                     }
                 }
             });
-            recyclerviewMain.setNestedScrollingEnabled(false);
+            mWIFIListRecyclerview.setNestedScrollingEnabled(false);
             // 设置布局管理器
-            recyclerviewMain.setLayoutManager(new FullyLinearLayoutManager(mActivity));
-            recyclerviewMain.setAdapter(mAdapter);
+            mWIFIListRecyclerview.setLayoutManager(new FullyLinearLayoutManager(mActivity));
+            mWIFIListRecyclerview.setAdapter(mWIFIListAdapter);
         } else {
-            mAdapter.setDatas(wifiInfoList);
-            mAdapter.notifyDataSetChanged();
+            mWIFIListAdapter.setDatas(wifiInfoList);
+            mWIFIListAdapter.notifyDataSetChanged();
         }
         new BaseTimer().startTimer(HIDE_LOADING_TIME, new BaseTimer.TimerCallBack() {
             @Override
@@ -444,21 +446,11 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     public void onResume() {
         super.onResume();
         LogHelper.releaseLog(TAG + "onResume!");
-        List<String> permissionsList = new ArrayList<String>();
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            LogHelper.releaseLog(TAG + "onResume no location permission!");
-            permissionsList.add(Manifest.permission.ACCESS_FINE_LOCATION);
-            permissionsList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-            ActivityCompat.requestPermissions(mActivity, permissionsList.toArray(new String[permissionsList.size()]),
-                    WIFIDefine.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
-        } else {
-            LogHelper.releaseLog(TAG + "onResume has location permission!");
-            startLocation();
-        }
         mIsSign = CommonUtil.userIsSign();
         doSign();
         if (WifiManager.WIFI_STATE_ENABLED != WIFIHelper.getWIFISwitchState(mActivity)) {
+            mConnectWifiLayout.setVisibility(View.GONE);
+            mWIFIListRecyclerview.setVisibility(View.INVISIBLE);
             DialogUtils.showDialog(mActivity, getResources().getString(R.string.wifi_switch_close), getResources().getString(R.string.wifi_switch_need_open),
                     new DialogUtils.OnDialogClickListener() {
                         @Override
@@ -472,11 +464,35 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                         public void onClick(String content) {
                             // 确定
                             WIFIHelper.setWIFIEnabled(mActivity, true);
+                            judgeWIFIPermission();
                         }
                     });
+        } else {
+            judgeWIFIPermission();
         }
     }
 
+    /**
+     * 判断wifi权限
+     */
+    private void judgeWIFIPermission() {
+        List<String> permissionsList = new ArrayList<String>();
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            LogHelper.releaseLog(TAG + "onResume no location permission!");
+            permissionsList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            permissionsList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            ActivityCompat.requestPermissions(mActivity, permissionsList.toArray(new String[permissionsList.size()]),
+                    WIFIDefine.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+        } else {
+            LogHelper.releaseLog(TAG + "onResume has location permission!");
+            startLocation();
+        }
+    }
+
+    /**
+     * 开始扫描wifi定时器
+     */
     private void startScanWIFITimer() {
         if (null == mScanWIFITimer) {
             mScanWIFITimer = new BaseTimer();
@@ -494,12 +510,16 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         });
     }
 
+    /**
+     * 注册wifi开关监听广播
+     */
     private void registerWIFIStateBroadcast() {
         LogHelper.releaseLog(TAG + "registerWIFIStateBroadcast!");
         try {
             mIntentFilter = new IntentFilter();
             mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
             mWIFIStateChangeReceiver = new WIFIStateChangeReceiver();
+            mWIFIStateChangeReceiver.setWIFIStateChangeListener(mWIFIStateChangeListener);
             mActivity.registerReceiver(mWIFIStateChangeReceiver, mIntentFilter);
         } catch (Exception e) {
             LogHelper.errorLog(TAG + "registerWIFIStateBroadcast Error!");
@@ -510,6 +530,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         LogHelper.releaseLog(TAG + "releaseWIFIStateBroadcast!");
         try {
             if (null != mWIFIStateChangeReceiver) {
+                mWIFIStateChangeReceiver.setWIFIStateChangeListener(null);
                 mActivity.unregisterReceiver(mWIFIStateChangeReceiver);
                 mWIFIStateChangeReceiver = null;
             }
@@ -519,6 +540,9 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         }
     }
 
+    /**
+     * 处理签到功能
+     */
     private void doSign() {
         LogHelper.releaseLog(TAG + "doSign mIsSign:" + mIsSign);
         if (mIsSign) {
@@ -652,22 +676,14 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         }
     };
 
-    class WIFIStateChangeReceiver extends BroadcastReceiver {
+    private WIFIStateChangeReceiver.WIFIStateChangeListener mWIFIStateChangeListener = new WIFIStateChangeReceiver.WIFIStateChangeListener() {
         @Override
-        public void onReceive(Context context, Intent intent) {
-            if (null != intent) {
-                String action = intent.getAction();
-                int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
-                LogHelper.releaseLog(TAG + "WIFIStateChangeReceiver action:" + action + " wifiState:" + wifiState);
-                if (TextUtils.equals(action, WifiManager.WIFI_STATE_CHANGED_ACTION)) {
-                    if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
-                        // WIFI开关处于打开状态
-                        startLocation();
-                    } else {
-                        // WIFI开关处于关闭状态
-                    }
-                }
+        public void wifiStateOpen(boolean isOpen) {
+            LogHelper.releaseLog(TAG + "WIFIStateChangeListener isOpen:" + isOpen);
+            if (isOpen) {
+                // wifi开关开始，开始扫描wifi
+                judgeWIFIPermission();
             }
         }
-    }
+    };
 }

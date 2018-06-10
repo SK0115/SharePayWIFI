@@ -159,7 +159,7 @@
         <View style="@style/MainLineStyle" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_main"
+            android:id="@+id/wifilist_recyclerview_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white_90"
