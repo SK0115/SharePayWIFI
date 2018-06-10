@@ -92,6 +92,7 @@ public class MainPresenter implements MainContract.Presenter {
             @Override
             public void onError(Throwable e) {
                 LogHelper.errorLog(TAG + "requestJoinWifi onError! msg:" + e.getMessage());
+                ToastUtils.showShort(R.string.connect_fail);
             }
         }), mMainRequestService, mobile, id, time);
     }

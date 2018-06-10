@@ -48,6 +48,7 @@ import com.sharepay.wifi.model.info.WIFIInfo;
 import com.sharepay.wifi.model.info.WIFIShareInfo;
 import com.sharepay.wifi.model.realm.AccountInfoRealm;
 import com.sharepay.wifi.model.realm.CurrentWifiInfoRealm;
+import com.sharepay.wifi.receiver.NetworkConnectChangedReceiver;
 import com.sharepay.wifi.receiver.WIFIStateChangeReceiver;
 import com.sharepay.wifi.util.CommonUtil;
 import com.sharepay.wifi.util.DialogUtils;
@@ -62,8 +63,9 @@ import butterknife.OnClick;
 public class MainFragment extends BaseFragment implements MainContract.View {
 
     private static final String TAG = "MainFragment ";
-    private static final int SCAN_WIFI_TIME = 15 * 1000;
+    private static final int SCAN_WIFI_TIME = 10 * 1000;
     private static final int HIDE_LOADING_TIME = 5 * 1000;
+    private static final int WIFI_CONNECT_TIME = 10 * 1000;
 
     @BindView(R.id.iv_main_share)
     ImageView mShareView;
@@ -86,11 +88,17 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     @BindView(R.id.pb_scan_loading)
     ProgressView mScanProgressBar;
 
+    private ProgressView mWIFIConnectView;
+
     private MainWifiListAdapter mWIFIListAdapter;
     private boolean mIsSign; // 是否已签到
+    private boolean mIsSelectWIFIConnect = false;
     private BaseTimer mScanWIFITimer;
-    private IntentFilter mIntentFilter;
+    private BaseTimer mWIFIConnectTimer;
     private WIFIStateChangeReceiver mWIFIStateChangeReceiver;
+    private IntentFilter mWIFIStateIntentFilter;
+    private NetworkConnectChangedReceiver mNetworkConnectChangedReceiver;
+    private IntentFilter mNetworkConnectIntentFilter;
     private LocationHelper mLocationHelper;
     private double mXCoordinate = 0; // 纬度
     private double mYCoordinate = 0; // 经度
@@ -100,6 +108,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     private WIFIConnectManager.WifiCipherType mWifiCipherType;
     private ShareWifiHttpData mNeedConnectWifi;
     private CurrentWifiInfoRealm mCurrentWifiInfoRealm;
+    private WIFIInfo mSelectConnectWIFIInfo;
 
     @OnClick({ R.id.iv_main_personal_enter, R.id.iv_main_share, R.id.tv_sign_in, R.id.layout_main_connect_wifi })
     public void onClick(View view) {
@@ -165,6 +174,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                     if (null != info) {
                         mNeedConnectWifi = null;
                         mWifiCipherType = null;
+                        mSelectConnectWIFIInfo = info;
                         mWIFIConnectManager = new WIFIConnectManager(mActivity);
                         mWIFIConnectManager.mHandler = new Handler() {
                             @Override
@@ -186,6 +196,8 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                                 mWifiCipherType = WIFIConnectManager.WifiCipherType.WIFICIPHER_WEP;
                             }
                         }
+                        mWIFIConnectView = viewHolder.getView(R.id.wifi_connect_loading);
+                        mIsSelectWIFIConnect = true;
                         if (info.isShared()) {
                             String payInfo = String.format(getResources().getString(R.string.wifi_pay_integral), info.getEarnings());
                             DialogUtils.showDialog(mActivity, getResources().getString(R.string.wifi_need_pay), payInfo,
@@ -218,11 +230,12 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                                     });
                         } else {
                             if (WIFIHelper.isFreeWifi(info.getCapabilities())) {
-                                // 免费wifi直接连接
+                                // 不加密wifi直接连接
                                 WIFIHelper.disconnectWIFI(mActivity);
                                 mWIFIConnectManager.connectWIFI(info.getName(), "", mWifiCipherType);
+                                registerWIFIConnectBroadcast();
                             } else {
-                                // 付费wifi需要密码连接
+                                // 加密wifi需要密码连接
                                 DialogUtils.showDialog(mActivity, getResources().getString(R.string.wifi_need_pass), "", true,
                                         new DialogUtils.OnDialogClickListener() {
                                             @Override
@@ -235,6 +248,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                                                 // 确定
                                                 WIFIHelper.disconnectWIFI(mActivity);
                                                 mWIFIConnectManager.connectWIFI(info.getName(), content, mWifiCipherType);
+                                                registerWIFIConnectBroadcast();
                                             }
                                         });
                             }
@@ -279,6 +293,9 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         }
     }
 
+    /**
+     * 初始化已经连接的wifi信息
+     */
     private void initHasConnectWIFIInfo() {
         LogHelper.releaseLog(TAG + "initHasConnectWIFIInfo");
         if (null == mConnectWifiLayout) {
@@ -288,6 +305,14 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         String currentWifiName = WIFIHelper.getCurrentConnectWIFISSID(mActivity);
         if (!TextUtils.isEmpty(currentWifiName)) {
             mConnectWifiLayout.setVisibility(View.VISIBLE);
+            if (mIsSelectWIFIConnect && null != mSelectConnectWIFIInfo && currentWifiName.equals(mSelectConnectWIFIInfo.getName())) {
+                mIsSelectWIFIConnect = false;
+                ToastUtils.showShort(R.string.connect_success);
+                if (null != mWIFIConnectView) {
+                    mWIFIConnectView.setVisibility(View.GONE);
+                    mWIFIConnectView.stopRotateAnimation();
+                }
+            }
             CurrentWifiInfoRealm currentWifiInfoRealm = CommonUtil.getCurrentConnectWifiRealm();
             String currentWifiMac = WIFIHelper.getCurrentConnectWIFIMac(mActivity);
 
@@ -349,6 +374,9 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         }
     }
 
+    /**
+     * 开始扫描附近wifi信息
+     */
     private void startScanWIFIList() {
         LogHelper.releaseLog(TAG + "startScanWIFIList");
         List<ScanResult> wifiList = WIFIHelper.getAllWIFIList(mActivity);
@@ -431,10 +459,6 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         if (null != currentWifiInfoRealm && currentWifiInfoRealm.isShared()) {
             WIFIHelper.disconnectWIFI(mActivity);
         }
-        if (null != mScanWIFITimer) {
-            mScanWIFITimer.killTimer();
-            mScanWIFITimer = null;
-        }
         if (null != mLocationHelper) {
             mLocationHelper.setLocationCallBack(null);
             mLocationHelper.release();
@@ -511,21 +535,34 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     }
 
     /**
+     * 停止wifi扫描定时器
+     */
+    private void stopScanWIFITimer() {
+        if (null != mScanWIFITimer) {
+            mScanWIFITimer.killTimer();
+            mScanWIFITimer = null;
+        }
+    }
+
+    /**
      * 注册wifi开关监听广播
      */
     private void registerWIFIStateBroadcast() {
         LogHelper.releaseLog(TAG + "registerWIFIStateBroadcast!");
         try {
-            mIntentFilter = new IntentFilter();
-            mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+            mWIFIStateIntentFilter = new IntentFilter();
+            mWIFIStateIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
             mWIFIStateChangeReceiver = new WIFIStateChangeReceiver();
             mWIFIStateChangeReceiver.setWIFIStateChangeListener(mWIFIStateChangeListener);
-            mActivity.registerReceiver(mWIFIStateChangeReceiver, mIntentFilter);
+            mActivity.registerReceiver(mWIFIStateChangeReceiver, mWIFIStateIntentFilter);
         } catch (Exception e) {
             LogHelper.errorLog(TAG + "registerWIFIStateBroadcast Error!");
         }
     }
 
+    /**
+     * 销毁wifi开关监听广播
+     */
     private void releaseWIFIStateBroadcast() {
         LogHelper.releaseLog(TAG + "releaseWIFIStateBroadcast!");
         try {
@@ -534,9 +571,51 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                 mActivity.unregisterReceiver(mWIFIStateChangeReceiver);
                 mWIFIStateChangeReceiver = null;
             }
-            mIntentFilter = null;
+            mWIFIStateIntentFilter = null;
         } catch (Exception e) {
             LogHelper.errorLog(TAG + "releaseWIFIStateBroadcast Error!");
+        }
+    }
+
+    /**
+     * 注册wifi连接广播
+     */
+    private void registerWIFIConnectBroadcast() {
+        LogHelper.releaseLog(TAG + "registerWIFIConnectBroadcast!");
+        try {
+            if (null != mWIFIConnectView) {
+                mWIFIConnectView.setVisibility(View.VISIBLE);
+                mWIFIConnectView.setImageResource(R.drawable.ic_list_loading);
+                mWIFIConnectView.startRotateAnimation();
+            }
+            stopScanWIFITimer();
+            mScanProgressBar.setVisibility(View.GONE);
+            mScanProgressBar.stopRotateAnimation();
+            startWIFIConnectTimer();
+            mNetworkConnectChangedReceiver = new NetworkConnectChangedReceiver();
+            mNetworkConnectIntentFilter = new IntentFilter();
+            mNetworkConnectIntentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+            mNetworkConnectChangedReceiver.setNetworkConnectChangedListener(mNetworkConnectChangedListener);
+            mActivity.registerReceiver(mNetworkConnectChangedReceiver, mNetworkConnectIntentFilter);
+        } catch (Exception e) {
+            LogHelper.errorLog(TAG + "registerWIFIConnectBroadcast Error!");
+        }
+    }
+
+    /**
+     * 销毁wifi连接广播
+     */
+    private void releaseWIFIConnectBroadcast() {
+        LogHelper.releaseLog(TAG + "releaseWIFIConnectBroadcast!");
+        try {
+            if (null != mNetworkConnectChangedReceiver) {
+                mNetworkConnectChangedReceiver.setNetworkConnectChangedListener(null);
+                mActivity.unregisterReceiver(mNetworkConnectChangedReceiver);
+                mNetworkConnectChangedReceiver = null;
+            }
+            mNetworkConnectIntentFilter = null;
+        } catch (Exception e) {
+            LogHelper.errorLog(TAG + "releaseWIFIConnectBroadcast Error!");
         }
     }
 
@@ -565,11 +644,12 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     @Override
     public void onStop() {
         super.onStop();
-        if (null != mScanWIFITimer) {
-            mScanWIFITimer.killTimer();
-            mScanWIFITimer = null;
-        }
+        stopScanWIFITimer();
+        mIsSelectWIFIConnect = false;
+        mSelectConnectWIFIInfo = null;
+        stopWIFIConnectTimer();
         releaseWIFIStateBroadcast();
+        releaseWIFIConnectBroadcast();
         if (null != mScanProgressBar) {
             mScanProgressBar.stopRotateAnimation();
         }
@@ -616,6 +696,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             if (null != mWIFIConnectManager && null != mNeedConnectWifi && null != mWifiCipherType) {
                 WIFIHelper.disconnectWIFI(mActivity);
                 mWIFIConnectManager.connectWIFI(mNeedConnectWifi.getName(), mNeedConnectWifi.getPass(), mWifiCipherType);
+                registerWIFIConnectBroadcast();
                 mCurrentWifiInfoRealm = new CurrentWifiInfoRealm();
                 mCurrentWifiInfoRealm.setShared(true);
                 mCurrentWifiInfoRealm.setId(mNeedConnectWifi.getId());
@@ -642,6 +723,38 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         }
         mLocationHelper.setLocationCallBack(mLocationCallBack);
         mLocationHelper.location(mActivity);
+    }
+
+    /**
+     * 开始wifi连接超时定时器
+     */
+    private void startWIFIConnectTimer() {
+        if (null == mWIFIConnectTimer) {
+            mWIFIConnectTimer = new BaseTimer();
+        }
+        mWIFIConnectTimer.startTimer(WIFI_CONNECT_TIME, new BaseTimer.TimerCallBack() {
+            @Override
+            public void callback() {
+                ToastUtils.showShort(R.string.connect_fail);
+                if (null != mWIFIConnectView) {
+                    mWIFIConnectView.setVisibility(View.GONE);
+                    mWIFIConnectView.stopRotateAnimation();
+                }
+                stopWIFIConnectTimer();
+                startScanWIFITimer();
+            }
+        });
+    }
+
+    /**
+     * 停止wifi连接超时定时器
+     */
+    private void stopWIFIConnectTimer() {
+        if (null != mWIFIConnectTimer) {
+            mWIFIConnectTimer.killTimer();
+            mWIFIConnectTimer = null;
+        }
+        releaseWIFIConnectBroadcast();
     }
 
     private WIFIDefine.LocationCallBack mLocationCallBack = new WIFIDefine.LocationCallBack() {
@@ -684,6 +797,21 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                 // wifi开关开始，开始扫描wifi
                 judgeWIFIPermission();
             }
+        }
+    };
+
+    private NetworkConnectChangedReceiver.NetworkConnectChangedListener mNetworkConnectChangedListener = new NetworkConnectChangedReceiver.NetworkConnectChangedListener() {
+        @Override
+        public void networkConnected() {
+            stopWIFIConnectTimer();
+            releaseWIFIConnectBroadcast();
+            BaseTimer timer = new BaseTimer();
+            timer.startTimer(5 * 1000, new BaseTimer.TimerCallBack() {
+                @Override
+                public void callback() {
+                    startScanWIFITimer();
+                }
+            });
         }
     };
 }

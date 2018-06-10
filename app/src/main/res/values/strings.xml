@@ -33,7 +33,7 @@
     <string name="sign_fail">签到失败</string>
     <string name="sign_veryday_intergration">每天签到获得2个积分</string>
     <string name="connect_success">连接成功</string>
-    <string name="connect_fail">密码错误，连接失败</string>
+    <string name="connect_fail">连接失败</string>
     <string name="select_network">选择网络</string>
     <string name="detecting_network">正在检测您的网速...</string>
     <string name="network_speed_measurement">网络测速</string>

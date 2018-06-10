@@ -7,7 +7,6 @@ import android.widget.TextView;
 import com.sharepay.wifi.R;
 import com.sharepay.wifi.base.BaseAdapter;
 import com.sharepay.wifi.base.BaseHolder;
-import com.sharepay.wifi.baseCtrl.ProgressView;
 import com.sharepay.wifi.helper.WIFIHelper;
 import com.sharepay.wifi.model.info.WIFIInfo;
 
@@ -33,9 +32,6 @@ public class MainWifiListAdapter extends BaseAdapter<WIFIInfo> {
     protected void convert(BaseHolder holder, WIFIInfo data) {
         TextView textview = holder.getView(R.id.tv_wifi_item_name);
         ImageView ivItem = holder.getView(R.id.iv_wifi_item);
-        ProgressView progressView = holder.getView(R.id.wifi_connect_loading);
-        progressView.setImageResource(R.drawable.ic_list_loading);
-        progressView.startRotateAnimation();
         textview.setText(data.getName());
         String capabilities = data.getCapabilities().trim();
         if (WIFIHelper.isFreeWifi(capabilities)) {
