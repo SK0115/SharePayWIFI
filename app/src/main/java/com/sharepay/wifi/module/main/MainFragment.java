@@ -38,6 +38,7 @@ import com.sharepay.wifi.baseCtrl.FullyLinearLayoutManager;
 import com.sharepay.wifi.baseCtrl.ProgressView;
 import com.sharepay.wifi.define.WIFIDefine;
 import com.sharepay.wifi.helper.AccountHelper;
+import com.sharepay.wifi.helper.BaseTimer;
 import com.sharepay.wifi.helper.LocationHelper;
 import com.sharepay.wifi.helper.LogHelper;
 import com.sharepay.wifi.helper.WIFIConnectManager;
@@ -62,6 +63,8 @@ import butterknife.OnClick;
 public class MainFragment extends BaseFragment implements MainContract.View {
 
     private static final String TAG = "MainFragment ";
+    private static final int SCAN_WIFI_TIME = 30 * 1000;
+    private static final int HIDE_LOADING_TIME = 5 * 1000;
 
     @BindView(R.id.iv_main_share)
     ImageView mShareView;
@@ -86,7 +89,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
 
     private MainWifiListAdapter mAdapter;
     private boolean mIsSign; // 是否已签到
-    private ScanWIFIThread mScanWIFIThread;
+    private BaseTimer mScanWIFITimer;
     private IntentFilter mIntentFilter;
     private WIFIStateChangeReceiver mWIFIStateChangeReceiver;
     private LocationHelper mLocationHelper;
@@ -237,6 +240,13 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             mAdapter.setDatas(wifiInfoList);
             mAdapter.notifyDataSetChanged();
         }
+        new BaseTimer().startTimer(HIDE_LOADING_TIME, new BaseTimer.TimerCallBack() {
+            @Override
+            public void callback() {
+                mScanProgressBar.setVisibility(View.GONE);
+                mScanProgressBar.stopRotateAnimation();
+            }
+        });
     }
 
     @Override
@@ -248,18 +258,6 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         layoutTips.requestFocus();
         layoutTips.requestFocusFromTouch();
         mScanProgressBar.setImageResource(R.drawable.ic_list_loading);
-        List<String> permissionsList = new ArrayList<String>();
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            LogHelper.releaseLog(TAG + "initView no location permission!");
-            permissionsList.add(Manifest.permission.ACCESS_FINE_LOCATION);
-            permissionsList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-            ActivityCompat.requestPermissions(mActivity, permissionsList.toArray(new String[permissionsList.size()]),
-                    WIFIDefine.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
-        } else {
-            LogHelper.releaseLog(TAG + "initView has location permission!");
-            startLocation();
-        }
     }
 
     @Override
@@ -423,8 +421,9 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         if (null != currentWifiInfoRealm && currentWifiInfoRealm.isShared()) {
             WIFIHelper.disconnectWIFI(mActivity);
         }
-        if (null != mScanWIFIThread) {
-            mScanWIFIThread = null;
+        if (null != mScanWIFITimer) {
+            mScanWIFITimer.killTimer();
+            mScanWIFITimer = null;
         }
         if (null != mLocationHelper) {
             mLocationHelper.setLocationCallBack(null);
@@ -436,11 +435,21 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     @Override
     public void onResume() {
         super.onResume();
+        LogHelper.releaseLog(TAG + "onResume!");
+        List<String> permissionsList = new ArrayList<String>();
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            LogHelper.releaseLog(TAG + "onResume no location permission!");
+            permissionsList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            permissionsList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            ActivityCompat.requestPermissions(mActivity, permissionsList.toArray(new String[permissionsList.size()]),
+                    WIFIDefine.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+        } else {
+            LogHelper.releaseLog(TAG + "onResume has location permission!");
+            startLocation();
+        }
         mIsSign = CommonUtil.userIsSign();
         doSign();
-        if (null != mScanProgressBar) {
-            mScanProgressBar.startRotateAnimation();
-        }
         if (WifiManager.WIFI_STATE_ENABLED != WIFIHelper.getWIFISwitchState(mActivity)) {
             DialogUtils.showDialog(mActivity, getResources().getString(R.string.wifi_switch_close), getResources().getString(R.string.wifi_switch_need_open),
                     new DialogUtils.OnDialogClickListener() {
@@ -460,31 +469,37 @@ public class MainFragment extends BaseFragment implements MainContract.View {
         }
     }
 
-    private void startScanThread() {
-        if (null == mScanWIFIThread) {
-            LogHelper.releaseLog(TAG + "startScanThread ScanWIFIThread is null!");
-            mScanWIFIThread = new ScanWIFIThread();
-            mScanWIFIThread.start();
-        } else if (!mScanWIFIThread.isAlive()) {
-            LogHelper.releaseLog(TAG + "startScanThread ScanWIFIThread is not alive!");
-            mScanWIFIThread.start();
+    private void startScanWIFITimer() {
+        if (null == mScanWIFITimer) {
+            mScanWIFITimer = new BaseTimer();
         }
+        LogHelper.releaseLog(TAG + "startScanWIFITimer!");
+        mScanWIFITimer.startIntervalInstance(SCAN_WIFI_TIME, new BaseTimer.TimerCallBack() {
+            @Override
+            public void callback() {
+                LogHelper.releaseLog(TAG + "startScanWIFITimer callback!");
+                mScanProgressBar.setVisibility(View.VISIBLE);
+                mScanProgressBar.startRotateAnimation();
+                initHasConnectWIFIInfo();
+                startScanWIFIList();
+            }
+        });
     }
 
     private void registerWIFIStateBroadcast() {
-        LogHelper.releaseLog("registerWIFIStateBroadcast!");
+        LogHelper.releaseLog(TAG + "registerWIFIStateBroadcast!");
         try {
             mIntentFilter = new IntentFilter();
             mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
             mWIFIStateChangeReceiver = new WIFIStateChangeReceiver();
             mActivity.registerReceiver(mWIFIStateChangeReceiver, mIntentFilter);
         } catch (Exception e) {
-            LogHelper.errorLog("registerWIFIStateBroadcast Error!");
+            LogHelper.errorLog(TAG + "registerWIFIStateBroadcast Error!");
         }
     }
 
     private void releaseWIFIStateBroadcast() {
-        LogHelper.releaseLog("releaseWIFIStateBroadcast!");
+        LogHelper.releaseLog(TAG + "releaseWIFIStateBroadcast!");
         try {
             if (null != mWIFIStateChangeReceiver) {
                 mActivity.unregisterReceiver(mWIFIStateChangeReceiver);
@@ -492,7 +507,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             }
             mIntentFilter = null;
         } catch (Exception e) {
-            LogHelper.errorLog("releaseWIFIStateBroadcast Error!");
+            LogHelper.errorLog(TAG + "releaseWIFIStateBroadcast Error!");
         }
     }
 
@@ -518,8 +533,9 @@ public class MainFragment extends BaseFragment implements MainContract.View {
     @Override
     public void onStop() {
         super.onStop();
-        if (null != mScanWIFIThread && mScanWIFIThread.isAlive()) {
-            mScanWIFIThread.interrupt();
+        if (null != mScanWIFITimer) {
+            mScanWIFITimer.killTimer();
+            mScanWIFITimer = null;
         }
         releaseWIFIStateBroadcast();
         if (null != mScanProgressBar) {
@@ -557,7 +573,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             // 请求共享wifi列表成功
             mShareWifiHttpDataList = wifiListHttpResult.getHttpData();
         }
-        startScanThread();
+        startScanWIFITimer();
     }
 
     @Override
@@ -614,7 +630,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                 LogHelper.releaseLog(TAG + "setLocation wifiShareInfo:" + wifiShareInfo.toString());
                 if (null == mAccountInfoRealm || TextUtils.isEmpty(mAccountInfoRealm.getMobile()) || TextUtils.isEmpty(mAccountInfoRealm.getId())) {
                     // 未登陆帐号，直接扫描wifi
-                    startScanThread();
+                    startScanWIFITimer();
                 } else {
                     wifiShareInfo.setMobile(mAccountInfoRealm.getMobile());
                     if (null != mPresenter) {
@@ -623,31 +639,10 @@ public class MainFragment extends BaseFragment implements MainContract.View {
                 }
             } else {
                 LogHelper.releaseLog(TAG + "setLocation location is null! startScanThread");
-                startScanThread();
+                startScanWIFITimer();
             }
         }
     };
-
-    private class ScanWIFIThread extends Thread {
-        @Override
-        public void run() {
-            while (true) {
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        LogHelper.releaseLog(TAG + "ScanWIFIThread run!");
-                        initHasConnectWIFIInfo();
-                        startScanWIFIList();
-                    }
-                });
-                try {
-                    Thread.sleep(5000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     class WIFIStateChangeReceiver extends BroadcastReceiver {
         @Override
@@ -655,7 +650,7 @@ public class MainFragment extends BaseFragment implements MainContract.View {
             if (null != intent) {
                 String action = intent.getAction();
                 int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
-                LogHelper.releaseLog("WIFIStateChangeReceiver action:" + action + " wifiState:" + wifiState);
+                LogHelper.releaseLog(TAG + "WIFIStateChangeReceiver action:" + action + " wifiState:" + wifiState);
                 if (TextUtils.equals(action, WifiManager.WIFI_STATE_CHANGED_ACTION)) {
                     if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
                         // WIFI开关处于打开状态
