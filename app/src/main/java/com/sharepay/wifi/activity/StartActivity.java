@@ -51,7 +51,10 @@ public class StartActivity extends BaseActivity {
             }
         }), HttpRequestHelper.getInstance().create(StartRequestService.class));
 
-        boolean isShow = PreferenceUtil.getInstance().getBooleanValue(WIFIDefine.KEY_PREFERENCE_ISSHOWSTARTOVER, false);
+        // boolean isShow =
+        // PreferenceUtil.getInstance().getBooleanValue(WIFIDefine.KEY_PREFERENCE_ISSHOWSTARTOVER,
+        // false);
+        boolean isShow = true;
         if (!isShow) {
             PreferenceUtil.getInstance().saveBooleanValue(WIFIDefine.KEY_PREFERENCE_ISSHOWSTARTOVER, true);
             startDelay(GuideActivity.class);

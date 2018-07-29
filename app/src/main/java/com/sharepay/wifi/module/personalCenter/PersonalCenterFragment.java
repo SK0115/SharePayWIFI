@@ -44,10 +44,10 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
     private static final String TAG = "PersonalCenterFragment ";
     private static final int PERSONAL_CENTER_HEAD_INDEX = 0;
     private static final int PERSONAL_CENTER_HISTORY_INDEX = 1;
-    private static final int PERSONAL_CENTER_CONTACTUS_INDEX = 2;
-    private static final int PERSONAL_CENTER_USERAGREEMENT_INDEX = 3;
-    private static final int PERSONAL_CENTER_VERSIONINFO_INDEX = 4;
-    private static final int PERSONAL_CENTER_EXIT_INDEX = 5;
+    // private static final int PERSONAL_CENTER_CONTACTUS_INDEX = 2;
+    // private static final int PERSONAL_CENTER_USERAGREEMENT_INDEX = 2;
+    private static final int PERSONAL_CENTER_VERSIONINFO_INDEX = 2;
+    private static final int PERSONAL_CENTER_EXIT_INDEX = 3;
 
     @BindView(R.id.recyclerview_personal_center)
     RecyclerView mPersonalCenterRecyclerview;
@@ -257,17 +257,20 @@ public class PersonalCenterFragment extends BaseFragment implements PersonalCent
         personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_IMG);
         mPersonalCenterDataList.add(PERSONAL_CENTER_HISTORY_INDEX, personalCenterData);
 
-        personalCenterData = new PersonalCenterInfo();
-        personalCenterData.setTitle(getString(R.string.contact_us));
-        personalCenterData.setImg(R.drawable.ic_list_next);
-        personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_IMG);
-        mPersonalCenterDataList.add(PERSONAL_CENTER_CONTACTUS_INDEX, personalCenterData);
+        // 去除联系我们
+        // personalCenterData = new PersonalCenterInfo();
+        // personalCenterData.setTitle(getString(R.string.contact_us));
+        // personalCenterData.setImg(R.drawable.ic_list_next);
+        // personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_IMG);
+        // mPersonalCenterDataList.add(PERSONAL_CENTER_CONTACTUS_INDEX,
+        // personalCenterData);
 
-        personalCenterData = new PersonalCenterInfo();
-        personalCenterData.setTitle(getString(R.string.user_agreement));
-        personalCenterData.setImg(R.drawable.ic_list_next);
-        personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_IMG);
-        mPersonalCenterDataList.add(PERSONAL_CENTER_USERAGREEMENT_INDEX, personalCenterData);
+        // personalCenterData = new PersonalCenterInfo();
+        // personalCenterData.setTitle(getString(R.string.user_agreement));
+        // personalCenterData.setImg(R.drawable.ic_list_next);
+        // personalCenterData.setType(PersonalCenterInfo.PERSONAL_CENTER_IMG);
+        // mPersonalCenterDataList.add(PERSONAL_CENTER_USERAGREEMENT_INDEX,
+        // personalCenterData);
 
         personalCenterData = new PersonalCenterInfo();
         String versionInfo = getString(R.string.version_info) + mVersionName;
